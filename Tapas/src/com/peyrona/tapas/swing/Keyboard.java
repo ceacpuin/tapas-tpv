@@ -3,13 +3,14 @@
  * and open the template in the editor.
  */
 
-package com.peyrona.tapas.accountDialog;
+package com.peyrona.tapas.swing;
 
 import com.peyrona.tapas.mainFrame.MainFrame;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -20,15 +21,17 @@ import javax.swing.text.JTextComponent;
  *
  * @author Francisco Morero Peyrona
  */
-final class Keyboard extends JDialog
+public final class Keyboard extends JDialog
 {
     private JTextComponent text;   // A quien se le van a enviar las letras
 
     //------------------------------------------------------------------------//
 
-    Keyboard( JTextComponent text )
+    public Keyboard( JTextComponent text )
     {
         super( MainFrame.getInstance() );
+
+        this.text = text;
 
         setModal( true );
         setTitle( "Teclado virtual" );
@@ -37,7 +40,10 @@ final class Keyboard extends JDialog
         initComponents();
         pack();
 
-        this.text = text;
+        Point position = text.getLocationOnScreen();
+
+        setLocation( position.x - (getWidth() - text.getWidth()) / 2,
+                     position.y + text.getHeight() + 5 );
     }
 
     //------------------------------------------------------------------------//
@@ -47,12 +53,13 @@ final class Keyboard extends JDialog
         String sKeyboard = "1234567890"+
                            "QWERTYUIOP"+
                            "ASDFGHJKLÑ"+
-                           "ZXCVBNMÇ ";
+                           "ZXCVBNM ";
 
         for( int n = 0; n < sKeyboard.length(); n++ )
             add( new Button( sKeyboard.charAt( n ) ) );
 
-        add( new Button( new ImageIcon( getClass().getResource( "images/clear.png" ) ) ) );
+        add( new Button( "CLEAR", new ImageIcon( getClass().getResource( "images/clear.png" ) ) ) );
+        add( new Button( "CLOSE", new ImageIcon( getClass().getResource( "images/close.png" ) ) ) );
     }
 
     //------------------------------------------------------------------------//
@@ -79,15 +86,20 @@ final class Keyboard extends JDialog
             } );
         }
 
-        private Button( ImageIcon icon )
+        private Button( String sName, ImageIcon icon )
         {
             super( icon );
+            setName( sName );
+
             init();
             addActionListener( new java.awt.event.ActionListener()
             {
                 public void actionPerformed( ActionEvent ae )
                 {
-                    Keyboard.this.text.setText( null );
+                    if( "CLEAR".equals( getName() ) )
+                        Keyboard.this.text.setText( null );
+                    else
+                        Keyboard.this.dispose();
                 }
             } );
         }

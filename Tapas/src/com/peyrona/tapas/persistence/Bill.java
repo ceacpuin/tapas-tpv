@@ -35,7 +35,7 @@ import java.util.List;
  */
 public final class Bill
 {
-    public enum PayMode { Undefined, Paid, Deferred, Invitation, NotPaid }
+    public enum Payment { Undefined, Paid, Deferred, Invitation, NotPaid }
 
     public final static int NOW = -1;    // Para ser usado con setWhen(...)
 
@@ -44,7 +44,7 @@ public final class Bill
     private int            nId;
     private String         sCustomer;
     private long           nWhen;
-    private PayMode        payMode;
+    private Payment        payment;
     private List<BillLine> lstLines;
 
     //------------------------------------------------------------------------//
@@ -55,7 +55,7 @@ public final class Bill
         setId( -1 );
         setCustomer( String.valueOf( nCount++ ) );
         setWhen( 0l );
-        setPayMode( PayMode.Undefined );
+        setPayment( Payment.Undefined );
         setLines( null );
     }
 
@@ -89,17 +89,17 @@ public final class Bill
     /**
      * @return the nPayMode
      */
-    public PayMode getPayMode()
+    public Payment getPayment()
     {
-        return payMode;
+        return payment;
     }
 
     /**
      * @param nPayMode the nPayMode to set
      */
-    public void setPayMode( PayMode paymode )
+    public void setPayment( Payment paymode )
     {
-        this.payMode = paymode;
+        this.payment = paymode;
     }
 
     /**
@@ -133,7 +133,7 @@ public final class Bill
 
     public boolean isClosed()
     {
-        return (getPayMode() != null);
+        return (getPayment() != null);
     }
 
     @Override
@@ -166,7 +166,7 @@ public final class Bill
         hash = 61 * hash + this.nId;
         hash = 61 * hash + (this.sCustomer != null ? this.sCustomer.hashCode() : 0);
         hash = 61 * hash + (int) (this.nWhen ^ (this.nWhen >>> 32));
-        hash = 61 * hash + (this.payMode != null ? this.payMode.hashCode() : 0);
+        hash = 61 * hash + (this.payment != null ? this.payment.hashCode() : 0);
         return hash;
     }
 
@@ -187,7 +187,7 @@ public final class Bill
     {
         int n = -1;
 
-        switch( getPayMode() )
+        switch( getPayment() )
         {
             case Undefined : n = 1; break;
             case Deferred  : n = 2; break;
@@ -203,11 +203,11 @@ public final class Bill
     {
         switch( nPayMode )
         {
-            case 1: setPayMode( PayMode.Undefined  ); break;
-            case 2: setPayMode( PayMode.Deferred   ); break;
-            case 3: setPayMode( PayMode.Invitation ); break;
-            case 4: setPayMode( PayMode.NotPaid    ); break;
-            case 5: setPayMode( PayMode.Paid       ); break;
+            case 1: setPayment( Payment.Undefined  ); break;
+            case 2: setPayment( Payment.Deferred   ); break;
+            case 3: setPayment( Payment.Invitation ); break;
+            case 4: setPayment( Payment.NotPaid    ); break;
+            case 5: setPayment( Payment.Paid       ); break;
         }
     }
 }

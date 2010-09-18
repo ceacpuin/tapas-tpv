@@ -275,7 +275,7 @@ class DailyReport extends javax.swing.JPanel
 
     private void onExecuteReport(java.awt.event.ActionEvent evt)//GEN-FIRST:event_onExecuteReport
     {//GEN-HEADEREND:event_onExecuteReport
-        // TODO: implementarlo
+        // NEXT: implementarlo
         JOptionPane.showMessageDialog( null, "Opción pendiente de ser implementada." );
     }//GEN-LAST:event_onExecuteReport
 

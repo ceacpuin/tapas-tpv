@@ -65,11 +65,14 @@ public class SQLExecutor
         if( reader == null )
             throw new FileNotFoundException();
 
+        Statement      stmt  = null;
         String         sLine = null;
         StringBuilder  sb    = new StringBuilder( 1024 );
 
         try
         {
+            stmt = dbConn.createStatement();
+
             while( (sLine = reader.readLine()) != null )
             {
                 if( isSQL( sLine ) )
@@ -79,7 +82,7 @@ public class SQLExecutor
                     if( sLine.endsWith( sSQL_Termination ) )
                     {
                         sb.deleteCharAt( sb.length() - 1 );    // Borra la terminación (";")
-                        executeCommand( sb.toString() );
+                        stmt.execute( sb.toString() );
                         sb.setLength( 0 );
                     }
                 }
@@ -96,7 +99,10 @@ public class SQLExecutor
         finally
         {
             if( reader != null )
-                reader.close();
+                try{ reader.close(); } catch( IOException se ) { /* Nothing to do */ }
+
+            if( stmt != null )
+                try{ stmt.close(); } catch( SQLException se ) { /* Nothing to do */ }
         }
 
         añadeAlgunosArtículosParaPoderHacerPruebas(); // FIXME QUITARLO
@@ -108,26 +114,6 @@ public class SQLExecutor
 
         return (sLine.length() > 0) &&
                (! sLine.startsWith( sSQL_Comment ));
-    }
-
-    private void executeCommand( String sCmd ) throws SQLException
-    {
-        Statement stmt = null;
-
-        try
-        {
-            stmt = dbConn.createStatement();
-            stmt.execute( sCmd );
-        }
-        catch( SQLException se )
-        {
-            throw se;
-        }
-        finally
-        {
-            if( stmt != null )
-                try{ stmt.close(); } catch( SQLException se ) { /* Nothing to do */ }
-        }
     }
 
     private static void añadeAlgunosArtículosParaPoderHacerPruebas()

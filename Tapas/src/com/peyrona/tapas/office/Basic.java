@@ -82,7 +82,7 @@ class Basic extends javax.swing.JPanel implements ActionListener
                       config.setFullScreenMode( bFullScr );
                       config.setAutoAlignMode( bAutoAlign );
 
-        ////DataProvider.getDataSource().setConfiguration( config );
+        DataProvider.getInstance().setConfiguration( config );
     }
 
     /** This method is called from within the constructor to

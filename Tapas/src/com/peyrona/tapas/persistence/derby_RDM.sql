@@ -65,8 +65,8 @@ CREATE TABLE APP.configuracion(
    full_screen     INTEGER,
    auto_alinear    INTEGER,
    ticket_imagen   BLOB,
-   ticket_cabecera VARCHAR(256),
-   ticket_pie      VARCHAR(256) );
+   ticket_cabecera VARCHAR(999),
+   ticket_pie      VARCHAR(999) );
 
 -- -----------------------------------------------------------------------------
 -- FOREING KEYS
@@ -90,5 +90,11 @@ ALTER TABLE APP.productos
 
 CREATE INDEX ventas_modo_pago ON APP.ventas (modo_pago);
 CREATE INDEX ventas_cuando    ON APP.ventas (cuando);
+
+-- -----------------------------------------------------------------------------
+-- INITIAL DATA
+-- -----------------------------------------------------------------------------
+
+INSERT INTO APP.configuracion (auto_alinear) VALUES ( 1 )
 
 -- ********************************   EOF  *************************************

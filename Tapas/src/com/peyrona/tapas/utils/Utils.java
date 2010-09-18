@@ -29,6 +29,7 @@ import java.util.Currency;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -101,13 +102,13 @@ public class Utils
         return bufImage;
     }
 
-    public static Image scaleImage( BufferedImage buffImage, int nCompWidth, int nCompHeight )
+    public static ImageIcon scaleIcon( ImageIcon icon, int nCompWidth, int nCompHeight )
     {// FIXME: No va bien
-        if( buffImage == null )
+        if( icon == null )
             return null;
 
-        float nImgWidth  = buffImage.getWidth();
-        float nImgHeight = buffImage.getHeight();
+        float nImgWidth  = icon.getIconHeight();
+        float nImgHeight = icon.getIconHeight();
         float nScale     = nImgHeight / nImgWidth;
 
         if( nImgWidth > nCompWidth )
@@ -121,10 +122,13 @@ public class Utils
             nImgHeight = nCompHeight;
             nImgWidth *= nScale;
         }
-                   
-        return buffImage.getScaledInstance( Math.max( 16, (int)nImgWidth ),
-                                            Math.max( 16, (int)nImgHeight ),
-                                            Image.SCALE_SMOOTH );
+
+        Image image = icon.getImage();
+              image.getScaledInstance( Math.max( 16, (int)nImgWidth ),
+                                       Math.max( 16, (int)nImgHeight ),
+                                       Image.SCALE_SMOOTH );
+
+        return (new ImageIcon( image ));
     }
 
     public static void printError( Throwable th, Level level, String sMessage, int nExitCode )

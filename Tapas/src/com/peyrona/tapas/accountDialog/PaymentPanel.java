@@ -35,7 +35,7 @@ import javax.swing.border.EmptyBorder;
  */
 final class PaymentPanel extends JPanel
 {
-    private Bill.PayMode payMode = null;
+    private Bill.Payment payMode = null;
 
     PaymentPanel( final JDialog parent )
     {
@@ -45,22 +45,22 @@ final class PaymentPanel extends JPanel
         JButton btnPaid = new Button( "Cobrar" );
                 btnPaid.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { payMode = Bill.PayMode.Paid; parent.dispose(); }
+                    public void actionPerformed( ActionEvent e )  { payMode = Bill.Payment.Paid; parent.dispose(); }
                 } );
         JButton btnDefer = new Button( "Aplazar" );
                 btnDefer.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { payMode =  Bill.PayMode.Deferred; parent.dispose(); }
+                    public void actionPerformed( ActionEvent e )  { payMode =  Bill.Payment.Deferred; parent.dispose(); }
                 } );
         JButton btnInvitation = new Button( "Invitación" );
                 btnInvitation.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { payMode = Bill.PayMode.Invitation; parent.dispose(); }
+                    public void actionPerformed( ActionEvent e )  { payMode = Bill.Payment.Invitation; parent.dispose(); }
                 } );
         JButton btnNotPaid = new Button( "Impagado" );
                 btnNotPaid.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { payMode = Bill.PayMode.NotPaid; parent.dispose(); }
+                    public void actionPerformed( ActionEvent e )  { payMode = Bill.Payment.NotPaid; parent.dispose(); }
                 } );
 
         JButton btnClose = new Button( "Cerrar" );
@@ -76,7 +76,7 @@ final class PaymentPanel extends JPanel
         add( btnClose );
     }
 
-    Bill.PayMode getPayMode()
+    Bill.Payment getPayMode()
     {
         return payMode;
     }

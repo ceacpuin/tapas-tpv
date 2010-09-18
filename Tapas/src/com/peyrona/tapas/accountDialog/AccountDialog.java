@@ -75,7 +75,6 @@ public class AccountDialog extends JDialog
         setModal( true );
         setTitle( "Modificando cuenta: "+ bill.getCustomer() );
         setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
-        setLocationRelativeTo( null );
 
         initComponents( bill );
     }
@@ -83,13 +82,14 @@ public class AccountDialog extends JDialog
     public void execute()
     {
         pack();
+        setLocationRelativeTo( MainFrame.getInstance() );
         setVisible( true );
     }
 
     public Bill getBill()
     {
         bill.setCustomer( pnlCustomer.getCustomerName() );
-        bill.setPayMode( pnlPayMode.getPayMode() );
+        bill.setPayment( pnlPayMode.getPayMode() );
         bill.setWhen( Bill.NOW );
         bill.setLines( pnlItems.getBillLines() );
 
