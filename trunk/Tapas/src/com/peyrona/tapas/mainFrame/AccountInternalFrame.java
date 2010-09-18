@@ -47,11 +47,17 @@ final class AccountInternalFrame extends JInternalFrame
     private Bill        bill;
 
     //------------------------------------------------------------------------//
-
+    
     AccountInternalFrame()
     {
-        bill      = new Bill();
+        this( null );
+    }
+
+    AccountInternalFrame( Bill bill )
+    {
+        bill      = (bill == null ? new Bill() : bill);
         lblAmount = new LabelAmount();
+        lblAmount.setAmount( bill.getTotal() );
 
         setResizable( false );
         setIconifiable( false );
@@ -142,7 +148,6 @@ final class AccountInternalFrame extends JInternalFrame
         {
             setFont( getFont().deriveFont( Font.BOLD, 16f ) );
             setHorizontalAlignment( JLabel.CENTER );
-            setAmount( new BigDecimal( 0 ) );
         }
 
         void setAmount( BigDecimal nAmount )

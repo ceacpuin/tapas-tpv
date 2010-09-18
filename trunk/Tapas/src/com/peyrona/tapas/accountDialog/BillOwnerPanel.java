@@ -18,9 +18,9 @@
 
 package com.peyrona.tapas.accountDialog;
 
+import com.peyrona.tapas.swing.Keyboard;
 import java.awt.BorderLayout;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -61,12 +61,6 @@ final class BillOwnerPanel extends JPanel implements ActionListener
     @Override
     public void actionPerformed( ActionEvent e )
     {
-        Point    position = txtName.getLocationOnScreen();
-
-        Keyboard keyboard = new Keyboard( txtName );
-        keyboard.setLocation( position.x - (keyboard.getWidth() - txtName.getWidth()) / 2,
-                              position.y + txtName.getHeight() + 5 );
-                 keyboard.setVisible( true );
-                 
+        (new Keyboard( txtName )).setVisible( true );
     }
 }

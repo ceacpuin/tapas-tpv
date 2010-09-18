@@ -49,7 +49,9 @@ class Ticket extends javax.swing.JPanel implements ActionListener
         Configuration config = DataProvider.getInstance().getConfiguration();
         Image         image  = config.getTicketHeaderImage();
 
-        lblImageHeaderIcon.setDisabledIcon( (image == null ? null : new ImageIcon( image )) );
+        if( image != null )
+            setLabelHeaderIcon( new ImageIcon( image ) );
+
         txtHeaderText.setText( config.getTicketHeader() );
         txtFooterText.setText( config.getTicketFooter() );
     }
@@ -72,7 +74,7 @@ class Ticket extends javax.swing.JPanel implements ActionListener
             sFooter = null;
 
         // Vuelvo a traerme una instancia nueva de Configuration en base a la inf.
-        // existente en la DB. De este modo garantiza que no se preserven los
+        // existente en la DB. De este modo se garantiza que se preserven los
         // cambios que el tab "Basico" haya podido hacer en sus datos.
         // (Así, graba el tab quen grabe primero en la DB no importa).
         // Es un poco bestia, pero sigue el principio de la encapsulación de la POO
@@ -84,6 +86,13 @@ class Ticket extends javax.swing.JPanel implements ActionListener
                       config.setTicketFooter( sFooter );
 
         DataProvider.getInstance().setConfiguration( config );
+    }
+
+    private void setLabelHeaderIcon( ImageIcon icon )
+    {
+        ImageIcon iconScaled = Utils.scaleIcon( icon, lblImageHeaderIcon.getWidth(), lblImageHeaderIcon.getHeight() );
+        lblImageHeaderIcon.setIcon( iconScaled );
+        lblImageHeaderIcon.setDisabledIcon( icon );  // Guardo aquí el original, sin escalar (es tan buen sitio como otro)
     }
 
     //------------------------------------------------------------------------//
@@ -193,17 +202,13 @@ class Ticket extends javax.swing.JPanel implements ActionListener
         BufferedImage bimg = Utils.ImageChooser();
 
         if( bimg != null )
-        {
-            Image image = Utils.scaleImage( bimg, lblImageHeaderIcon.getWidth(), lblImageHeaderIcon.getHeight() );
-            lblImageHeaderIcon.setIcon( new ImageIcon( image ) );
-            lblImageHeaderIcon.setDisabledIcon( new ImageIcon( bimg ) );   // Guardo aquí el original (es tan buen sitio como otro)
-        }
+            setLabelHeaderIcon( new ImageIcon( bimg ) );
     }//GEN-LAST:event_onSelectHeaderImage
 
     private void onDiscardImage(java.awt.event.ActionEvent evt)//GEN-FIRST:event_onDiscardImage
     {//GEN-HEADEREND:event_onDiscardImage
         lblImageHeaderIcon.setIcon( null );
-        lblImageHeaderIcon.setDisabledIcon( null );   // Guardo aquí el original (es tan buen sitio como otro)
+        lblImageHeaderIcon.setDisabledIcon( null );
     }//GEN-LAST:event_onDiscardImage
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

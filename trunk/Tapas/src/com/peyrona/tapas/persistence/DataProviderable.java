@@ -54,7 +54,7 @@ public interface DataProviderable
 
     void deleteBill( Bill bill ) throws Exception;
 
-    List<Bill> findBillByCustomer( String sCustomerPattern ) throws Exception;
+    List<Bill> findBills( Date dFrom, Date dTo, Bill.Payment[] payments, boolean bDelete ) throws Exception;
 
-    List<Bill> findBillBetweenDates( Date from, Date to ) throws Exception;
+    List<Bill> findBillsByCustomer( String sCustomerPattern ) throws Exception;
 }

@@ -116,9 +116,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
     {
         try
         {
-            psInsertBillHead.close();
-            psInsertBillLines.close();
-            dbConn.close();
+            dbConn.close();    // dbConn.close() cierra automáticamente todos los recursos asociados
         }
         catch( SQLException ex )
         {
@@ -132,7 +130,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
             }
             catch( SQLException ex )
             {
-                /* Nothing to do: A clean shutdown always throws SQL exception XJ015, which can be ignored. */
+                /* Nada que hacer: un shutdown limpio siempre lanza una SQLException XJ015, la cual puede ser ignorada. */
             }
         }
     }
@@ -151,15 +149,13 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
 
             if( rs.next() )
             {                
-                Blob blob = dbConn.createBlob();
-
                 conf.setPassword( rs.getString( "contrasena" ) );
                 conf.setEmail( rs.getString( "email" ) );
                 conf.setFullScreenMode( rs.getInt( "full_screen" ) != 0 );
                 conf.setAutoAlignMode( rs.getInt( "auto_alinear" ) != 0 );
                 conf.setTicketFooter( rs.getString( "ticket_pie" ) );
                 conf.setTicketHeader( rs.getString( "ticket_cabecera" ) );
-                conf.setTicketHeaderImage( imageFromBlob( blob ) );
+                conf.setTicketHeaderImage( imageFromBlob( rs.getBlob( "ticket_imagen" ) ) );
             }
         }
         catch( SQLException exc )
@@ -168,10 +164,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         }
         finally
         {
-            if( rs != null )
-                try{ rs.close(); } catch( SQLException se ) { /* Nada que hacer */ }
-
-            if( stmt != null )
+            if( stmt != null )    // stmt.close() cierra automáticamente los rs asociados
                 try{ stmt.close(); } catch( SQLException se ) { /* Nada que hacer */ }
         }
 
@@ -186,15 +179,20 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
             " (contrasena, email, full_screen, auto_alinear, ticket_imagen, ticket_cabecera, ticket_pie)"+
             " VALUES (?,?,?,?,?,?,?)" );
 
+        Blob blobImage = imageToBlob( config.getTicketHeaderImage() );
+
         psInsert.setString( 1, config.getPassword() );
         psInsert.setString( 2, config.getEmail() );
         psInsert.setInt(    3, (config.isFullScreenSelected() ? 1 : 0) );
         psInsert.setInt(    4, (config.isAutoAlignSelected()  ? 1 : 0) );
-        psInsert.setBlob(   5, imageToBlob( config.getTicketHeaderImage() ) );
+        psInsert.setBlob(   5, blobImage );
         psInsert.setString( 6, config.getTicketHeader() );
         psInsert.setString( 7, config.getTicketFooter() );
         psInsert.executeUpdate();
         psInsert.close();
+
+        if( blobImage != null )
+            blobImage.free();
     }
 
     @Override
@@ -244,10 +242,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         }
         finally
         {
-            if( rs != null )
-                try{ rs.close(); } catch( SQLException se ) { /* Nothing to do */ }
-
-            if( stmt != null )
+            if( stmt != null )    // stmt.close() cierra automáticamente los rs asociados
                 try{ stmt.close(); } catch( SQLException se ) { /* Nothing to do */ }
         }
 
@@ -358,16 +353,48 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         executeCommand( "DELETE FROM APP.ventas WHERE ventas.id = " + nId );
     }
 
+
     @Override
-    public List<Bill> findBillByCustomer( String sCustomerPattern )
+    public List<Bill> findBills( Date dFrom, Date dTo, Bill.Payment[] payments, boolean bDelete ) throws SQLException
     {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        StringBuilder sbCondition = new StringBuilder( 512 );
+
+        if( dFrom != null )
+        {
+            sbCondition.append( "APP.ventas.cuando >= " )
+                       .append( new java.sql.Date( dFrom.getTime() ) );
+        }
+
+        if( dTo != null )
+        {
+            if( sbCondition.length() > 0 )
+                sbCondition.append(  " AND " );
+
+            sbCondition.append( "APP.ventas.cuando <= " )
+                       .append( new java.sql.Date( dTo.getTime() ) );
+        }
+
+        if( payments != null && payments.length > 0 )
+        {
+            if( sbCondition.length() > 0 )
+                sbCondition.append(  " AND " );
+
+            sbCondition.append( "APP.ventas.modo_pago IN (" );
+
+            for( Bill.Payment p : payments )
+                sbCondition.append( p ).append( ',' );
+
+            sbCondition.deleteCharAt( sbCondition.length() - 1 );   // Quitamos el último ','
+            sbCondition.append( ")" );
+        }
+
+        return resultSetToBillsList( sbCondition.toString(), bDelete );
     }
 
     @Override
-    public List<Bill> findBillBetweenDates( Date from, Date to )
+    public List<Bill> findBillsByCustomer( String sCustomerPattern ) throws SQLException
     {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        return resultSetToBillsList( "APP.ventas.cliente LIKE %"+ sCustomerPattern +"%", false );
     }
 
     //------------------------------------------------------------------------//
@@ -499,5 +526,28 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         }
 
         return icon;
+    }
+
+    private List<Bill> resultSetToBillsList( String sCondition, boolean bDelete ) throws SQLException
+    {
+        ArrayList<Bill> bills = new ArrayList<Bill>();
+
+        String    sQuery = "SELECT * FROM ";
+        Statement stmt   = dbConn.createStatement();
+        ResultSet rs     = stmt.executeQuery( sQuery + sCondition );
+
+        while( rs.next() )
+        {
+            // FIXME: implementarlo
+        }
+
+        if( bDelete )
+        {
+            
+        }
+
+        stmt.close();    // stmt.close() cierra automáticamente los rs asociados
+        
+        return bills;
     }
 }

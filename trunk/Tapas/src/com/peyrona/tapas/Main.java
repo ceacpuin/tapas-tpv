@@ -109,7 +109,6 @@ public class Main
 
                 splash.dispose();
                 frame.requestFocus();
-                ///new OfficeDialog();
             }
         } );
     }

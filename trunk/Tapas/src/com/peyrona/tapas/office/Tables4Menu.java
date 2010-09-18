@@ -102,13 +102,13 @@ final class Tables4Menu
 
         void shiftUpHighlightedRow()
         {
-            // TODO: implementarlo
+            // NEXT: implementarlo
             JOptionPane.showMessageDialog( null, "Opción pendiente de ser implementada." );
         }
 
         void shiftDownHighlightedRow()
         {
-            // TODO: implementarlo
+            // NEXT: implementarlo
             JOptionPane.showMessageDialog( null, "Opción pendiente de ser implementada." );
         }
 

@@ -18,7 +18,8 @@
 
 package com.peyrona.tapas.mainFrame;
 
-import com.peyrona.tapas.utils.Utils;
+import com.peyrona.tapas.persistence.Bill;
+import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.DesktopManager;
@@ -36,18 +37,23 @@ final class AccountsDesktop extends JDesktopPane
     {
         setMinimumSize( new Dimension( 580, 380 ) );
         setBorder( new LineBorder( Color.black, 2, true ));
-
-        if( Utils. bDEBUGGING )
-            createAccount();
     }
 
     void createAccount()
     {
-        final AccountInternalFrame iframe = new AccountInternalFrame();
+        openAccount( null );
+    }
+
+    void openAccount( Bill bill )
+    {
+        final AccountInternalFrame iframe = new AccountInternalFrame( bill );
                              iframe.setVisible( true );
 
         add( iframe );
         iframe.setSelected( true );
+
+       if( DataProvider.getInstance().getConfiguration().isAutoAlignSelected() )
+           mosaic();
     }
 
     boolean isEmpty()

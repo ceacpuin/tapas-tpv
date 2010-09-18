@@ -18,7 +18,9 @@
 
 package com.peyrona.tapas.persistence;
 
+import com.peyrona.tapas.persistence.Bill.Payment;
 import com.peyrona.tapas.utils.Utils;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -42,7 +44,28 @@ public final class DataProvider implements DataProviderable
 
     private DataProviderable provider = null;
 
-    // FIXME: Poner la instancia Config en la caché (las imgs tardan mucho)
+    // Como Configuration se utiliza con mucha frecuencia, para no tener que estar 
+    // leyéndola cada vez de la DB, La instancia Configuration la ponemos en una
+    // variable que la usamos a modo de caché.
+    private Configuration config = null;
+
+    //------------------------------------------------------------------------//
+
+    public static void setDataSourceType( DataSources ds )
+    {
+        type = ds;
+    }
+
+    public static DataProvider getInstance()
+    {
+        synchronized( DataProvider.class )
+        {
+            if( instance == null )
+                instance = new DataProvider();
+        }
+
+        return instance;
+    }
 
     //------------------------------------------------------------------------//
 
@@ -75,18 +98,19 @@ public final class DataProvider implements DataProviderable
     @Override
     public Configuration getConfiguration()
     {
-        Configuration conf = null;
-
-        try
+        if( config == null )
         {
-            conf = provider.getConfiguration();
-        }
-        catch( Exception ex )
-        {
-            onFatalError( ex );
+            try
+            {
+                config = provider.getConfiguration();
+            }
+            catch( Exception ex )
+            {
+                onFatalError( ex );
+            }
         }
 
-        return conf;
+        return config;
     }
 
     @Override
@@ -94,7 +118,9 @@ public final class DataProvider implements DataProviderable
     {
         try
         {
+            // TODO: Cortar las cadenas
             provider.setConfiguration( config );
+            this.config = config;
         }
         catch( Exception ex )
         {
@@ -124,6 +150,7 @@ public final class DataProvider implements DataProviderable
     {
         try
         {
+            // TODO: Cortar las cadenas
             provider.setCategoriesAndProducts( articles );
         }
         catch( Exception ex )
@@ -180,13 +207,13 @@ public final class DataProvider implements DataProviderable
     }
 
     @Override
-    public List<Bill> findBillByCustomer( String sCustomerPattern )
+    public List<Bill> findBillsByCustomer( String sCustomerPattern )
     {
-        List<Bill> bills = null;
+        List<Bill> bills = new ArrayList<Bill>();
 
         try
         {
-            bills = provider.findBillByCustomer( sCustomerPattern );
+            bills = provider.findBillsByCustomer( sCustomerPattern );
         }
         catch( Exception ex )
         {
@@ -197,13 +224,13 @@ public final class DataProvider implements DataProviderable
     }
 
     @Override
-    public List<Bill> findBillBetweenDates( Date from, Date to )
+    public List<Bill> findBills( Date dFrom, Date dTo, Payment[] payments, boolean bDelete ) throws Exception
     {
-        List<Bill> bills = null;
+        List<Bill> bills = new ArrayList<Bill>();
 
         try
         {
-            bills = provider.findBillBetweenDates( from, to );
+            bills = provider.findBills( dFrom, dTo, payments, bDelete );
         }
         catch( Exception ex )
         {
@@ -211,24 +238,6 @@ public final class DataProvider implements DataProviderable
         }
 
         return bills;
-    }
-
-    //------------------------------------------------------------------------//
-
-    public static void setDataSourceType( DataSources ds )
-    {
-        type = ds;
-    }
-
-    public static DataProvider getInstance()
-    {
-        synchronized( DataProvider.class )
-        {
-            if( instance == null )
-                instance = new DataProvider();
-        }
-
-        return instance;
     }
 
     //------------------------------------------------------------------------//

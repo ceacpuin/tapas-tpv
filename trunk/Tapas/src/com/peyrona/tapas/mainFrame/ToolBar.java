@@ -20,7 +20,6 @@ package com.peyrona.tapas.mainFrame;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -37,11 +36,12 @@ import javax.swing.JPanel;
  */
 final class ToolBar extends JPanel
 {
-    public static final String sACTION_NEW_ACCOUNT = "NewAccount";
-    public static final String sACTION_OPEN_BOX    = "OpenBox";
-    public static final String sACTION_MOSAIC      = "Mosaic";
-    public static final String sACTION_OFFICE      = "Office";
-    public static final String sACTION_CLOSE       = "Close";
+    public static final String sACTION_NEW_ACCOUNT  = "NewAccount";
+    public static final String sACTION_FIND_ACCOUNT = "FindAccount";
+    public static final String sACTION_OPEN_BOX     = "OpenBox";
+    public static final String sACTION_MOSAIC       = "Mosaic";
+    public static final String sACTION_OFFICE       = "Office";
+    public static final String sACTION_CLOSE        = "Close";
 
     private List<ActionListener> lstListeners = new ArrayList<ActionListener>();
 
@@ -51,12 +51,13 @@ final class ToolBar extends JPanel
     {
         setLayout( new BoxLayout( this, BoxLayout.X_AXIS ) );
 
-        add( new Button( "Cuenta"  , sACTION_NEW_ACCOUNT, "cuenta"   ) );
-        add( new Button( "Monedero", sACTION_OPEN_BOX   , "monedero" ) );
-        add( new Button( "Alinear" , sACTION_MOSAIC     , "alinear"  ) );
+        add( new Button( "Cuenta"  , sACTION_NEW_ACCOUNT , "cuenta"   ) );
+        add( new Button( "Buscar"  , sACTION_FIND_ACCOUNT, "buscar"   ) );
+        add( new Button( "Monedero", sACTION_OPEN_BOX    , "monedero" ) );
+        add( new Button( "Alinear" , sACTION_MOSAIC      , "alinear"  ) );
         add( Box.createRigidArea( new Dimension( 64, 1 ) ) );
-        add( new Button( "Oficina" , sACTION_OFFICE     , "oficina"  ) );
-        add( new Button( "Salir"   , sACTION_CLOSE      , "salir"    ) );
+        add( new Button( "Oficina" , sACTION_OFFICE      , "oficina"  ) );
+        add( new Button( "Salir"   , sACTION_CLOSE       , "salir"    ) );
         add( Box.createHorizontalGlue() );
         add( new Clock() );
     }

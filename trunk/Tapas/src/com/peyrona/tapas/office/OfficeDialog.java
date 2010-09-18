@@ -22,7 +22,6 @@ import com.peyrona.tapas.mainFrame.MainFrame;
 import com.peyrona.tapas.utils.Utils;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -48,19 +47,13 @@ public class OfficeDialog extends JDialog
         setModal( true );
         setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
         setTitle( "Tareas Administrativas Internas" );
-        setLocationRelativeTo( null );
         setLayout( new BorderLayout() );
 
         initComponents();
 
-        EventQueue.invokeLater( new Runnable()
-        {
-            public void run()
-            {
-                OfficeDialog.this.pack();
-                OfficeDialog.this.setVisible( true );
-            }
-        } );
+        pack();
+        setLocationRelativeTo( MainFrame.getInstance() );
+        setVisible( true );
     }
 
     //------------------------------------------------------------------------//
@@ -69,19 +62,25 @@ public class OfficeDialog extends JDialog
     // permitiéndoles de este modo actualizar sus datos o realizar cualquier
     // otra acción.
     // Solo los tabs que implementan ActionListener serán notifiacdos.
-    private void onClosing()
+    private void onClose()
     {
+        // Ocultamos la ventana, pero no será destruida hasta que los tabs no hayan sido notificados
+        setVisible( false );
+
         // Cerrar los tabs implica leer y escribir en el repositorio de datos =>
         // puede ser lento. Al meterlo en una thread no paramos el GUI.
         // En Swing, la respuesta a los eventos tiene que ser muy rápida.
         // Si fuese lenta, se utiliza SwingWorker, pero como en este caso no hay
-        // que actualizar el GUI, no es necesario utilizar SwingWorker y basa 
+        // que actualizar el GUI, no es necesario utilizar SwingWorker y basta
         // siemplemente con una Thread.
-        (new Thread()
+        Thread tSave = new Thread()
         {
             @Override
             public void run()
             {
+                // Mientras se estén guardando datos, no se puede salir de la app
+                MainFrame.getInstance().setAllowExit( false );
+
                 ActionEvent ae = new ActionEvent( this, ActionEvent.ACTION_PERFORMED, null );
 
                 for( Component comp : tabbedPane.getComponents() )
@@ -92,11 +91,13 @@ public class OfficeDialog extends JDialog
 
                 // No se puden destruir los componentes hasta no haber cerrado todos los tabs
                 OfficeDialog.this.dispose();
-            }
-        }).start();
 
-        // Ocultamos la ventana, pero no será destruida hasta que los tabs no hayan sido notificados
-        setVisible( false );
+                // Por lo que a este proceso ataña, ya se puede salir de aplicación
+                MainFrame.getInstance().setAllowExit( true );
+            }
+        };
+
+        tSave.start();
 
         if( ! Utils.bDEBUGGING )
         {
@@ -121,7 +122,7 @@ public class OfficeDialog extends JDialog
             @Override
             public void windowClosing( WindowEvent we )
             {
-                onClosing();
+                onClose();
             }
         } );
     }
