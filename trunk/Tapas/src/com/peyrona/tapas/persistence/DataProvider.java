@@ -19,7 +19,8 @@
 package com.peyrona.tapas.persistence;
 
 import com.peyrona.tapas.persistence.Bill.Payment;
-import com.peyrona.tapas.utils.Utils;
+import com.peyrona.tapas.Utils;
+import com.peyrona.tapas.swing.SwingUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -257,10 +258,10 @@ public final class DataProvider implements DataProviderable
 
     private void onFatalError( Exception exc )
     {
-        Utils.showError( exc,
-                         Level.SEVERE,
-                         "No se ha podido acceder a la base de datos.\n"+
-                         "El programa no puede continuar.",
-                         Utils.nEXIT_DB_ERROR );
+        SwingUtils.showError( exc,
+                              Level.SEVERE,
+                              "No se ha podido acceder a la base de datos.\n"+
+                              "El programa no puede continuar.",
+                              Utils.nEXIT_DB_ERROR );
     }
 }

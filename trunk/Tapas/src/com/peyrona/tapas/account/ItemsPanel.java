@@ -16,9 +16,9 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.peyrona.tapas.accountDialog;
+package com.peyrona.tapas.account;
 
-import com.peyrona.tapas.utils.Utils;
+import com.peyrona.tapas.Utils;
 import com.peyrona.tapas.persistence.Article;
 import com.peyrona.tapas.persistence.BillLine;
 import java.awt.Color;

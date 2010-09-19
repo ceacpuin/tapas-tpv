@@ -16,12 +16,8 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.peyrona.tapas.utils;
+package com.peyrona.tapas;
 
-import com.peyrona.tapas.mainFrame.MainFrame;
-import java.awt.EventQueue;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -29,9 +25,6 @@ import java.util.Currency;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -86,51 +79,6 @@ public class Utils
         return nfNoSymbol.format( nAmount );
     }
 
-    public static BufferedImage ImageChooser()
-    {
-        BufferedImage     bufImage = null;
-        PreviewImagePanel preview  = new PreviewImagePanel();
-        JFileChooser      chooser  = new JFileChooser();
-                          chooser.setAccessory( preview );
-                          chooser.addPropertyChangeListener( preview );
-                          chooser.addChoosableFileFilter( new ImageFilter() );
-        int nAction =     chooser.showOpenDialog( MainFrame.getInstance() );
-
-        if( nAction == JFileChooser.APPROVE_OPTION )
-            bufImage = preview.getImage();
-        
-        return bufImage;
-    }
-
-    public static ImageIcon scaleIcon( ImageIcon icon, int nCompWidth, int nCompHeight )
-    {// FIXME: No va bien
-        if( icon == null )
-            return null;
-
-        float nImgWidth  = icon.getIconHeight();
-        float nImgHeight = icon.getIconHeight();
-        float nScale     = nImgHeight / nImgWidth;
-
-        if( nImgWidth > nCompWidth )
-        {
-            nImgWidth   = nCompWidth;
-            nImgHeight *= nScale;
-        }
-
-        if( nImgHeight > nCompHeight )
-        {
-            nImgHeight = nCompHeight;
-            nImgWidth *= nScale;
-        }
-
-        Image image = icon.getImage();
-              image.getScaledInstance( Math.max( 16, (int)nImgWidth ),
-                                       Math.max( 16, (int)nImgHeight ),
-                                       Image.SCALE_SMOOTH );
-
-        return (new ImageIcon( image ));
-    }
-
     public static void printError( Throwable th, Level level, String sMessage, int nExitCode )
     {
         if( sMessage != null )
@@ -145,22 +93,5 @@ public class Utils
 
         if( nExitCode != nEXIT_NO_EXIT )
             System.exit( nExitCode );
-    }
-
-    public static void showError( final Throwable th, final Level level, final String sMessage, final int nExitCode )
-    {
-        printError( th, level, sMessage, nExitCode );
-
-        EventQueue.invokeLater( new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                JOptionPane.showMessageDialog( null, sMessage );
-
-                if( nExitCode != nEXIT_NO_EXIT )
-                    System.exit( nExitCode );
-            }
-        } );
     }
 }

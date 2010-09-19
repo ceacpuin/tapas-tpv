@@ -19,7 +19,9 @@
 package com.peyrona.tapas.office;
 
 import com.peyrona.tapas.mainFrame.MainFrame;
-import com.peyrona.tapas.utils.Utils;
+import com.peyrona.tapas.persistence.Configuration;
+import com.peyrona.tapas.persistence.DataProvider;
+import com.peyrona.tapas.Utils;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -29,31 +31,41 @@ import java.awt.event.WindowEvent;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
  * @author Francisco Morero Peyrona
  */
-public class OfficeDialog extends JDialog
+public class OfficePanel extends JTabbedPane
 {
-    private JTabbedPane tabbedPane = new JTabbedPane();
-
-    //------------------------------------------------------------------------//
-
-    public OfficeDialog()
+    public OfficePanel()
     {
-        super( MainFrame.getInstance() );
-
-        setModal( true );
-        setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
-        setTitle( "Tareas Administrativas Internas" );
-        setLayout( new BorderLayout() );
-
         initComponents();
+    }
 
-        pack();
-        setLocationRelativeTo( MainFrame.getInstance() );
-        setVisible( true );
+    public void showDialog()
+    {
+        JDialog dlg = new JDialog( MainFrame.getInstance() );
+                dlg.setModal( true );
+                dlg.setDefaultCloseOperation( JDialog.HIDE_ON_CLOSE );   // Se destruye manualmente (ver ::onClose())
+                dlg.setTitle( "Tareas Administrativas Internas" );
+                dlg.setLayout( new BorderLayout() );
+                dlg.setContentPane( this );
+
+                // Para informar a los tabs que la dialog va a cerrarse
+                dlg.addWindowListener( new WindowAdapter()
+                {
+                    @Override
+                    public void windowClosing( WindowEvent we )
+                    {
+                        OfficePanel.this.onClose();
+                    }
+                } );
+
+                dlg.pack();
+                dlg.setLocationRelativeTo( MainFrame.getInstance() );
+                dlg.setVisible( true );
     }
 
     //------------------------------------------------------------------------//
@@ -64,9 +76,6 @@ public class OfficeDialog extends JDialog
     // Solo los tabs que implementan ActionListener serán notifiacdos.
     private void onClose()
     {
-        // Ocultamos la ventana, pero no será destruida hasta que los tabs no hayan sido notificados
-        setVisible( false );
-
         // Cerrar los tabs implica leer y escribir en el repositorio de datos =>
         // puede ser lento. Al meterlo en una thread no paramos el GUI.
         // En Swing, la respuesta a los eventos tiene que ser muy rápida.
@@ -83,14 +92,14 @@ public class OfficeDialog extends JDialog
 
                 ActionEvent ae = new ActionEvent( this, ActionEvent.ACTION_PERFORMED, null );
 
-                for( Component comp : tabbedPane.getComponents() )
+                for( Component comp : OfficePanel.this.getComponents() )
                 {
                     if( comp instanceof ActionListener )
                         ((ActionListener) comp).actionPerformed( ae );
                 }
 
                 // No se puden destruir los componentes hasta no haber cerrado todos los tabs
-                OfficeDialog.this.dispose();
+                SwingUtilities.getWindowAncestor( OfficePanel.this ).dispose();
 
                 // Por lo que a este proceso ataña, ya se puede salir de aplicación
                 MainFrame.getInstance().setAllowExit( true );
@@ -109,21 +118,12 @@ public class OfficeDialog extends JDialog
 
     private void initComponents()
     {
-        tabbedPane.add( "Caja"  , new DailyReport() );
-        tabbedPane.add( "Básico", new Basic() );
-        tabbedPane.add( "Carta" , new Menu() );
-        tabbedPane.add( "Ticket", new Ticket() );
+        Configuration config = DataProvider.getInstance().getConfiguration();
 
-        add( tabbedPane, BorderLayout.CENTER );
-
-        // Para informar a los tabs que la dialog va a cerrarse
-        addWindowListener( new WindowAdapter()
-        {
-            @Override
-            public void windowClosing( WindowEvent we )
-            {
-                onClose();
-            }
-        } );
+        add( "Básico", new Basic( config ) );    // Estos dos componentes comparten la misma instancia de config
+        add( "Caja"  , new DailyReport() );
+        add( "Carta" , new Menu() );
+        add( "Ticket", new Ticket( config ) );   // Estos dos componentes comparten la misma instancia de config
+        setSelectedIndex( 1 );
     }
 }

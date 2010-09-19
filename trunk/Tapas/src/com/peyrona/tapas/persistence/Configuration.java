@@ -69,10 +69,10 @@ public class Configuration
         if( acPass == null || String.valueOf( acPass ).trim().length() == 0 )
             acPass = new char[0];
 
-        this.acPass = acPass;
+        this.acPass = Arrays.copyOf( acPass, acPass.length );   // Copia defensiva
     }
 
-    // Sólo utilizable desde por los DataSource
+    // Package: sólo utilizable por los DataSource
     void setPassword( String sPass )
     {
         if( sPass == null || sPass.trim().length() == 0 )

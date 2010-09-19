@@ -16,9 +16,9 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.peyrona.tapas.accountDialog;
+package com.peyrona.tapas.account;
 
-import com.peyrona.tapas.swing.Keyboard;
+import com.peyrona.tapas.swing.KeyboardVirtual;
 import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -61,6 +61,6 @@ final class BillOwnerPanel extends JPanel implements ActionListener
     @Override
     public void actionPerformed( ActionEvent e )
     {
-        (new Keyboard( txtName )).setVisible( true );
+        (new KeyboardVirtual( txtName )).setVisible( true );
     }
 }

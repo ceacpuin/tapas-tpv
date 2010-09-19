@@ -27,19 +27,16 @@ import java.awt.event.ActionListener;
  *
  * @author peyrona
  */
-
-// En lugar de traer de la instancia de Configuration de la DB y guardarla
-// en esta clase, hay que traerla de la DB dos veces: al inicializar los
-// componentes y al cerrar la dialog, si no se hace así, podrían solaparse
-// las modificaciones hechas en este tab con las hechas en el tab "Ticket".
 class Basic extends javax.swing.JPanel implements ActionListener
 {
-    /** Creates new form Basic */
-    Basic()
-    {
-        initComponents();
+    private Configuration config;
 
-        Configuration config = DataProvider.getInstance().getConfiguration();
+    /** Creates new form Basic */
+    Basic( Configuration config )
+    {
+        this.config = config;
+
+        initComponents();
 
         txtEmail.setText( config.getEmail() );
         txtPassword.setText( config.getPassword() );
@@ -59,28 +56,13 @@ class Basic extends javax.swing.JPanel implements ActionListener
         char[]  acPassword = null;
         String  sEmail     = txtEmail.getText();
 
-        if( sPassword.trim().length() == 0 )
-            sPassword = null;
-        else
+        if( sPassword != null  )
             acPassword = sPassword.trim().toCharArray();
 
-        if( sEmail.trim().length() == 0 )
-            sEmail = null;
-        else
-            sEmail = sEmail.trim();
-
-        // Vuelvo a traerme una instancia nueva de Configuration en base a la inf.
-        // existente en la DB. De este modo garantiza que no se preserven los
-        // cambios que el tab "Ticket" haya podido hacer en sus datos.
-        // (Así, graba el tab quen grabe primero en la DB no importa).
-        // Es un poco bestia, pero sigue el principio de la encapsulación de la POO
-        // (ya que la otra opción sería compartir con "Basic" una misma instancia
-        // de Configurtation).
-        Configuration config = DataProvider.getInstance().getConfiguration();
-                      config.setEmail( sEmail );
-                      config.setPassword( acPassword );
-                      config.setFullScreenMode( bFullScr );
-                      config.setAutoAlignMode( bAutoAlign );
+        config.setEmail( sEmail );
+        config.setPassword( acPassword );
+        config.setFullScreenMode( bFullScr );
+        config.setAutoAlignMode( bAutoAlign );
 
         DataProvider.getInstance().setConfiguration( config );
     }
