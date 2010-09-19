@@ -16,7 +16,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.peyrona.tapas.accountDialog;
+package com.peyrona.tapas.account;
 
 import com.peyrona.tapas.persistence.Bill;
 import java.awt.Component;
@@ -25,8 +25,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -37,7 +37,7 @@ final class PaymentPanel extends JPanel
 {
     private Bill.Payment payMode = null;
 
-    PaymentPanel( final JDialog parent )
+    PaymentPanel()
     {
         setBorder( new EmptyBorder( 10, 0, 17, 0 ) );
         setLayout( new GridLayout( 1, 5, 2, 0 ) );
@@ -45,28 +45,28 @@ final class PaymentPanel extends JPanel
         JButton btnPaid = new Button( "Cobrar" );
                 btnPaid.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { payMode = Bill.Payment.Paid; parent.dispose(); }
+                    public void actionPerformed( ActionEvent e )  { closeDialog( Bill.Payment.Paid ); }
                 } );
         JButton btnDefer = new Button( "Aplazar" );
                 btnDefer.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { payMode =  Bill.Payment.Deferred; parent.dispose(); }
+                    public void actionPerformed( ActionEvent e )  { closeDialog( Bill.Payment.Deferred ); }
                 } );
         JButton btnInvitation = new Button( "Invitación" );
                 btnInvitation.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { payMode = Bill.Payment.Invitation; parent.dispose(); }
+                    public void actionPerformed( ActionEvent e )  { closeDialog( Bill.Payment.Invitation ); }
                 } );
         JButton btnNotPaid = new Button( "Impagado" );
                 btnNotPaid.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { payMode = Bill.Payment.NotPaid; parent.dispose(); }
+                    public void actionPerformed( ActionEvent e )  { closeDialog( Bill.Payment.NotPaid ); }
                 } );
 
         JButton btnClose = new Button( "Cerrar" );
                 btnClose.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { parent.dispose(); }
+                    public void actionPerformed( ActionEvent e )  { closeDialog( null ); }
                 } );
         
         add( btnPaid );
@@ -91,6 +91,14 @@ final class PaymentPanel extends JPanel
         // Actúa sobre todos los botones menos el último: siempre se puede cerrar la dialog
         for( int n = 0; n < comp.length-1; n++ )
             comp[n].setEnabled( b );
+    }
+
+    //------------------------------------------------------------------------//
+    
+    private void closeDialog( Bill.Payment payment )
+    {
+        payMode =  payment;
+        SwingUtilities.getWindowAncestor( this ).dispose();
     }
 
     //------------------------------------------------------------------------//

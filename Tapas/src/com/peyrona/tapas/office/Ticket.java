@@ -20,7 +20,8 @@ package com.peyrona.tapas.office;
 
 import com.peyrona.tapas.persistence.Configuration;
 import com.peyrona.tapas.persistence.DataProvider;
-import com.peyrona.tapas.utils.Utils;
+import com.peyrona.tapas.Utils;
+import com.peyrona.tapas.swing.SwingUtils;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,23 +32,20 @@ import javax.swing.ImageIcon;
  *
  * @author peyrona
  */
-
-// En lugar de traer de la instancia de Configuration de la DB y guardarla
-// en esta clase, hay que traerla de la DB dos veces: al inicializar los
-// componentes y al cerrar la dialog, si no se hace así, podrían solaparse
-// las modificaciones hechas en este tab con las hechas en el tab "Basico".
-
 class Ticket extends javax.swing.JPanel implements ActionListener
 {
+    private Configuration config;
+
     /**
      * Constructor de argumento cero.
      */
-    Ticket()
+    Ticket( Configuration config )
     {
+        this.config = config;
+
         initComponents();
 
-        Configuration config = DataProvider.getInstance().getConfiguration();
-        Image         image  = config.getTicketHeaderImage();
+        Image image  = config.getTicketHeaderImage();
 
         if( image != null )
             setLabelHeaderIcon( new ImageIcon( image ) );
@@ -67,30 +65,18 @@ class Ticket extends javax.swing.JPanel implements ActionListener
         String    sHeader   = txtHeaderText.getText();
         String    sFooter   = txtFooterText.getText();
 
-        if( sHeader.trim().length() == 0 )
-            sHeader = null;
+        config.setTicketHeaderImage( imgHeader );
+        config.setTicketHeader( sHeader );
+        config.setTicketFooter( sFooter );
 
-        if( sFooter.trim().length() == 0 )
-            sFooter = null;
-
-        // Vuelvo a traerme una instancia nueva de Configuration en base a la inf.
-        // existente en la DB. De este modo se garantiza que se preserven los
-        // cambios que el tab "Basico" haya podido hacer en sus datos.
-        // (Así, graba el tab quen grabe primero en la DB no importa).
-        // Es un poco bestia, pero sigue el principio de la encapsulación de la POO
-        // (ya que la otra opción sería compartir con "Basico" una misma instancia
-        // de Configurtation).
-        Configuration config = DataProvider.getInstance().getConfiguration();
-                      config.setTicketHeaderImage( imgHeader );
-                      config.setTicketHeader( sHeader );
-                      config.setTicketFooter( sFooter );
-
+        // Config se guarda dos veces: unan vez Basic y la otra Ticket, pero lo
+        // prefiero a que la guarde OfficeDialog.
         DataProvider.getInstance().setConfiguration( config );
     }
 
     private void setLabelHeaderIcon( ImageIcon icon )
     {
-        ImageIcon iconScaled = Utils.scaleIcon( icon, lblImageHeaderIcon.getWidth(), lblImageHeaderIcon.getHeight() );
+        ImageIcon iconScaled = SwingUtils.scaleIcon( icon, lblImageHeaderIcon.getWidth(), lblImageHeaderIcon.getHeight() );
         lblImageHeaderIcon.setIcon( iconScaled );
         lblImageHeaderIcon.setDisabledIcon( icon );  // Guardo aquí el original, sin escalar (es tan buen sitio como otro)
     }
@@ -199,7 +185,7 @@ class Ticket extends javax.swing.JPanel implements ActionListener
 
     private void onSelectHeaderImage(java.awt.event.ActionEvent evt)//GEN-FIRST:event_onSelectHeaderImage
     {//GEN-HEADEREND:event_onSelectHeaderImage
-        BufferedImage bimg = Utils.ImageChooser();
+        BufferedImage bimg = SwingUtils.ImageChooser();
 
         if( bimg != null )
             setLabelHeaderIcon( new ImageIcon( bimg ) );

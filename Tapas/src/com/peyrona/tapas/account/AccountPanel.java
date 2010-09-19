@@ -15,13 +15,13 @@
  * Tapas; see the file COPYING.  If not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package com.peyrona.tapas.accountDialog;
+package com.peyrona.tapas.account;
 
 import com.peyrona.tapas.mainFrame.MainFrame;
 import com.peyrona.tapas.persistence.Article;
 import com.peyrona.tapas.persistence.Bill;
-import com.peyrona.tapas.utils.ImageHighlightFilter;
-import com.peyrona.tapas.utils.Utils;
+import com.peyrona.tapas.swing.ImageHighlightFilter;
+import com.peyrona.tapas.Utils;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -44,7 +44,7 @@ import javax.swing.border.LineBorder;
  *
  * @author Francisco Morero Peyrona
  */
-public class AccountDialog extends JDialog
+public class AccountPanel extends JPanel
 {
     private Bill bill;
 
@@ -58,32 +58,28 @@ public class AccountDialog extends JDialog
 
     //------------------------------------------------------------------------//
 
-    public AccountDialog()
+    public AccountPanel()
     {
         this( null );
     }
 
-    public AccountDialog( Bill bill )
+    public AccountPanel( Bill bill )
     {
-        super( MainFrame.getInstance() );
-
-        if( bill == null )
-            bill = new Bill();
-
-        this.bill = bill;
+        this.bill = (bill == null ? new Bill() : bill);
         
-        setModal( true );
-        setTitle( "Modificando cuenta: "+ bill.getCustomer() );
-        setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
-
-        initComponents( bill );
+        initComponents();
     }
 
-    public void execute()
+    public void showDialog()
     {
-        pack();
-        setLocationRelativeTo( MainFrame.getInstance() );
-        setVisible( true );
+        JDialog dlg = new JDialog( MainFrame.getInstance() );
+                dlg.setModal( true );
+                dlg.setTitle( "Modificando cuenta: "+ bill.getCustomer() );
+                dlg.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
+                dlg.setContentPane( this );
+                dlg.pack();
+                dlg.setLocationRelativeTo( MainFrame.getInstance() );
+                dlg.setVisible( true );
     }
 
     public Bill getBill()
@@ -105,10 +101,10 @@ public class AccountDialog extends JDialog
         pnlDisplay.setAmount( pnlItems.getTotal() );
     }
 
-    private void initComponents( Bill bill )
+    private void initComponents()
     {
         pnlCustomer   = new BillOwnerPanel( bill.getCustomer() );
-        pnlPayMode    = new PaymentPanel( this );
+        pnlPayMode    = new PaymentPanel();
         pnlItems      = new ItemsPanel( bill.getLines() );
         pnlNumericPad = new NumericPadPanel();
         pnlEditItems  = new ItemEditorPanel();
@@ -125,7 +121,7 @@ public class AccountDialog extends JDialog
             public void actionPerformed( ActionEvent ae )
             {
                 pnlItems.add( (Article) ae.getSource() );
-                AccountDialog.this.updateLeftPanelButtons();
+                AccountPanel.this.updateLeftPanelButtons();
             }
         } );
 
@@ -151,12 +147,11 @@ public class AccountDialog extends JDialog
                pnlBill.add( pnlItemsAndNumericPad, BorderLayout.CENTER );
                pnlBill.add( pnlButtonsAndDisplay , BorderLayout.SOUTH  );
 
-        JPanel pnlAll = new JPanel( new BorderLayout( 10, 0 ) );
-               pnlAll.setBorder( new EmptyBorder( 9,9,9,9 ) );
-               pnlAll.add( pnlBill    , BorderLayout.CENTER );
-               pnlAll.add( pnlArticles, BorderLayout.EAST   );
-
-        getContentPane().add( pnlAll );
+        // Añadimos todos los componentes a this (el JPanel global)
+        setLayout( new BorderLayout( 10, 0 ) );
+        setBorder( new EmptyBorder( 9,9,9,9 ) );
+        add( pnlBill    , BorderLayout.CENTER );
+        add( pnlArticles, BorderLayout.EAST   );
     }
 
     //------------------------------------------------------------------------//
@@ -193,25 +188,25 @@ public class AccountDialog extends JDialog
 
         private void startEditing()
         {
-            if( AccountDialog.this.pnlItems.isRowSelected() )
+            if( AccountPanel.this.pnlItems.isRowSelected() )
             {
-                AccountDialog.this.pnlPayMode.setEnabled( false );
-                AccountDialog.this.pnlNumericPad.setEnabled( true );
-                AccountDialog.this.pnlEditItems.setEnabled( false );
-                AccountDialog.this.pnlItems.startEditingPrice();
-                AccountDialog.this.pnlItems.updateEditingPrice( "0" );
-                AccountDialog.this.pnlNumericPad.addActionListener( this );
+                AccountPanel.this.pnlPayMode.setEnabled( false );
+                AccountPanel.this.pnlNumericPad.setEnabled( true );
+                AccountPanel.this.pnlEditItems.setEnabled( false );
+                AccountPanel.this.pnlItems.startEditingPrice();
+                AccountPanel.this.pnlItems.updateEditingPrice( "0" );
+                AccountPanel.this.pnlNumericPad.addActionListener( this );
             }
         }
 
         private void stopEditing()
         {
-            AccountDialog.this.pnlPayMode.setEnabled( true );
-            AccountDialog.this.pnlNumericPad.setEnabled( false );
-            AccountDialog.this.pnlEditItems.setEnabled( true );
-            AccountDialog.this.pnlItems.stopEditingPrice();
-            AccountDialog.this.pnlDisplay.setAmount( pnlItems.getTotal() );
-            AccountDialog.this.pnlNumericPad.removeActionListener( this );
+            AccountPanel.this.pnlPayMode.setEnabled( true );
+            AccountPanel.this.pnlNumericPad.setEnabled( false );
+            AccountPanel.this.pnlEditItems.setEnabled( true );
+            AccountPanel.this.pnlItems.stopEditingPrice();
+            AccountPanel.this.pnlDisplay.setAmount( pnlItems.getTotal() );
+            AccountPanel.this.pnlNumericPad.removeActionListener( this );
         }
 
         @Override
@@ -229,7 +224,7 @@ public class AccountDialog extends JDialog
                 else if( cBtn == NumericPadPanel.cCLEAR )     sb.setLength( 0 );
                 else                                          sb.append( cBtn );
 
-                AccountDialog.this.pnlItems.updateEditingPrice( sb.toString() );
+                AccountPanel.this.pnlItems.updateEditingPrice( sb.toString() );
             }
         }
 
@@ -271,13 +266,13 @@ public class AccountDialog extends JDialog
         {
             String sCmd = getActionCommand();
 
-                 if( sCmd.equals( CMD_MINUS ) )  AccountDialog.this.pnlItems.decrementQuantity();
-            else if( sCmd.equals( CMD_PLUS  ) )  AccountDialog.this.pnlItems.incrementQuantity();
+                 if( sCmd.equals( CMD_MINUS ) )  AccountPanel.this.pnlItems.decrementQuantity();
+            else if( sCmd.equals( CMD_PLUS  ) )  AccountPanel.this.pnlItems.incrementQuantity();
             else if( sCmd.equals( CMD_EDIT  ) )  (new ItemPriceEditor()).startEditing();
             else if( sCmd.equals( CMD_DEL   ) )
             {
-                AccountDialog.this.pnlItems.deleteLine();
-                AccountDialog.this.updateLeftPanelButtons();
+                AccountPanel.this.pnlItems.deleteLine();
+                AccountPanel.this.updateLeftPanelButtons();
             }
         }
     }

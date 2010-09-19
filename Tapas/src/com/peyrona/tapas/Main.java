@@ -18,7 +18,6 @@
 
 package com.peyrona.tapas;
 
-import com.peyrona.tapas.utils.Utils;
 import com.peyrona.tapas.mainFrame.MainFrame;
 import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.BorderLayout;

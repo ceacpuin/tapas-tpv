@@ -60,13 +60,14 @@ CREATE TABLE APP.productos(
    icono          BLOB );
 
 CREATE TABLE APP.configuracion(
-   contrasena      VARCHAR( 32),
-   email           VARCHAR( 48),
-   full_screen     INTEGER,
-   auto_alinear    INTEGER,
-   ticket_imagen   BLOB,
-   ticket_cabecera VARCHAR(999),
-   ticket_pie      VARCHAR(999) );
+   id_configuracion INTEGER     GENERATED ALWAYS AS IDENTITY,
+   contrasena       VARCHAR( 32),
+   email            VARCHAR( 48),
+   full_screen      INTEGER,
+   auto_alinear     INTEGER,
+   ticket_imagen    BLOB,
+   ticket_cabecera  VARCHAR(999),
+   ticket_pie       VARCHAR(999) );
 
 -- -----------------------------------------------------------------------------
 -- FOREING KEYS
@@ -95,6 +96,6 @@ CREATE INDEX ventas_cuando    ON APP.ventas (cuando);
 -- INITIAL DATA
 -- -----------------------------------------------------------------------------
 
-INSERT INTO APP.configuracion (auto_alinear) VALUES ( 1 )
+INSERT INTO APP.configuracion (auto_alinear) VALUES ( 1 );
 
 -- ********************************   EOF  *************************************

@@ -4,3 +4,5 @@
 * He hecho las mismas cosas de diferentes modos para mostrar distintas opciones
 
 * La primera vez que se ejecuta tarda más porque tiene que crear la DB.
+
+* Los iconos son "open", es decir, legales (tomados de Wiki Commons)

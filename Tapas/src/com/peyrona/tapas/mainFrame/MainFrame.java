@@ -20,18 +20,17 @@ package com.peyrona.tapas.mainFrame;
 
 import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
-import com.peyrona.tapas.office.OfficeDialog;
+import com.peyrona.tapas.office.OfficePanel;
 import com.peyrona.tapas.persistence.Bill;
 import com.peyrona.tapas.persistence.Configuration;
 import com.peyrona.tapas.persistence.DataProvider;
-import com.peyrona.tapas.utils.Utils;
+import com.peyrona.tapas.Utils;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
@@ -104,13 +103,7 @@ public final class MainFrame extends JFrame implements ActionListener
     private void onFindAccount()
     {
         FindAccountPanel panel = new FindAccountPanel();
-
-        JDialog dialog = new JDialog( this, "Buscar cuenta", true );
-                dialog.setContentPane( panel );
-                dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
-                dialog.pack();
-                dialog.setLocationRelativeTo( this );
-                dialog.setVisible( true );
+                         panel.showDialog();
 
         Bill bill = panel.getSelectedAccount();
 
@@ -136,15 +129,9 @@ public final class MainFrame extends JFrame implements ActionListener
         }
 
         if( bRun )
-        {
-           OfficeDialog office = new OfficeDialog();
-                        office.pack();
-                        office.setVisible( true );
-        }
+           (new OfficePanel()).showDialog();
         else
-        {
             JOptionPane.showMessageDialog( getInstance(), "Contraseña errónea.\nInténtelo de nuevo." );
-        }
     }
 
     private void onExit()

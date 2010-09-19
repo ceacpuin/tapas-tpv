@@ -18,8 +18,8 @@
 
 package com.peyrona.tapas.mainFrame;
 
-import com.peyrona.tapas.utils.Utils;
-import com.peyrona.tapas.accountDialog.AccountDialog;
+import com.peyrona.tapas.Utils;
+import com.peyrona.tapas.account.AccountPanel;
 import com.peyrona.tapas.persistence.Bill;
 import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.BorderLayout;
@@ -127,8 +127,8 @@ final class AccountInternalFrame extends JInternalFrame
         @Override
         public void actionPerformed( ActionEvent ae )
         {
-            AccountDialog dialog = new AccountDialog( AccountInternalFrame.this.bill );
-                          dialog.execute();
+            AccountPanel dialog = new AccountPanel( AccountInternalFrame.this.bill );
+                          dialog.showDialog();
 
             bill = dialog.getBill();
             setCustomer( bill.getCustomer() ); // Por si ha cambiado (es más simple que comprobar si ha cambiado)

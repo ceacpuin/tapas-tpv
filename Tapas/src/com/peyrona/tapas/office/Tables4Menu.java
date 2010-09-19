@@ -19,7 +19,8 @@
 package com.peyrona.tapas.office;
 
 import com.peyrona.tapas.persistence.Article;
-import com.peyrona.tapas.utils.Utils;
+import com.peyrona.tapas.Utils;
+import com.peyrona.tapas.swing.SwingUtils;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -355,7 +356,7 @@ final class Tables4Menu
 
         public void mouseClicked( MouseEvent me )
         {
-            BufferedImage bimage = Utils.ImageChooser();
+            BufferedImage bimage = SwingUtils.ImageChooser();
 
             if( bimage != null )
                 icon = new ImageIcon( bimage );

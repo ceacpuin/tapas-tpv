@@ -19,9 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.peyrona.tapas.accountDialog;
+package com.peyrona.tapas.account;
 
-import com.peyrona.tapas.utils.Utils;
+import com.peyrona.tapas.Utils;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;

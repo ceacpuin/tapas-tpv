@@ -145,7 +145,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         try
         {
             stmt = dbConn.createStatement();
-            rs   = stmt.executeQuery( "SELECT * FROM APP.configuracion" );
+            rs   = stmt.executeQuery( "SELECT * FROM APP.configuracion WHERE id_configuracion = 1" );
 
             if( rs.next() )
             {                
@@ -174,22 +174,23 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
     @Override
     public void setConfiguration( Configuration config ) throws SQLException
     {
-        PreparedStatement psInsert = dbConn.prepareStatement(
-            "INSERT INTO APP.configuracion "+
-            " (contrasena, email, full_screen, auto_alinear, ticket_imagen, ticket_cabecera, ticket_pie)"+
-            " VALUES (?,?,?,?,?,?,?)" );
+        PreparedStatement psUpdate = dbConn.prepareStatement(
+            "UPDATE APP.configuracion "+
+            " SET contrasena = ?, email = ?, full_screen = ?, auto_alinear = ?,"+
+            "     ticket_imagen = ?, ticket_cabecera = ?, ticket_pie = ?"+
+            " WHERE id_configuracion = 1");
 
         Blob blobImage = imageToBlob( config.getTicketHeaderImage() );
 
-        psInsert.setString( 1, config.getPassword() );
-        psInsert.setString( 2, config.getEmail() );
-        psInsert.setInt(    3, (config.isFullScreenSelected() ? 1 : 0) );
-        psInsert.setInt(    4, (config.isAutoAlignSelected()  ? 1 : 0) );
-        psInsert.setBlob(   5, blobImage );
-        psInsert.setString( 6, config.getTicketHeader() );
-        psInsert.setString( 7, config.getTicketFooter() );
-        psInsert.executeUpdate();
-        psInsert.close();
+        psUpdate.setString( 1, config.getPassword() );
+        psUpdate.setString( 2, config.getEmail() );
+        psUpdate.setInt(    3, (config.isFullScreenSelected() ? 1 : 0) );
+        psUpdate.setInt(    4, (config.isAutoAlignSelected()  ? 1 : 0) );
+        psUpdate.setBlob(   5, blobImage );
+        psUpdate.setString( 6, config.getTicketHeader() );
+        psUpdate.setString( 7, config.getTicketFooter() );
+        psUpdate.executeUpdate();
+        psUpdate.close();
 
         if( blobImage != null )
             blobImage.free();
