@@ -128,8 +128,8 @@ final class PresetArticlesPanel extends JPanel
             setFont( getFont().deriveFont( Font.PLAIN ) );
             setFocusPainted( false );
             setMargin( new Insets( 2, 2, 2, 2 ) );
-            setMinimumSize( new Dimension( 48, 64 ) );
-            setMaximumSize( new Dimension( 96, 96 ) );
+            setMinimumSize( new Dimension(  48,  64 ) );
+            setMaximumSize( new Dimension( 110, 110 ) );
             setPreferredSize( getMaximumSize() );
 
             if( article.getIcon() != null )
@@ -144,7 +144,7 @@ final class PresetArticlesPanel extends JPanel
             List<Article> lstArticles = article.getSubMenu();
             final int     nCols = 4;
             int           nRows = lstArticles.size() / nCols;
-                          nRows = (nRows < 6 ? 6 : nRows);
+                          nRows = (nRows < 4 ? 4 : nRows);
 
             GridLayout layout = (GridLayout) pnlSubMenu.getLayout();
                        layout.setRows( nRows );
@@ -185,8 +185,8 @@ final class PresetArticlesPanel extends JPanel
             setFont( getFont().deriveFont( Font.PLAIN, 9f ) );
             setFocusPainted( false );
             setMargin( new Insets( 2, 2, 2, 2 ) );
-            setMinimumSize( new Dimension( 48, 64 ) );
-            setMaximumSize( new Dimension( 80, 80 ) );
+            setMinimumSize( new Dimension(  48,  64 ) );
+            setMaximumSize( new Dimension( 110, 110 ) );
             setPreferredSize( getMaximumSize() );
 
             addActionListener( ButtonArticle.this );
@@ -197,7 +197,7 @@ final class PresetArticlesPanel extends JPanel
         @Override
         public void actionPerformed( ActionEvent ae )
         {
-            ae.setSource( ((ButtonArticle) ae.getSource()).article );
+            ae.setSource( article );
 
             for( ActionListener al : lstListeners )
                 al.actionPerformed( ae );

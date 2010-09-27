@@ -18,11 +18,13 @@
 
 package com.peyrona.tapas;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -85,10 +87,21 @@ public class Utils
             System.out.println( sMessage );
 
         if( th != null )
-        {
+        { 
+            Logger logger = Logger.getLogger( "Tapas.Logger" );
+
+            try
+            {
+                FileHandler handler = new FileHandler( "Tapas.log", true );   // true == append en el fichero
+                logger.addHandler( handler );
+            }
+            catch( IOException ioe )
+            {
+                // Nada que hacer
+            }
+
+            logger.log( Level.SEVERE, sMessage, th );
             th.printStackTrace( System.err );
-            // FIXME: hacer que el logger escriba a un fichero en disco
-            Logger.getLogger( "Tapas.Logger" ).log( Level.SEVERE, sMessage, th );
         }
 
         if( nExitCode != nEXIT_NO_EXIT )
