@@ -115,7 +115,15 @@ public final class Bill
      */
     public void setLines( List<BillLine> lstLines )
     {
-        this.lstLines = ( lstLines == null ? new ArrayList<BillLine>() : lstLines);
+        this.lstLines = (lstLines == null ? new ArrayList<BillLine>() : lstLines);
+    }
+
+    public void addLine( BillLine line )
+    {
+        if( this.lstLines == null )
+            this.lstLines = new ArrayList<BillLine>();
+
+        this.lstLines.add( line );
     }
 
     public BigDecimal getTotal()

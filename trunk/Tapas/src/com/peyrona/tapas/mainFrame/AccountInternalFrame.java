@@ -105,7 +105,7 @@ final class AccountInternalFrame extends JInternalFrame
         if( bill.getLines().size() > 0 )
         {
             DataProvider.getInstance().insertBill( bill );
-            // FIXME: printTicket( bill );
+            // NEXT: printTicket( bill );
         }
 
         dispose();

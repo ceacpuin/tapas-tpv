@@ -105,7 +105,7 @@ public class SQLExecutor
                 try{ stmt.close(); } catch( SQLException se ) { /* Nothing to do */ }
         }
 
-        ///añadeAlgunosArtículosParaPoderHacerPruebas(); // FIXME QUITARLO
+        añadeAlgunosArtículosParaPoderHacerPruebas(); // FIXME QUITARLO
     }
 
     boolean isSQL( String s )

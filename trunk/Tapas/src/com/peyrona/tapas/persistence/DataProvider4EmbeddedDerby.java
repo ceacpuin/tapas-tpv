@@ -97,7 +97,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
             }
             catch( Exception ex )
             {
-                deleteDbFolder();
+                deleteDirectory( new File( sDbPath ) );
                 throw new SQLException( "Error procesing SQL file to create RDM." );
             }
         }
@@ -423,11 +423,24 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
     }
 
     /**
-     * Borra el dir de la DB y todos sus sundirs.
+     * Borra el dir de la DB y todos sus sub-dirs.
      */
-    private void deleteDbFolder()
+    private boolean deleteDirectory( File path )
     {
-       // FIXME: Hay que borrar el dir de la db
+        if( path.exists() )
+        {
+            File[] files = path.listFiles();
+
+            for( int i = 0; i < files.length; i++ )
+            {
+                if( files[i].isDirectory() )
+                    deleteDirectory( files[i] );
+                else
+                    files[i].delete();
+            }
+        }
+
+        return (path.delete());
     }
 
     private boolean isNeededToCreateTables( String sDbLocation )
@@ -528,27 +541,48 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
 
         return icon;
     }
-
+// TODO: probar este método
     private List<Bill> resultSetToBillsList( String sCondition, boolean bDelete ) throws SQLException
     {
         ArrayList<Bill> bills = new ArrayList<Bill>();
 
-        String    sQuery = "SELECT * FROM ";
-        Statement stmt   = dbConn.createStatement();
-        ResultSet rs     = stmt.executeQuery( sQuery + sCondition );
+        String    sQuery  = "SELECT * FROM APP.VENTAS, APP.VENTAS_DETALLE"+
+                            "   WHERE (APP.VENTAS.ID_VENTA = APP.VENTAS_DETALLE.ID_VENTA)"+
+                            "     AND ("+ sCondition + ")";
+        Statement stmt    = dbConn.createStatement();
+        ResultSet rs      = stmt.executeQuery( sQuery + sCondition );
+        Bill      bill    = null;
+        int       nBillId = -1;
 
         while( rs.next() )
         {
-            // FIXME: implementarlo
-        }
+            if( nBillId != rs.getInt( "ID_VENTA" ) )    // Nuevo Bill
+            {
+                nBillId = rs.getInt( "ID_VENTA" );
 
-        if( bDelete )
-        {
-            
+                bill = new Bill();
+                bill.setId( nBillId );
+                bill.setCustomer( rs.getString( "CLIENTE" ) );
+                bill.setPayModeAsInt( rs.getInt( "MODO_PAGO" ) );
+                bill.setWhen( rs.getLong( "CUANDO" ) );
+                bills.add( bill );
+            }
+
+            BillLine billLine = new BillLine( rs.getInt( "CANTIDAD" ),
+                                              rs.getString( "PRODUCTO" ), 
+                                              rs.getBigDecimal( "PRECIO" ) );
+            bill.addLine( billLine );
         }
 
         stmt.close();    // stmt.close() cierra automáticamente los rs asociados
-        
+
+        if( bDelete )
+        {   // Al borrar VENTAS, VENTAS_DETALLE se borra automáticamente (ON DELETE CASCADE)
+            Statement stmtDel = dbConn.createStatement();
+                      stmtDel.executeUpdate( "DELETE FROM APP.VENTAS WHERE "+ sCondition );
+                      stmtDel.close();
+        }
+
         return bills;
     }
 }
