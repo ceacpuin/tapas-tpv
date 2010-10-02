@@ -35,8 +35,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
- * Esta es la clase encargada de gestionar las categorías de productos (AKA familias)
- * en la pestaña "Carta" de la ventana de la configuración (véase la clase OfficeDialog).
+ * Esta clase se encarga de gestionar las categorías de productos (AKA familias)
+ * en la pestaña "Carta" de la ventana de la configuración (véase la clase OfficePanel).
  *
  * @author Francisco Morero Peyrona
  */

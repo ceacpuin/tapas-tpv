@@ -88,6 +88,8 @@ public class Main
         tDB.start();
 
         // Creamos la ventana principal
+        JFrame.setDefaultLookAndFeelDecorated( false );   // Las ventanas usan el look del sistema, no del L&F de Java
+        
         final MainFrame frame = MainFrame.getInstance();
                         frame.pack();
                         frame.setExtendedState( JFrame.MAXIMIZED_BOTH );

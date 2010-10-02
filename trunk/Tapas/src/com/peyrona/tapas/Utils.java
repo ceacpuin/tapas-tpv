@@ -45,7 +45,7 @@ public class Utils
     public static final char   cDecimalSep     = (new DecimalFormatSymbols()).getMonetaryDecimalSeparator();
     public static final String sCurrencySymbol = (new DecimalFormatSymbols()).getCurrencySymbol();
 
-    public static final boolean bDEBUGGING = true;   // ¿Estamos en modo develop o debug?
+    public static final boolean bDEBUGGING = true;   // ¿Estamos en modo develop o debug?    // FIXME: Apagarlo
 
     //------------------------------------------------------------------------//
 

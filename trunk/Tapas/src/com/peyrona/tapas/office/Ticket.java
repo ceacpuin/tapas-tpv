@@ -20,7 +20,6 @@ package com.peyrona.tapas.office;
 
 import com.peyrona.tapas.persistence.Configuration;
 import com.peyrona.tapas.persistence.DataProvider;
-import com.peyrona.tapas.Utils;
 import com.peyrona.tapas.swing.SwingUtils;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -29,8 +28,9 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
 /**
+ * Configuración del ticket que se imprime.
  *
- * @author peyrona
+ * @author Francisco Morero Peyrona (www.peyrona.com)
  */
 class Ticket extends javax.swing.JPanel implements ActionListener
 {
