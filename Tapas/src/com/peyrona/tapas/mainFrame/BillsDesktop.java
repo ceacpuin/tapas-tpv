@@ -31,9 +31,9 @@ import javax.swing.border.LineBorder;
  *
  * @author Francisco Morero Peyrona
  */
-final class AccountsDesktop extends JDesktopPane
+final class BillsDesktop extends JDesktopPane
 {
-    AccountsDesktop()
+    BillsDesktop()
     {
         setMinimumSize( new Dimension( 580, 380 ) );
         setBorder( new LineBorder( Color.black, 2, true ));
@@ -46,7 +46,7 @@ final class AccountsDesktop extends JDesktopPane
 
     void openAccount( Bill bill )
     {
-        final AccountInternalFrame iframe = new AccountInternalFrame( bill );
+        final BillInternalFrame iframe = new BillInternalFrame( bill );
                              iframe.setVisible( true );
 
         add( iframe );

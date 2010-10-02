@@ -52,19 +52,25 @@ import javax.swing.table.TableCellRenderer;
  * Las he puesto en un fichero separado para poder afinar más con la encapsulación:
  * si las clases de este fichero estuvieran dentro del fichero Menu.java, entonces
  * todos los métodos y datos de estas clases serían accesibles desde la clase Menu,
- * aunque fuese private, lo que no ocurre al estar en otro fichero.
+ * aunque fuesen private, lo que no ocurre al estar en otro fichero.
  * <p>
  * Son static porque de este modo funcionan casi como si cada una estuviera en un
- * fichero diferente (porque no hay que instanciar Tables4Menu para poder crear
+ * fichero diferente (ya que no hay que instanciar Tables4Menu para poder crear
  * instancias de estas clases).
  *
  * @author Francisco Morero Peyrona
  */
 final class Tables4Menu
 {
+    //------------------------------------------------------------------------//
+    // Inner Class
+    //------------------------------------------------------------------------//
     /**
      * De esta clase heredan TableCategories y TableProducts, pero como esta clase
      * no está pensada para ser utilizada por sí misma, la hacemos private.
+     * <p>
+     * Podría conseguirs lo mismo haciéndola anstract, pero de este modo encaja
+     * mejor con la teoría de la POO.
      */
     private static class JCommonTable extends JTable
     {
@@ -103,13 +109,13 @@ final class Tables4Menu
 
         void shiftUpHighlightedRow()
         {
-            // NEXT: implementarlo
+            // TODO: implementarlo
             JOptionPane.showMessageDialog( null, "Opción pendiente de ser implementada." );
         }
 
         void shiftDownHighlightedRow()
         {
-            // NEXT: implementarlo
+            // TODO: implementarlo
             JOptionPane.showMessageDialog( null, "Opción pendiente de ser implementada." );
         }
 

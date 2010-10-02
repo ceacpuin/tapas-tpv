@@ -44,7 +44,7 @@ public final class MainFrame extends JFrame implements ActionListener
 {
     private static MainFrame instance;
 
-    private AccountsDesktop accounts;
+    private BillsDesktop accounts;
     private ToolBar         actions;
     private int             nActiveProcesses = 0;  // Nº de procesos funcionando
 
@@ -96,13 +96,13 @@ public final class MainFrame extends JFrame implements ActionListener
 
     private void onOpenMoneyBox()
     {
-        // NEXT: implementarlo
-        JOptionPane.showMessageDialog( null, "Opción pendiente de ser implementada." );
+        // TODO: implementarlo
+        JOptionPane.showMessageDialog( null, "Este botón abre la caja del dinero.\nOpción pendiente de ser implementada." );
     }
 
     private void onFindAccount()
     {
-        FindAccountPanel panel = new FindAccountPanel();
+        FindBillPanel panel = new FindBillPanel();
                          panel.showDialog();
 
         Bill bill = panel.getSelectedAccount();
@@ -167,12 +167,12 @@ public final class MainFrame extends JFrame implements ActionListener
 
     private void sendMailWithTodaySales()
     {
-        // NEXT: Implementarlo
+        // TODO: Implementarlo
     }
 
     private void initComponents()
     {
-        accounts = new AccountsDesktop();
+        accounts = new BillsDesktop();
         actions  = new ToolBar();
         actions.addActionListener( this );
 

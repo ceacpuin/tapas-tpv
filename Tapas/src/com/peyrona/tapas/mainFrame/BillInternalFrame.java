@@ -19,7 +19,7 @@
 package com.peyrona.tapas.mainFrame;
 
 import com.peyrona.tapas.Utils;
-import com.peyrona.tapas.account.AccountPanel;
+import com.peyrona.tapas.bill.AccountPanel;
 import com.peyrona.tapas.persistence.Bill;
 import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.BorderLayout;
@@ -39,7 +39,7 @@ import javax.swing.border.EmptyBorder;
  *
  * @author Francisco Morero Peyrona
  */
-final class AccountInternalFrame extends JInternalFrame
+final class BillInternalFrame extends JInternalFrame
 {
     private static int nCount = 0;
 
@@ -48,12 +48,12 @@ final class AccountInternalFrame extends JInternalFrame
 
     //------------------------------------------------------------------------//
     
-    AccountInternalFrame()
+    BillInternalFrame()
     {
         this( null );
     }
 
-    AccountInternalFrame( Bill bill )
+    BillInternalFrame( Bill bill )
     {
         bill      = (bill == null ? new Bill() : bill);
         lblAmount = new LabelAmount();
@@ -105,10 +105,15 @@ final class AccountInternalFrame extends JInternalFrame
         if( bill.getLines().size() > 0 )
         {
             DataProvider.getInstance().insertBill( bill );
-            // NEXT: printTicket( bill );
+            printTicket( bill );
         }
 
         dispose();
+    }
+
+    private void printTicket( Bill bill )
+    {
+        // TODO: implementarlo
     }
 
     //------------------------------------------------------------------------//
@@ -127,7 +132,7 @@ final class AccountInternalFrame extends JInternalFrame
         @Override
         public void actionPerformed( ActionEvent ae )
         {
-            AccountPanel dialog = new AccountPanel( AccountInternalFrame.this.bill );
+            AccountPanel dialog = new AccountPanel( BillInternalFrame.this.bill );
                           dialog.showDialog();
 
             bill = dialog.getBill();

@@ -119,7 +119,7 @@ public final class DataProvider implements DataProviderable
     {
         try
         {
-            // TODO: Cortar las cadenas
+            // FIXME: Cortar las cadenas
             provider.setConfiguration( config );
             this.config = config;
         }
@@ -151,7 +151,7 @@ public final class DataProvider implements DataProviderable
     {
         try
         {
-            // TODO: Cortar las cadenas
+            // FIXME: Cortar las cadenas
             provider.setCategoriesAndProducts( articles );
         }
         catch( Exception ex )
