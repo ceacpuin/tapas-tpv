@@ -250,6 +250,8 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         return lstArticles;
     }
 
+    // Este método está implementado a lo bestia: borra todo y lo vuelve a grabar todo.
+    // Es bestia, sí, pero es simple y efectivo, además una carta son pocos registros.
     @Override
     public void setCategoriesAndProducts( List<Article> articles ) throws IOException, SQLException
     {

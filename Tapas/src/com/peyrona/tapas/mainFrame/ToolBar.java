@@ -40,6 +40,7 @@ final class ToolBar extends JPanel
     public static final String sACTION_FIND_ACCOUNT = "FindAccount";
     public static final String sACTION_OPEN_BOX     = "OpenBox";
     public static final String sACTION_MOSAIC       = "Mosaic";
+    public static final String sACTION_MUSIC        = "Music";
     public static final String sACTION_OFFICE       = "Office";
     public static final String sACTION_CLOSE        = "Close";
 
@@ -56,6 +57,7 @@ final class ToolBar extends JPanel
         add( new Button( "Monedero", sACTION_OPEN_BOX    , "monedero" ) );
         add( new Button( "Alinear" , sACTION_MOSAIC      , "alinear"  ) );
         add( Box.createRigidArea( new Dimension( 64, 1 ) ) );
+        add( new Button( "Música"  , sACTION_MUSIC       , "musica"   ) );
         add( new Button( "Oficina" , sACTION_OFFICE      , "oficina"  ) );
         add( new Button( "Salir"   , sACTION_CLOSE       , "salir"    ) );
         add( Box.createHorizontalGlue() );

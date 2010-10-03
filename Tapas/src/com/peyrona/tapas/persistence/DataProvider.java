@@ -46,7 +46,7 @@ public final class DataProvider implements DataProviderable
     private DataProviderable provider = null;
 
     // Como Configuration se utiliza con mucha frecuencia, para no tener que estar 
-    // leyéndola cada vez de la DB, La instancia Configuration la ponemos en una
+    // leyéndola cada vez de la DB, la instancia Configuration la ponemos en una
     // variable que la usamos a modo de caché.
     private Configuration config = null;
 

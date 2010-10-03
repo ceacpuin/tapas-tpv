@@ -29,7 +29,6 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.AbstractCellEditor;
 import javax.swing.ImageIcon;
@@ -121,7 +120,7 @@ final class Tables4Menu
 
         List<Article> getData()
         {
-            return Collections.unmodifiableList( ((DataModel) getModel()).getData() );
+            return ((DataModel) getModel()).getData();
         }
 
         void setData( List<Article> data )

@@ -107,7 +107,7 @@ public final class Bill
      */
     public List<BillLine> getLines()
     {
-        return Collections.unmodifiableList( lstLines );
+        return lstLines;
     }
 
     /**
@@ -115,7 +115,10 @@ public final class Bill
      */
     public void setLines( List<BillLine> lstLines )
     {
-        this.lstLines = (lstLines == null ? new ArrayList<BillLine>() : lstLines);
+        if( lstLines == null )
+            lstLines = new ArrayList<BillLine>();
+
+        this.lstLines = lstLines;
     }
 
     public void addLine( BillLine line )

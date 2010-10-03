@@ -44,7 +44,7 @@ import javax.swing.border.LineBorder;
  *
  * @author Francisco Morero Peyrona
  */
-public class AccountPanel extends JPanel
+public class BillPanel extends JPanel
 {
     private Bill bill;
 
@@ -58,12 +58,12 @@ public class AccountPanel extends JPanel
 
     //------------------------------------------------------------------------//
 
-    public AccountPanel()
+    public BillPanel()
     {
         this( null );
     }
 
-    public AccountPanel( Bill bill )
+    public BillPanel( Bill bill )
     {
         this.bill = (bill == null ? new Bill() : bill);
         
@@ -121,7 +121,7 @@ public class AccountPanel extends JPanel
             public void actionPerformed( ActionEvent ae )
             {
                 pnlItems.add( (Article) ae.getSource() );
-                AccountPanel.this.updateLeftPanelButtons();
+                BillPanel.this.updateLeftPanelButtons();
             }
         } );
 
@@ -188,25 +188,25 @@ public class AccountPanel extends JPanel
 
         private void startEditing()
         {
-            if( AccountPanel.this.pnlItems.isRowSelected() )
+            if( BillPanel.this.pnlItems.isRowSelected() )
             {
-                AccountPanel.this.pnlPayMode.setEnabled( false );
-                AccountPanel.this.pnlNumericPad.setEnabled( true );
-                AccountPanel.this.pnlEditItems.setEnabled( false );
-                AccountPanel.this.pnlItems.startEditingPrice();
-                AccountPanel.this.pnlItems.updateEditingPrice( "0" );
-                AccountPanel.this.pnlNumericPad.addActionListener( this );
+                BillPanel.this.pnlPayMode.setEnabled( false );
+                BillPanel.this.pnlNumericPad.setEnabled( true );
+                BillPanel.this.pnlEditItems.setEnabled( false );
+                BillPanel.this.pnlItems.startEditingPrice();
+                BillPanel.this.pnlItems.updateEditingPrice( "0" );
+                BillPanel.this.pnlNumericPad.addActionListener( this );
             }
         }
 
         private void stopEditing()
         {
-            AccountPanel.this.pnlPayMode.setEnabled( true );
-            AccountPanel.this.pnlNumericPad.setEnabled( false );
-            AccountPanel.this.pnlEditItems.setEnabled( true );
-            AccountPanel.this.pnlItems.stopEditingPrice();
-            AccountPanel.this.pnlDisplay.setAmount( pnlItems.getTotal() );
-            AccountPanel.this.pnlNumericPad.removeActionListener( this );
+            BillPanel.this.pnlPayMode.setEnabled( true );
+            BillPanel.this.pnlNumericPad.setEnabled( false );
+            BillPanel.this.pnlEditItems.setEnabled( true );
+            BillPanel.this.pnlItems.stopEditingPrice();
+            BillPanel.this.pnlDisplay.setAmount( pnlItems.getTotal() );
+            BillPanel.this.pnlNumericPad.removeActionListener( this );
         }
 
         @Override
@@ -224,7 +224,7 @@ public class AccountPanel extends JPanel
                 else if( cBtn == NumericPadPanel.cCLEAR )     sb.setLength( 0 );
                 else                                          sb.append( cBtn );
 
-                AccountPanel.this.pnlItems.updateEditingPrice( sb.toString() );
+                BillPanel.this.pnlItems.updateEditingPrice( sb.toString() );
             }
         }
 
@@ -266,13 +266,13 @@ public class AccountPanel extends JPanel
         {
             String sCmd = getActionCommand();
 
-                 if( sCmd.equals( CMD_MINUS ) )  AccountPanel.this.pnlItems.decrementQuantity();
-            else if( sCmd.equals( CMD_PLUS  ) )  AccountPanel.this.pnlItems.incrementQuantity();
+                 if( sCmd.equals( CMD_MINUS ) )  BillPanel.this.pnlItems.decrementQuantity();
+            else if( sCmd.equals( CMD_PLUS  ) )  BillPanel.this.pnlItems.incrementQuantity();
             else if( sCmd.equals( CMD_EDIT  ) )  (new ItemPriceEditor()).startEditing();
             else if( sCmd.equals( CMD_DEL   ) )
             {
-                AccountPanel.this.pnlItems.deleteLine();
-                AccountPanel.this.updateLeftPanelButtons();
+                BillPanel.this.pnlItems.deleteLine();
+                BillPanel.this.updateLeftPanelButtons();
             }
         }
     }

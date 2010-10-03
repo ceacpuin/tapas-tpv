@@ -44,9 +44,9 @@ public final class MainFrame extends JFrame implements ActionListener
 {
     private static MainFrame instance;
 
-    private BillsDesktop accounts;
-    private ToolBar         actions;
-    private int             nActiveProcesses = 0;  // Nº de procesos funcionando
+    private BillsDesktop desktop;
+    private ToolBar      toolbar;
+    private int          nActiveProcesses = 0;  // Nº de procesos funcionando
 
     //------------------------------------------------------------------------//
 
@@ -83,6 +83,7 @@ public final class MainFrame extends JFrame implements ActionListener
         else if( sAction.equals( ToolBar.sACTION_OPEN_BOX     ) ) onOpenMoneyBox();
         else if( sAction.equals( ToolBar.sACTION_FIND_ACCOUNT ) ) onFindAccount();
         else if( sAction.equals( ToolBar.sACTION_MOSAIC       ) ) onMosaic();
+        else if( sAction.equals( ToolBar.sACTION_MUSIC        ) ) onMusic();
         else if( sAction.equals( ToolBar.sACTION_OFFICE       ) ) onOffice();
         else if( sAction.equals( ToolBar.sACTION_CLOSE        ) ) onExit();
     }
@@ -91,7 +92,7 @@ public final class MainFrame extends JFrame implements ActionListener
 
     private void onNewAccount()
     {
-       accounts.createAccount();
+       desktop.createAccount();
     }
 
     private void onOpenMoneyBox()
@@ -108,12 +109,17 @@ public final class MainFrame extends JFrame implements ActionListener
         Bill bill = panel.getSelectedAccount();
 
         if( bill != null  )
-            accounts.openAccount( bill );
+            desktop.openAccount( bill );
     }
 
     private void onMosaic()
     {
-        accounts.mosaic();
+        desktop.mosaic();
+    }
+
+    private void onMusic()
+    {
+        desktop.openMusic();
     }
 
     private void onOffice()
@@ -138,7 +144,7 @@ public final class MainFrame extends JFrame implements ActionListener
     {
         int nOption = JOptionPane.OK_OPTION;
 
-        if( ! accounts.isEmpty() )
+        if( ! desktop.isEmpty() )
         {
             if( ! Utils. bDEBUGGING )
             {
@@ -172,15 +178,15 @@ public final class MainFrame extends JFrame implements ActionListener
 
     private void initComponents()
     {
-        accounts = new BillsDesktop();
-        actions  = new ToolBar();
-        actions.addActionListener( this );
+        desktop = new BillsDesktop();
+        toolbar  = new ToolBar();
+        toolbar.addActionListener( this );
 
         JPanel pnlAll = new JPanel();
                pnlAll.setBorder( new EmptyBorder( 5, 8, 5, 8 ) );
                pnlAll.setLayout( new BorderLayout( 0, 9 ) );
-               pnlAll.add( actions , BorderLayout.NORTH );
-               pnlAll.add( accounts, BorderLayout.CENTER );
+               pnlAll.add( toolbar , BorderLayout.NORTH );
+               pnlAll.add( desktop, BorderLayout.CENTER );
 
        setLayout( new BorderLayout() );
        setContentPane( pnlAll );

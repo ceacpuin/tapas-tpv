@@ -22,7 +22,6 @@ import java.awt.Image;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.ImageIcon;
 
@@ -147,7 +146,7 @@ public final class Article
      */
     public List<Article> getSubMenu()
     {
-        return Collections.unmodifiableList( lstSubMenu );
+        return lstSubMenu;
     }
 
     /**
@@ -158,7 +157,7 @@ public final class Article
         if( lstSubMenu == null )
             lstSubMenu = new ArrayList<Article>();
 
-        this.lstSubMenu = new ArrayList( Arrays.asList( lstSubMenu.toArray() ) );
+        this.lstSubMenu = lstSubMenu;
     }
 
     /**

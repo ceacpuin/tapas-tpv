@@ -20,11 +20,14 @@ package com.peyrona.tapas.mainFrame;
 
 import com.peyrona.tapas.persistence.Bill;
 import com.peyrona.tapas.persistence.DataProvider;
+import com.peyrona.tapas.player.Player;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.beans.PropertyVetoException;
 import javax.swing.DesktopManager;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.border.LineBorder;
 
 /**
@@ -49,11 +52,29 @@ final class BillsDesktop extends JDesktopPane
         final BillInternalFrame iframe = new BillInternalFrame( bill );
                              iframe.setVisible( true );
 
-        add( iframe );
+        add( iframe, JLayeredPane.DEFAULT_LAYER );
         iframe.setSelected( true );
 
        if( DataProvider.getInstance().getConfiguration().isAutoAlignSelected() )
            mosaic();
+    }
+
+    void openMusic()
+    {
+        Player  player = Player.getInstance();
+        boolean bExist = getAllFramesInLayer( JLayeredPane.PALETTE_LAYER ).length > 0;
+
+        if( ! bExist )
+            add( player, JLayeredPane.PALETTE_LAYER );    // El Player se coloca por encima de las Bill
+
+        try{ player.setSelected( true ); } catch( PropertyVetoException ex ) { }
+        player.setVisible( true );
+
+        if( ! bExist )
+        {
+            getDesktopManager().dragFrame( player, (getWidth() - player.getWidth()) / 2,
+                                                   (getHeight() - player.getHeight()) / 2 );
+        }
     }
 
     boolean isEmpty()
@@ -64,7 +85,7 @@ final class BillsDesktop extends JDesktopPane
     void mosaic()
     {
         DesktopManager   manager = getDesktopManager();
-        JInternalFrame[] aFrame  = getAllFrames();
+        JInternalFrame[] aFrame  = getAllFramesInLayer( JLayeredPane.DEFAULT_LAYER );
 
         if( manager != null && aFrame.length > 0 )  // Tiene que haber desktop manager y ventanas
         {
@@ -91,5 +112,5 @@ final class BillsDesktop extends JDesktopPane
                 }
             }
         }
-    } // Fin método
-} // Fin clase
+    }
+}
