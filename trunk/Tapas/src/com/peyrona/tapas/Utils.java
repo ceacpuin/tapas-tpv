@@ -81,6 +81,11 @@ public class Utils
         return nfNoSymbol.format( nAmount );
     }
 
+    public static boolean isEmpty( String s )
+    {
+        return (s == null || s.trim().length() == 0);
+    }
+
     public static void printError( Throwable th, Level level, String sMessage, int nExitCode )
     {
         if( sMessage != null )
