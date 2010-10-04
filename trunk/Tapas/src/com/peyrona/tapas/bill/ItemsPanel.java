@@ -110,7 +110,7 @@ final class ItemsPanel extends JScrollPane
 
     void updateEditingPrice( String sNewPrice )
     {
-        if( sNewPrice == null || sNewPrice.trim().length() == 0 )
+        if( Utils.isEmpty( sNewPrice ) )
             sNewPrice = "0";
 
         if( sNewPrice.indexOf( Utils.cDecimalSep ) > -1 )
