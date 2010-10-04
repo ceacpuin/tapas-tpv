@@ -63,6 +63,7 @@ CREATE TABLE APP.configuracion(
    id_configuracion INTEGER     GENERATED ALWAYS AS IDENTITY,
    contrasena       VARCHAR( 32),
    email            VARCHAR( 48),
+   carpeta_musica   VARCHAR(256),
    full_screen      INTEGER,
    auto_alinear     INTEGER,
    ticket_imagen    BLOB,

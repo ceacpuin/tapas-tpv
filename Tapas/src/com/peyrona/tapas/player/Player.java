@@ -6,7 +6,13 @@
 package com.peyrona.tapas.player;
 
 import com.peyrona.tapas.Utils;
+import com.peyrona.tapas.persistence.DataProvider;
+import com.peyrona.tapas.swing.SwingUtils;
+import java.io.File;
+import java.util.Hashtable;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JSlider;
 
 /**
  * Player: sencillo y simple reproductor de música.
@@ -17,14 +23,21 @@ import javax.swing.ImageIcon;
  *
  * @author peyrona
  */
+
+// TODO: Esta clase contiene casi toda su funcionalidad Swing, pero le falta
+//       la funcionalidad JMF. A este respecto hay dos webs interesantes:
+//           * http://fmj-sf.net/
+//           * http://www.lcc.uma.es/~pinilla/TutorialJMF/Reproduccion.htm
+
 public class Player extends javax.swing.JInternalFrame
 {
-    private enum Status { Playing, Paused, Sttoped }
+    private static final String IS_PLAYING = "isPlaying";
+    private static final String IS_PAUSED  = "isPaused";
 
     private static Player instance;
 
     private PlayList playList;
-    private Status   status;
+    private boolean  bRandom;
 
     //------------------------------------------------------------------------//
 
@@ -43,44 +56,47 @@ public class Player extends javax.swing.JInternalFrame
 
     private void onPlayPause()
     {
-        switch( status )
+        if( isPlaying() )
         {
-            case Sttoped:
-            case Paused :
-                status = Status.Playing;
-                btnPlayPause.setIcon( new ImageIcon( getClass().getResource( "images/pause.png" ) ) );
-                lblInfo.setText( "El reproductor está reproduciendo música" );
-                break;
-
-            case Playing:
-                status = Status.Paused;
-                btnPlayPause.setIcon( new ImageIcon( getClass().getResource( "images/play.png" ) ) );
-                lblInfo.setText( "El reprodutor está en pausa" );
-                break;
+            btnPlayPause.setIcon( new ImageIcon( getClass().getResource( "images/play.png" ) ) );
+            btnPlayPause.setName( IS_PAUSED );
+            lblInfo.setText( "El reprodutor está en pausa" );
         }
-
-        btnStop.setSelected( false );
+        else
+        {
+            btnPlayPause.setIcon( new ImageIcon( getClass().getResource( "images/pause.png" ) ) );
+            btnPlayPause.setName( IS_PLAYING );
+            lblInfo.setText( "El reproductor está reproduciendo música" );
+        }
     }
 
-    private void onStop()
+    private void onEject()
     {
-        status = Status.Sttoped;
-        lblInfo.setText( "El reprodutor está parado" );
-    }
+        File folder = SwingUtils.folderChooser();
 
-    private String onEject()
-    {
-        return null;
+        if( folder != null )
+            playList.loadPlayList( folder );
     }
 
     private void onRandom()
     {
+        String sMsg = "El reprodutor está en modo 'reproducción ";
 
+        bRandom = btnRandom.isSelected();
+        lblInfo.setText( sMsg + (bRandom ? "aleatoria'" : "secuencial'") );
     }
 
     private void onVolume()
     {
+        // TODO: Hacerlo
+    }
 
+    // Inicialmente, el nombre de btbPlayPause es null, por lo que éste método
+    // devolverá acertadamente (ya que NO se está playing) false, el resto
+    // de las veces funcionará de "modo normal", devolviendo tb valores correctos.
+    private boolean isPlaying()
+    {
+        return (IS_PLAYING.equals( btnPlayPause.getName() ));
     }
 
     /** Creates new form Player */
@@ -88,14 +104,27 @@ public class Player extends javax.swing.JInternalFrame
     {
         initComponents();
 
-        String sBaseFolder = "/home/peyrona/Música/Jazz"; // FIXME: leerlo del config
+        // Etiquetas para el slider de volumen: se utiliza una Collection obsoleta
+        // porque así lo exige JSlider en la versión actual (JDK 1.6.x) de Swing.
+        Hashtable<Integer, JLabel> labels = new Hashtable<Integer, JLabel>();
+                                   labels.put( sldVolume.getMinimum(), new JLabel( "Min" ) );
+                                   labels.put( sldVolume.getMaximum(), new JLabel( "Max" ) );
+        sldVolume.setLabelTable( labels );
+        sldVolume.setPaintLabels( true );
+
+        // Que quede todo en su sitio
+        btnRandom.doClick();
+
+        // Cargamos la lista de reproducción
+        String sBaseFolder = DataProvider.getInstance().getConfiguration().getMusicFolder();
+        
+        playList = new PlayList();
+        spTable.setViewportView( playList );
 
         if( Utils.isEmpty( sBaseFolder ) )
-            sBaseFolder = onEject();
-
-        playList = new PlayList( sBaseFolder );
-        spTable.setViewportView( playList );
-        btnStop.doClick();
+            onEject();
+        else
+            playList.loadPlayList( new File( sBaseFolder ) );
     }
 
     /** This method is called from within the constructor to
@@ -113,8 +142,9 @@ public class Player extends javax.swing.JInternalFrame
         btnPlayPause = new javax.swing.JButton();
         btnRandom = new javax.swing.JToggleButton();
         spTable = new javax.swing.JScrollPane();
-        btnStop = new javax.swing.JToggleButton();
         lblInfo = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
@@ -124,6 +154,19 @@ public class Player extends javax.swing.JInternalFrame
         setPreferredSize(new java.awt.Dimension(600, 360));
 
         btnEject.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/peyrona/tapas/player/images/eject.png"))); // NOI18N
+        btnEject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEjectActionPerformed(evt);
+            }
+        });
+
+        sldVolume.setMajorTickSpacing(10);
+        sldVolume.setPaintTicks(true);
+        sldVolume.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sldVolumeStateChanged(evt);
+            }
+        });
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/peyrona/tapas/player/images/volume.png"))); // NOI18N
 
@@ -135,11 +178,19 @@ public class Player extends javax.swing.JInternalFrame
         });
 
         btnRandom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/peyrona/tapas/player/images/random.png"))); // NOI18N
-
-        btnStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/peyrona/tapas/player/images/stop.png"))); // NOI18N
-        btnStop.setSelected(true);
+        btnRandom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRandomActionPerformed(evt);
+            }
+        });
 
         lblInfo.setText("Info");
+
+        jLabel2.setForeground(new java.awt.Color(168, 9, 37));
+        jLabel2.setText("Este módulo");
+
+        jLabel3.setForeground(new java.awt.Color(166, 20, 30));
+        jLabel3.setText("está inacabado");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -148,37 +199,41 @@ public class Player extends javax.swing.JInternalFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(spTable, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                    .addComponent(spTable, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(btnPlayPause, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnEject, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnRandom, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)
-                        .addGap(3, 3, 3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(sldVolume, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblInfo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE))
+                    .addComponent(lblInfo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnEject, btnPlayPause, btnRandom, btnStop});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnEject, btnPlayPause, btnRandom});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnEject, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
-                    .addComponent(btnRandom, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
-                    .addComponent(btnPlayPause, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(sldVolume, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE))
-                    .addComponent(btnStop, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnPlayPause, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                    .addComponent(btnEject, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                    .addComponent(btnRandom, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                    .addComponent(sldVolume, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblInfo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -194,12 +249,31 @@ public class Player extends javax.swing.JInternalFrame
         onPlayPause();
     }//GEN-LAST:event_btnPlayPauseActionPerformed
 
+    private void sldVolumeStateChanged(javax.swing.event.ChangeEvent evt)//GEN-FIRST:event_sldVolumeStateChanged
+    {//GEN-HEADEREND:event_sldVolumeStateChanged
+        JSlider slider = (JSlider) evt.getSource();
+
+        if( ! slider.getValueIsAdjusting() )
+            onVolume();
+    }//GEN-LAST:event_sldVolumeStateChanged
+
+    private void btnRandomActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnRandomActionPerformed
+    {//GEN-HEADEREND:event_btnRandomActionPerformed
+        onRandom();
+    }//GEN-LAST:event_btnRandomActionPerformed
+
+    private void btnEjectActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnEjectActionPerformed
+    {//GEN-HEADEREND:event_btnEjectActionPerformed
+        onEject();
+    }//GEN-LAST:event_btnEjectActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEject;
     private javax.swing.JButton btnPlayPause;
     private javax.swing.JToggleButton btnRandom;
-    private javax.swing.JToggleButton btnStop;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel lblInfo;
     private javax.swing.JSlider sldVolume;
     private javax.swing.JScrollPane spTable;

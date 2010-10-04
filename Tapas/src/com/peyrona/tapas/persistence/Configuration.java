@@ -18,6 +18,7 @@
 
 package com.peyrona.tapas.persistence;
 
+import com.peyrona.tapas.Utils;
 import java.awt.Image;
 import java.util.Arrays;
 
@@ -43,6 +44,7 @@ public class Configuration
     private Image   imgHeader   = null;
     private String  sHeader     = null;
     private String  sFooter     = null;
+    private String  sMusicDir   = null;
 
     //------------------------------------------------------------------------//
 
@@ -66,7 +68,7 @@ public class Configuration
 
     public void setPassword( char[] acPass )
     {
-        if( acPass == null || String.valueOf( acPass ).trim().length() == 0 )
+        if( acPass == null || Utils.isEmpty( String.valueOf( acPass ) ) )
             acPass = new char[0];
 
         this.acPass = Arrays.copyOf( acPass, acPass.length );   // Copia defensiva
@@ -75,7 +77,7 @@ public class Configuration
     // Package: sólo utilizable por los DataSource
     void setPassword( String sPass )
     {
-        if( sPass == null || sPass.trim().length() == 0 )
+        if( Utils.isEmpty( sPass ) )
             acPass = new char[0];
         else
             acPass = sPass.toCharArray();
@@ -94,7 +96,7 @@ public class Configuration
      */
     public void setEmail( String sEmail )
     {
-        if( sEmail != null && sEmail.trim().length() == 0 )
+        if( Utils.isEmpty( sEmail ) )
             sEmail = null;
 
         this.sEmail = sEmail;
@@ -118,6 +120,25 @@ public class Configuration
     public void setAutoAlignMode( boolean bAutoAlign )
     {
         this.bAutoAlign = bAutoAlign;
+    }
+
+    /**
+     * @return the sMusicDir
+     */
+    public String getMusicFolder()
+    {
+        return sMusicDir;
+    }
+
+    /**
+     * @param sMusicDir the sMusicDir to set
+     */
+    public void setMusicFolder( String sMusicFolder )
+    {
+        if( Utils.isEmpty( sMusicFolder ) )
+            sMusicFolder = null;
+        
+        this.sMusicDir = sMusicFolder;
     }
 
     /**
@@ -149,7 +170,7 @@ public class Configuration
      */
     public void setTicketHeader( String sHeader )
     {
-        if( sHeader != null && sHeader.trim().length() == 0 )
+        if( Utils.isEmpty( sHeader ) )
             sHeader = null;
 
         this.sHeader = sHeader;
@@ -168,7 +189,7 @@ public class Configuration
      */
     public void setTicketFooter( String sFooter )
     {
-        if( sFooter != null && sFooter.trim().length() == 0 )
+        if( Utils.isEmpty( sFooter ) )
             sFooter = null;
 
         this.sFooter = sFooter;

@@ -20,10 +20,12 @@ package com.peyrona.tapas.mainFrame;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -89,28 +91,31 @@ final class ToolBar extends JPanel
     //------------------------------------------------------------------------//
     private final class Button extends JButton
     {
-        private ActionListener al = null;
-
         Button( String sText, String sActionCommand, String sIcon )
         {
             super( sText );
-            setIcon( new ImageIcon( getClass().getResource( "images/"+ sIcon +".png" ) ) );
             setActionCommand( sActionCommand );
-            setFont( getFont().deriveFont( Font.BOLD, 16f ) );
+            setIcon( new ImageIcon( getClass().getResource( "images/"+ sIcon +".png" ) ) );
+            setFont( getFont().deriveFont( Font.BOLD, 14f ) );
             setMaximumSize( new Dimension( 220, 60 ) );
-
-            if( al == null )
-            {
-               al =  new ActionListener()
-                     {
-                        public void actionPerformed( ActionEvent ae )
-                        {
-                            ToolBar.this.fireActionEvent( ae );
-                        }
-                     };
-            }
             
-            addActionListener( al );
+            // Si la resolución horizontal es baja, hacemos los iconos más pequeños
+            // poniendo las etiquetas (text) bajo el icono en lugar de a su derecha.
+            // Asumimos que sólo hay una pantalla asociada (es lo normal en un TPV).
+            if( Toolkit.getDefaultToolkit().getScreenSize().width < 1200 )
+            {
+                setMaximumSize( new Dimension( 110, 90 ) );
+                setHorizontalTextPosition( AbstractButton.CENTER );
+                setVerticalTextPosition( AbstractButton.BOTTOM );
+            }
+
+            addActionListener( new ActionListener()
+                 {
+                    public void actionPerformed( ActionEvent ae )
+                    {
+                        ToolBar.this.fireActionEvent( ae );
+                    }
+                 } );
         }
     }
 }

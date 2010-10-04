@@ -5,7 +5,6 @@
 
 package com.peyrona.tapas.player;
 
-import com.peyrona.tapas.Utils;
 import java.awt.Component;
 import java.awt.Rectangle;
 import java.io.File;
@@ -36,11 +35,10 @@ public final class PlayList extends JTable
         setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         setShowGrid( false );
         setRowHeight( 16 );
-        ///setRowMargin( 22 );
         setModel( new DataModel() );
         getColumnModel().getColumn( 0 ).setCellRenderer( new CellRenderer() );
 
-        if( ! Utils.isEmpty( sBaseFolder ) )
+        if( sBaseFolder != null )
             loadPlayList( new File( sBaseFolder ) );
     }
 
@@ -50,7 +48,6 @@ public final class PlayList extends JTable
     {
         if( fBaseFolder != null && fBaseFolder.isDirectory() )    // isDirectory() comprueba que exista
         {
-            ((DataModel) getModel()).deleteAllRows();
             SwingWorker sw = getSwingWorkerToLoadPlayList( fBaseFolder );
                         sw.execute();
         }
@@ -68,6 +65,7 @@ public final class PlayList extends JTable
             @Override
             public Void doInBackground()
             {
+                ((DataModel) PlayList.this.getModel()).deleteAllRows();
                 loadFiles( fBaseFolder );
                 return null;
             }

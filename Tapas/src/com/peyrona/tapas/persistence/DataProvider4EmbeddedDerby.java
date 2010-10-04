@@ -151,6 +151,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
             {                
                 conf.setPassword( rs.getString( "contrasena" ) );
                 conf.setEmail( rs.getString( "email" ) );
+                conf.setMusicFolder( rs.getString( "carpeta_musica" ) );
                 conf.setFullScreenMode( rs.getInt( "full_screen" ) != 0 );
                 conf.setAutoAlignMode( rs.getInt( "auto_alinear" ) != 0 );
                 conf.setTicketFooter( rs.getString( "ticket_pie" ) );
@@ -176,7 +177,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
     {
         PreparedStatement psUpdate = dbConn.prepareStatement(
             "UPDATE APP.configuracion "+
-            " SET contrasena = ?, email = ?, full_screen = ?, auto_alinear = ?,"+
+            " SET contrasena = ?, email = ?, carpeta_musica = ?, full_screen = ?, auto_alinear = ?,"+
             "     ticket_imagen = ?, ticket_cabecera = ?, ticket_pie = ?"+
             " WHERE id_configuracion = 1");
 
@@ -184,11 +185,12 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
 
         psUpdate.setString( 1, config.getPassword() );
         psUpdate.setString( 2, config.getEmail() );
-        psUpdate.setInt(    3, (config.isFullScreenSelected() ? 1 : 0) );
-        psUpdate.setInt(    4, (config.isAutoAlignSelected()  ? 1 : 0) );
-        psUpdate.setBlob(   5, blobImage );
-        psUpdate.setString( 6, config.getTicketHeader() );
-        psUpdate.setString( 7, config.getTicketFooter() );
+        psUpdate.setString( 3, config.getMusicFolder() );
+        psUpdate.setInt(    4, (config.isFullScreenSelected() ? 1 : 0) );
+        psUpdate.setInt(    5, (config.isAutoAlignSelected()  ? 1 : 0) );
+        psUpdate.setBlob(   6, blobImage );
+        psUpdate.setString( 7, config.getTicketHeader() );
+        psUpdate.setString( 8, config.getTicketFooter() );
         psUpdate.executeUpdate();
         psUpdate.close();
 
