@@ -19,11 +19,7 @@
 package com.peyrona.tapas.bill;
 
 import com.peyrona.tapas.Utils;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -147,6 +143,7 @@ final class NumericPadPanel extends JPanel
 
             addActionListener( new java.awt.event.ActionListener()
             {
+                @Override
                 public void actionPerformed( ActionEvent ae )
                 {
                     NumericPadPanel.this.fireActionPerformed( ae );

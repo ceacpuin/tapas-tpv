@@ -27,7 +27,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
 import java.math.BigDecimal;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -35,12 +34,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 /**
- * This class acts as a calculator display.
- * <p>
- * It has seberal methdos to perform needed actions: clear(), getAmount(), ...
+ * El display para mostrar la cantidad total (suma de todos los items) del ticket.
  *
  * @author Francisco Morero Peyrona
- * @version 1.0
  */
 final class TotalDisplayPanel extends JPanel
 {

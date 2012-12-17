@@ -63,12 +63,17 @@ CREATE TABLE APP.configuracion(
    id_configuracion INTEGER     GENERATED ALWAYS AS IDENTITY,
    contrasena       VARCHAR( 32),
    email            VARCHAR( 48),
-   carpeta_musica   VARCHAR(256),
    full_screen      INTEGER,
    auto_alinear     INTEGER,
    ticket_imagen    BLOB,
    ticket_cabecera  VARCHAR(999),
    ticket_pie       VARCHAR(999) );
+
+-- Tabla para alamacenar las configuraciones de los plugins
+CREATE TABLE APP.plugin_config(
+   id_plugin_config INTEGER     GENERATED ALWAYS AS IDENTITY,
+   nombre           VARCHAR(999),
+   configuracion    VARCHAR(999) );
 
 -- -----------------------------------------------------------------------------
 -- FOREING KEYS

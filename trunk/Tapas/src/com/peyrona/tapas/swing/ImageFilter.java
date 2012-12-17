@@ -43,6 +43,7 @@ class ImageFilter extends FileFilter
                sFileName.endsWith( ".png"  ) ;
     }
 
+    @Override
     public String getDescription()
     {
         return "Imágenes";

@@ -17,18 +17,12 @@
  */
 package com.peyrona.tapas.bill;
 
+import com.peyrona.tapas.Utils;
 import com.peyrona.tapas.mainFrame.MainFrame;
 import com.peyrona.tapas.persistence.Article;
 import com.peyrona.tapas.persistence.Bill;
 import com.peyrona.tapas.swing.ImageHighlightFilter;
-import com.peyrona.tapas.Utils;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.FilteredImageSource;
@@ -41,6 +35,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 /**
+ * Cuando se abre el detalle de una cuenta, aparecen dos paneles: el de la
+ * izquierda contiene el nombre del cliente, lo que ha consumido y los botones
+ * para operar con ello y el de la derecha donde aparecen todos los artículos
+ * (bebidas y comidas) pre-establecidas.<br>
+ * Este panel es el de la izquierda.
  *
  * @author Francisco Morero Peyrona
  */

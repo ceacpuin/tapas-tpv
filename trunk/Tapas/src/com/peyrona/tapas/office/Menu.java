@@ -26,11 +26,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -145,7 +141,7 @@ final class Menu extends JPanel implements ActionListener
         if( all.isEmpty() )
             all.add( new Article() );
 
-        // Al utilizar all directamente, los cambios se realizan tanto en Vlines como en all
+        // Al utilizar all directamente, los cambios se realizan tanto en vLines como en all
         tblCategories.setData( all );
         tblProducts.setData( all.get( 0 ).getSubMenu() );
         
@@ -184,7 +180,7 @@ final class Menu extends JPanel implements ActionListener
             setIcon( icon );
             setActionCommand( sAction );
             setFocusPainted( false );
-            setMargin( new Insets( 4, 4, 4, 4 ) );
+            setMargin( new Insets( 4,4,4,4 ) );
             addActionListener( Button.this );
         }
 

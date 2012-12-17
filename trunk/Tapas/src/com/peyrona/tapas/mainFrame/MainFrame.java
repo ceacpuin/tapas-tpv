@@ -18,22 +18,18 @@
 
 package com.peyrona.tapas.mainFrame;
 
-import java.awt.event.ActionEvent;
-import javax.swing.JFrame;
+import com.peyrona.tapas.Utils;
 import com.peyrona.tapas.office.OfficePanel;
 import com.peyrona.tapas.persistence.Bill;
 import com.peyrona.tapas.persistence.Configuration;
 import com.peyrona.tapas.persistence.DataProvider;
-import com.peyrona.tapas.Utils;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -46,7 +42,6 @@ public final class MainFrame extends JFrame implements ActionListener
 
     private BillsDesktop desktop;
     private ToolBar      toolbar;
-    private int          nActiveProcesses = 0;  // Nº de procesos funcionando
 
     //------------------------------------------------------------------------//
 
@@ -61,17 +56,6 @@ public final class MainFrame extends JFrame implements ActionListener
         return instance;
     }
 
-    /**
-     * Cada proceso en background (thread) llama aquí cuando comienza con false
-     * y cuando termina con true.
-     *
-     * @param bAllowExit
-     */
-    public void setAllowExit( boolean bAllowExit )
-    {
-        nActiveProcesses += (bAllowExit ? -1 : 1);
-    }
-
     //------------------------------------------------------------------------//
 
     @Override
@@ -83,7 +67,6 @@ public final class MainFrame extends JFrame implements ActionListener
         else if( sAction.equals( ToolBar.sACTION_OPEN_BOX     ) ) onOpenMoneyBox();
         else if( sAction.equals( ToolBar.sACTION_FIND_ACCOUNT ) ) onFindAccount();
         else if( sAction.equals( ToolBar.sACTION_MOSAIC       ) ) onMosaic();
-        else if( sAction.equals( ToolBar.sACTION_MUSIC        ) ) onMusic();
         else if( sAction.equals( ToolBar.sACTION_OFFICE       ) ) onOffice();
         else if( sAction.equals( ToolBar.sACTION_CLOSE        ) ) onExit();
     }
@@ -117,11 +100,6 @@ public final class MainFrame extends JFrame implements ActionListener
         desktop.mosaic();
     }
 
-    private void onMusic()
-    {
-        desktop.openMusic();
-    }
-
     private void onOffice()
     {
         boolean       bRun   = true;
@@ -146,21 +124,12 @@ public final class MainFrame extends JFrame implements ActionListener
 
         if( ! desktop.isEmpty() )
         {
-            if( ! Utils. bDEBUGGING )
+            if( ! Utils. DEBUGGING )
             {
                 nOption = JOptionPane.showConfirmDialog( this,
                           "Aún quedan cuentas abiertas.\n¿Seguro que desea salir?",
                           "Cerrando la aplicación", JOptionPane.OK_CANCEL_OPTION );
             }
-        }
-        
-        if( nActiveProcesses > 0 )
-        {
-            JOptionPane.showMessageDialog( this, "En estos momentos no se puede finalizar\n"+
-                                                 "la aplicación porque hay al menos un proceso\n"+
-                                                 "crítico ejecutándose.\n\n"+
-                                                 "Por favor, inténtelo de nuevo en unos segundos" );
-            nOption = JOptionPane.CANCEL_OPTION;
         }
 
         if( nOption == JOptionPane.OK_OPTION )

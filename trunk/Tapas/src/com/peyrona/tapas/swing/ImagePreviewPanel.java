@@ -38,14 +38,14 @@ import javax.swing.JPanel;
  *
  * @author Francisco Morero Peyrona
  */
-class PreviewImagePanel extends JPanel implements PropertyChangeListener
+class ImagePreviewPanel extends JPanel implements PropertyChangeListener
 {
     private JLabel        lblImage;
     private BufferedImage buffImage;
 
     //------------------------------------------------------------------------//
     
-    PreviewImagePanel()
+    ImagePreviewPanel()
     {
         lblImage = new JLabel();
         lblImage.setBackground( Color.WHITE );
@@ -62,19 +62,19 @@ class PreviewImagePanel extends JPanel implements PropertyChangeListener
         return buffImage;
     }
 
+    @Override
     public void propertyChange( PropertyChangeEvent evt )
     {
-        ImageIcon icon = null;
-
         if( JFileChooser.SELECTED_FILE_CHANGED_PROPERTY.equals( evt.getPropertyName() ) )
         {
-            File fImage = (File) evt.getNewValue();
+            File      file = (File) evt.getNewValue();
+            ImageIcon icon = null;
 
-            if( fImage != null )
+            if( (file != null) && (new ImageFilter().accept( file )) )
             {
                 try
                 {
-                    buffImage = ImageIO.read( fImage );
+                    buffImage = ImageIO.read( file );
 
                     float nWidth  = buffImage.getWidth();
                     float nHeight = buffImage.getHeight();
@@ -82,7 +82,7 @@ class PreviewImagePanel extends JPanel implements PropertyChangeListener
 
                     nWidth = getPreferredSize().width;
 
-                    nHeight = (nWidth * nScale); // height should be scaled from new width
+                    nHeight = (nWidth * nScale);
                     icon = new ImageIcon( buffImage.getScaledInstance( Math.max( 16, (int)nWidth ),
                                                                        Math.max( 16, (int)nHeight ),
                                           Image.SCALE_FAST ) );
@@ -94,7 +94,6 @@ class PreviewImagePanel extends JPanel implements PropertyChangeListener
             }
 
             lblImage.setIcon( icon );
-            repaint();
         }
     }
 }

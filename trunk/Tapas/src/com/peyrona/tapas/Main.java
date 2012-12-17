@@ -19,20 +19,14 @@
 package com.peyrona.tapas;
 
 import com.peyrona.tapas.mainFrame.MainFrame;
+import com.peyrona.tapas.persistence.Article;
 import com.peyrona.tapas.persistence.DataProvider;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JWindow;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.LineBorder;
 
@@ -60,7 +54,7 @@ public class Main
             @Override
             public void run()
             {
-                if( ! Utils.bDEBUGGING )
+                if( ! Utils.DEBUGGING )
                     splash.setVisible( true );
             }
         } );
@@ -87,9 +81,11 @@ public class Main
         };
         tDB.start();
 
+        // Configuración de ventanas y dialogos
+        JFrame.setDefaultLookAndFeelDecorated( false );    // Las ventanas usan el look del sistema, no del L&F de Java
+        JDialog.setDefaultLookAndFeelDecorated( false );   // Los dialogos usan el look del sistema, no del L&F de Java
+
         // Creamos la ventana principal
-        JFrame.setDefaultLookAndFeelDecorated( false );   // Las ventanas usan el look del sistema, no del L&F de Java
-        
         final MainFrame frame = MainFrame.getInstance();
                         frame.pack();
                         frame.setExtendedState( JFrame.MAXIMIZED_BOTH );
@@ -103,17 +99,26 @@ public class Main
                 frame.setVisible( true );
 
                 // Esperamos a que termine la Thread de inicializaicón de DataProvider
-                try{ tDB.join(); } catch( InterruptedException ex ) { };
+                try{ tDB.join(); } catch( InterruptedException ex ) { Utils.printError( ex ); }
+
+                // NEXT: Sistema de plugins ----------------------------
+                // Añadimos los plugins
+                // PluginManager.getInstance().init( this );
+                //------------------------------------------------------
 
                 if( DataProvider.getInstance().getConfiguration().isFullScreenSelected() )
+                {
                     setFullScreenMode( frame );
+                }
 
                 splash.dispose();
                 frame.requestFocus();
+
+                DbTest();// FIXME: quitarlo
             }
         } );
     }
-    
+
     //------------------------------------------------------------------------//
 
     private static JWindow getSplash()
@@ -125,20 +130,24 @@ public class Main
                      panel.setBorder( new LineBorder( Color.darkGray, 3 ) );
                      panel.add( image   , BorderLayout.CENTER );
                      panel.add( progress, BorderLayout.SOUTH  );
+        JWindow      window = new JWindow();
+                     window.setLayout( new BorderLayout() );
+                     window.add( panel, BorderLayout.CENTER );
+                     window.pack();
+                     window.setLocationRelativeTo( null );
 
-        JWindow splash = new JWindow();
-                splash.setLayout( new BorderLayout() );
-                splash.add( panel, BorderLayout.CENTER );
-                splash.pack();
-                splash.setLocationRelativeTo( null );
-        
-        return splash;
+        return window;
     }
 
     // Este método se invocará cuando se vaya a cerrar la JVM
     private static void onShutdown()
     {
-        // Nos aseguramos de que al cerrar la app, DerbyEmbedded se cierra apropiadamente
+        // NEXT: Sistema de plugins ----------------------------
+        // Informamos a los plugins que se va a cerrar
+        // PluginManager.getInstance().destroy();
+        //------------------------------------------------------
+
+        // Nos aseguramos de que al cerrar la app, la DB se cierra apropiadamente
         DataProvider.getInstance().disconnect();
     }
 
@@ -185,5 +194,51 @@ public class Main
                 Utils.printError( e, Level.SEVERE, "Error iniciando L&F", Utils.nEXIT_LAF_ERROR );
             }
         }
+    }
+
+    private static void DbTest()
+    {
+        Article birraCruz = new Article();
+                birraCruz.setCaption( "Cruz Campo" );
+                birraCruz.setDescription( "Cruz Campo 1/3" );
+                birraCruz.setIcon( new ImageIcon( "/home/peyrona/proyectos/Tapas/img_tmp/cruzcampo.jpg" ) );
+                birraCruz.setPrice( new BigDecimal( "2.3" ) );
+
+        Article birraMahou = new Article();
+                birraMahou.setCaption( "Mahou" );
+                birraMahou.setDescription( "Mahou 1/3" );
+                birraMahou.setIcon( new ImageIcon( "/home/peyrona/proyectos/Tapas/img_tmp/mahou.jpg" ) );
+                birraMahou.setPrice( new BigDecimal( "2.5" ) );
+
+        Article catBirra = new Article();
+                catBirra.setCaption( "Cervezas" );
+                catBirra.setIcon( new ImageIcon( "/home/peyrona/proyectos/Tapas/img_tmp/cervezas.jpg" ) );
+                catBirra.addToSubMenu( birraCruz );
+                catBirra.addToSubMenu( birraMahou );
+
+
+        Article sodaCoca = new Article();
+                sodaCoca.setCaption( "Coca-Cola" );
+                sodaCoca.setDescription( "Coca-Cola normal" );
+                sodaCoca.setIcon( new ImageIcon( "/home/peyrona/proyectos/Tapas/img_tmp/cocacola.jpg" ) );
+                sodaCoca.setPrice( new BigDecimal( "1.9" ) );
+
+        Article sodaFanta = new Article();
+                sodaCoca.setCaption( "Fanta" );
+                sodaCoca.setDescription( "Fanta naranja" );
+                sodaCoca.setIcon( new ImageIcon( "/home/peyrona/proyectos/Tapas/img_tmp/fanta.jpg" ) );
+                sodaCoca.setPrice( new BigDecimal( "1.8" ) );
+
+        Article catSodas = new Article();
+                catSodas.setCaption( "Refrescos" );
+                catSodas.setIcon( new ImageIcon( "/home/peyrona/proyectos/Tapas/img_tmp/refrescos.jpg" ) );
+                catSodas.addToSubMenu( sodaCoca );
+                catSodas.addToSubMenu( sodaFanta );
+
+        List<Article> categorias = new ArrayList<Article>();
+                      categorias.add( catBirra );
+                      categorias.add( catSodas );
+
+        DataProvider.getInstance().setCategoriesAndProducts( categorias );
     }
 }

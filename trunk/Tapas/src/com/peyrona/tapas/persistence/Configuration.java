@@ -44,7 +44,6 @@ public class Configuration
     private Image   imgHeader   = null;
     private String  sHeader     = null;
     private String  sFooter     = null;
-    private String  sMusicDir   = null;
 
     //------------------------------------------------------------------------//
 
@@ -120,25 +119,6 @@ public class Configuration
     public void setAutoAlignMode( boolean bAutoAlign )
     {
         this.bAutoAlign = bAutoAlign;
-    }
-
-    /**
-     * @return the sMusicDir
-     */
-    public String getMusicFolder()
-    {
-        return sMusicDir;
-    }
-
-    /**
-     * @param sMusicDir the sMusicDir to set
-     */
-    public void setMusicFolder( String sMusicFolder )
-    {
-        if( Utils.isEmpty( sMusicFolder ) )
-            sMusicFolder = null;
-        
-        this.sMusicDir = sMusicFolder;
     }
 
     /**
