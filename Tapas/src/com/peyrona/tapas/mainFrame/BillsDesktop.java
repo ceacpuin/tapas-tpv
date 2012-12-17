@@ -20,10 +20,8 @@ package com.peyrona.tapas.mainFrame;
 
 import com.peyrona.tapas.persistence.Bill;
 import com.peyrona.tapas.persistence.DataProvider;
-import com.peyrona.tapas.player.Player;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.beans.PropertyVetoException;
 import javax.swing.DesktopManager;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
@@ -31,7 +29,8 @@ import javax.swing.JLayeredPane;
 import javax.swing.border.LineBorder;
 
 /**
- *
+ * El JDesktopPane donde aparecen todas las JInternalFrame.
+ * 
  * @author Francisco Morero Peyrona
  */
 final class BillsDesktop extends JDesktopPane
@@ -57,24 +56,6 @@ final class BillsDesktop extends JDesktopPane
 
        if( DataProvider.getInstance().getConfiguration().isAutoAlignSelected() )
            mosaic();
-    }
-
-    void openMusic()
-    {
-        Player  player = Player.getInstance();
-        boolean bExist = getAllFramesInLayer( JLayeredPane.PALETTE_LAYER ).length > 0;
-
-        if( ! bExist )
-            add( player, JLayeredPane.PALETTE_LAYER );    // El Player se coloca por encima de las Bill
-
-        try{ player.setSelected( true ); } catch( PropertyVetoException ex ) { }
-        player.setVisible( true );
-
-        if( ! bExist )
-        {
-            getDesktopManager().dragFrame( player, (getWidth() - player.getWidth()) / 2,
-                                                   (getHeight() - player.getHeight()) / 2 );
-        }
     }
 
     boolean isEmpty()

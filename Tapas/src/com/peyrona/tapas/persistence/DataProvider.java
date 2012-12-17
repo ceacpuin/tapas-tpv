@@ -18,11 +18,12 @@
 
 package com.peyrona.tapas.persistence;
 
-import com.peyrona.tapas.persistence.Bill.Payment;
 import com.peyrona.tapas.Utils;
+import com.peyrona.tapas.persistence.Bill.Payment;
 import com.peyrona.tapas.swing.SwingUtils;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -45,7 +46,7 @@ public final class DataProvider implements DataProviderable
 
     private DataProviderable provider = null;
 
-    // Como Configuration se utiliza con mucha frecuencia, para no tener que estar 
+    // Como Configuration se utiliza con mucha frecuencia, para no tener que estar
     // leyéndola cada vez de la DB, la instancia Configuration la ponemos en una
     // variable que la usamos a modo de caché.
     private Configuration config = null;
@@ -62,7 +63,9 @@ public final class DataProvider implements DataProviderable
         synchronized( DataProvider.class )
         {
             if( instance == null )
+            {
                 instance = new DataProvider();
+            }
         }
 
         return instance;
@@ -92,7 +95,7 @@ public final class DataProvider implements DataProviderable
         }
         catch( Exception ex )
         {
-            onFatalError( ex );
+            // No es bueno, pero no hay nada que hacer.
         }
     }
 
@@ -118,10 +121,44 @@ public final class DataProvider implements DataProviderable
     public void setConfiguration( Configuration config )
     {
         try
-        {
-            // FIXME: Cortar las cadenas
+        {   // Estos son los tamaños max de las cadenas para estos datos
+            config.setEmail( Utils.setMaxLength( config.getEmail(), 48 ) );
+            config.setPassword( Utils.setMaxLength( config.getPassword(), 32 ) );
+            config.setTicketHeader( Utils.setMaxLength( config.getTicketHeader(), 999 ) );
+            config.setTicketFooter( Utils.setMaxLength( config.getTicketFooter(), 999 ) );
+
             provider.setConfiguration( config );
             this.config = config;
+        }
+        catch( Exception ex )
+        {
+            onFatalError( ex );
+        }
+    }
+
+    @Override
+    public HashMap<String,String> getConfiguration4Plugin( String sPluginName ) throws Exception
+    {
+        HashMap<String,String> ret = null;
+
+        try
+        {
+            ret = provider.getConfiguration4Plugin( sPluginName );
+        }
+        catch( Exception ex )
+        {
+            onFatalError( ex );
+        }
+
+        return ret;
+    }
+
+    @Override
+    public void setConfiguration4Plugin( String sPluginName, HashMap<String,String> conf ) throws Exception
+    {
+        try
+        {
+            provider.setConfiguration4Plugin( sPluginName, conf );
         }
         catch( Exception ex )
         {
@@ -151,11 +188,18 @@ public final class DataProvider implements DataProviderable
     {
         try
         {
-            // FIXME: Cortar las cadenas
+            // Estos son los tamaños max de las cadenas para estos los artículos
+            for( Article article : articles )
+            {
+                article.setCaption( Utils.setMaxLength( article.getCaption(), 16 ) );
+                article.setDescription( Utils.setMaxLength( article.getDescription(), 32 ) );
+            }
+
             provider.setCategoriesAndProducts( articles );
         }
         catch( Exception ex )
         {
+            ex.printStackTrace( System.err );
             onFatalError( ex );
         }
     }

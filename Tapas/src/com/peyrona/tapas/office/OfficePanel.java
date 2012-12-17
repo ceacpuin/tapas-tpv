@@ -21,7 +21,6 @@ package com.peyrona.tapas.office;
 import com.peyrona.tapas.mainFrame.MainFrame;
 import com.peyrona.tapas.persistence.Configuration;
 import com.peyrona.tapas.persistence.DataProvider;
-import com.peyrona.tapas.Utils;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -34,6 +33,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 /**
+ * El panel principal que aparece en la dialog de "Oficina".
  *
  * @author Francisco Morero Peyrona
  */
@@ -76,44 +76,30 @@ public class OfficePanel extends JTabbedPane
     // Solo los tabs que implementan ActionListener serán notifiacdos.
     private void onClose()
     {
-        // Cerrar los tabs implica leer y escribir en el repositorio de datos =>
-        // puede ser lento. Al meterlo en una thread no paramos el GUI.
-        // En Swing, la respuesta a los eventos tiene que ser muy rápida.
-        // Si fuese lenta, se utiliza SwingWorker, pero como en este caso no hay
-        // que actualizar el GUI, no es necesario utilizar SwingWorker y basta
-        // siemplemente con una Thread.
-        Thread tSave = new Thread()
+        (new Runnable()
         {
             @Override
             public void run()
             {
-                // Mientras se estén guardando datos, no se puede salir de la app
-                MainFrame.getInstance().setAllowExit( false );
-
                 ActionEvent ae = new ActionEvent( this, ActionEvent.ACTION_PERFORMED, null );
 
                 for( Component comp : OfficePanel.this.getComponents() )
                 {
                     if( comp instanceof ActionListener )
+                    {
                         ((ActionListener) comp).actionPerformed( ae );
+                    }
                 }
 
                 // No se puden destruir los componentes hasta no haber cerrado todos los tabs
                 SwingUtilities.getWindowAncestor( OfficePanel.this ).dispose();
-
-                // Por lo que a este proceso ataña, ya se puede salir de aplicación
-                MainFrame.getInstance().setAllowExit( true );
             }
-        };
+        }).run();
 
-        tSave.start();
-
-        if( ! Utils.bDEBUGGING )
-        {
-            JOptionPane.showMessageDialog( MainFrame.getInstance(),
-                                           "Si ha realizado cambios, estos no surtirán\n"+
-                                           "efecto hasta que reinicie la aplicación." );
-        }
+        JOptionPane.showMessageDialog( MainFrame.getInstance(),
+                                       "Los cambios realizados no surtirán efecto\nhasta que se reinicie la aplicación",
+                                       "Atención",
+                                       JOptionPane.INFORMATION_MESSAGE );
     }
 
     private void initComponents()
@@ -124,6 +110,6 @@ public class OfficePanel extends JTabbedPane
         add( "Caja"  , new DailyReport() );
         add( "Carta" , new Menu() );
         add( "Ticket", new Ticket( config ) );   // Estos dos componentes comparten la misma instancia de config
-        setSelectedIndex( 1 );
+        setSelectedIndex( 1 );  // Tab Caja
     }
 }

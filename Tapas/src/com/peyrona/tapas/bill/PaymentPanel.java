@@ -45,28 +45,28 @@ final class PaymentPanel extends JPanel
         JButton btnPaid = new Button( "Cobrar" );
                 btnPaid.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { closeDialog( Bill.Payment.Paid ); }
+                    @Override public void actionPerformed( ActionEvent ae )  { closeDialog( Bill.Payment.Paid ); }
                 } );
         JButton btnDefer = new Button( "Aplazar" );
                 btnDefer.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { closeDialog( Bill.Payment.Deferred ); }
+                    @Override public void actionPerformed( ActionEvent ae )  { closeDialog( Bill.Payment.Deferred ); }
                 } );
         JButton btnInvitation = new Button( "Invitación" );
                 btnInvitation.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { closeDialog( Bill.Payment.Invitation ); }
+                    @Override public void actionPerformed( ActionEvent ae )  { closeDialog( Bill.Payment.Invitation ); }
                 } );
         JButton btnNotPaid = new Button( "Impagado" );
                 btnNotPaid.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { closeDialog( Bill.Payment.NotPaid ); }
+                    @Override public void actionPerformed( ActionEvent ae )  { closeDialog( Bill.Payment.NotPaid ); }
                 } );
 
         JButton btnClose = new Button( "Cerrar" );
                 btnClose.addActionListener( new ActionListener()
                 {
-                    public void actionPerformed( ActionEvent e )  { closeDialog( null ); }
+                    @Override public void actionPerformed( ActionEvent ae )  { closeDialog( null ); }
                 } );
         
         add( btnPaid );

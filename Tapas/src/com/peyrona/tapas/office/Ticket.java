@@ -60,23 +60,30 @@ class Ticket extends javax.swing.JPanel implements ActionListener
     @Override
     public void actionPerformed( ActionEvent e )
     {
-        ImageIcon icon      = (ImageIcon) lblImageHeaderIcon.getDisabledIcon();
-        Image     imgHeader = (icon == null ?  null : icon.getImage());
+        ImageIcon icon      = getLabelHeaderIcon();
+        Image     imgHeader = (icon == null ? null : icon.getImage());
         String    sHeader   = txtHeaderText.getText();
         String    sFooter   = txtFooterText.getText();
 
+        config = new Configuration();
         config.setTicketHeaderImage( imgHeader );
         config.setTicketHeader( sHeader );
         config.setTicketFooter( sFooter );
 
-        // Config se guarda dos veces: unan vez Basic y la otra Ticket, pero lo
-        // prefiero a que la guarde OfficeDialog.
+        // Config se guarda dos veces: unan vez lo hace Basic y la otra lo hace Ticket, pero
+        // prefiero esta duplicidad a la otra opción (que la guarde OfficeDialog).
         DataProvider.getInstance().setConfiguration( config );
+    }
+
+    private ImageIcon getLabelHeaderIcon()
+    {
+        // Recojo el original (sin escalar) desde donde lo guardé
+        return (ImageIcon) lblImageHeaderIcon.getDisabledIcon();
     }
 
     private void setLabelHeaderIcon( ImageIcon icon )
     {
-        ImageIcon iconScaled = SwingUtils.scaleIcon( icon, lblImageHeaderIcon.getWidth(), lblImageHeaderIcon.getHeight() );
+        ImageIcon iconScaled = SwingUtils.scaleIcon( icon, lblImageHeaderIcon );
         lblImageHeaderIcon.setIcon( iconScaled );
         lblImageHeaderIcon.setDisabledIcon( icon );  // Guardo aquí el original, sin escalar (es tan buen sitio como otro)
     }
@@ -147,16 +154,16 @@ class Ticket extends javax.swing.JPanel implements ActionListener
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTitle)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFooterText)
+                    .addComponent(lblImageHeaderIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblImgHeader)
                         .addGap(18, 18, 18)
                         .addComponent(btnSelectImage)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnDiscardImage))
-                    .addComponent(jLabel1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFooterText)
-                    .addComponent(lblImageHeaderIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnDiscardImage)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(

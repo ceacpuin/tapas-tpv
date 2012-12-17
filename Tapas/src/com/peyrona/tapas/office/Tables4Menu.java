@@ -18,8 +18,8 @@
 
 package com.peyrona.tapas.office;
 
-import com.peyrona.tapas.persistence.Article;
 import com.peyrona.tapas.Utils;
+import com.peyrona.tapas.persistence.Article;
 import com.peyrona.tapas.swing.SwingUtils;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -30,13 +30,7 @@ import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.AbstractCellEditor;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.JViewport;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -108,14 +102,12 @@ final class Tables4Menu
 
         void shiftUpHighlightedRow()
         {
-            // TODO: implementarlo
-            JOptionPane.showMessageDialog( null, "Opción pendiente de ser implementada." );
+            shiftHighlightedRow( -1 );
         }
 
         void shiftDownHighlightedRow()
         {
-            // TODO: implementarlo
-            JOptionPane.showMessageDialog( null, "Opción pendiente de ser implementada." );
+            shiftHighlightedRow( 1 );
         }
 
         List<Article> getData()
@@ -131,10 +123,21 @@ final class Tables4Menu
                 getSelectionModel().setSelectionInterval( 0, 0 );
         }
 
+        private void shiftHighlightedRow( int nDirection )
+        {
+            int nSelect = getSelectedRow();
+            int nNewRow = ((DataModel) getModel()).shiftRow( nSelect, nDirection );
+
+            if( nNewRow > -1 )
+            {
+                getSelectionModel().setSelectionInterval( nNewRow, nNewRow );
+                makeHighlightedRowVisible();
+            }
+        }
+
         private void makeHighlightedRowVisible()
         {
-            // Hace la fila seleccionada visible
-            Rectangle rect = getCellRect( getRowCount() - 1, 0, true );
+            Rectangle rect = getCellRect( getSelectedRow(), 0, true );
             ((JViewport) getParent()).scrollRectToVisible( rect );
         }
     }
@@ -200,21 +203,25 @@ final class Tables4Menu
             this.asColNames = asColNames;
         }
 
+        @Override
         public int getColumnCount()
         {
             return asColNames.length;
         }
 
+        @Override
         public String getColumnName( int nCol )
         {
             return asColNames[nCol];
         }
 
+        @Override
         public int getRowCount()
         {
             return vLines.size();
         }
 
+        @Override
         public Object getValueAt( int nRow, int nCol )
         {
             Article article = vLines.get( nRow );
@@ -232,16 +239,17 @@ final class Tables4Menu
             {
                 switch( nCol )
                 {
-                    case TableProducts.nCOL_CAPTION    : ret = article.getCaption();                            break;
-                    case TableProducts.nCOL_DESCRIPTION: ret = article.getDescription();                        break;
+                    case TableProducts.nCOL_CAPTION    : ret = article.getCaption();                        break;
+                    case TableProducts.nCOL_DESCRIPTION: ret = article.getDescription();                     break;
                     case TableProducts.nCOL_PRICE      : ret = Utils.formatLikeCurrency( article.getPrice() );  break;
-                    case TableProducts.nCOL_ICON       : ret = article.getIcon();                               break;
+                    case TableProducts.nCOL_ICON       : ret = article.getIcon();                            break;
                 }
             }
 
             return ret;
         }
 
+        @Override
         public void setValueAt( Object value, int nRow, int nCol )
         {
             Article article = vLines.get( nRow );
@@ -266,6 +274,7 @@ final class Tables4Menu
             }
         }
 
+        @Override
         public boolean isCellEditable( int nRow, int nCol )
         {
             return true;
@@ -295,6 +304,23 @@ final class Tables4Menu
                 vLines.remove( nRow );
                 fireTableRowsDeleted( nRow, nRow );
             }
+        }
+
+        private int shiftRow( int nRow, int nDirection )
+        {
+            int NewRow = -1;
+
+            if( (nRow > -1 && nRow < getRowCount()) &&           // nRow es un valor válido
+                ((nDirection == 1 && nRow < getRowCount() - 1)   // Quiere bajar y no es ya el último
+                ||
+                 (nDirection == -1 && nRow > 0)) )               // Quiere subir y no es ya el primero
+            {
+                NewRow = (nDirection == 1 ? nRow+1: nRow-1 );
+                vLines.add( NewRow, vLines.remove( nRow ) );
+                fireTableDataChanged();
+            }
+
+            return NewRow;
         }
 
         // Esto no es alta tecnología, pero si el usuario es sensato funciona
@@ -359,6 +385,7 @@ final class Tables4Menu
             return label;
         }
 
+        @Override
         public void mouseClicked( MouseEvent me )
         {
             BufferedImage bimage = SwingUtils.ImageChooser();
@@ -370,9 +397,13 @@ final class Tables4Menu
             fireEditingStopped();            // Para que el renderer haga su trabajo
         }
 
+        @Override
         public void mousePressed(  MouseEvent e )  { }
+        @Override
         public void mouseReleased( MouseEvent e )  { }
+        @Override
         public void mouseEntered(  MouseEvent e )  { }
+        @Override
         public void mouseExited(   MouseEvent e )  { }
     }
 }

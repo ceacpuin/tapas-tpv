@@ -36,7 +36,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 /**
- *
+ * Cada una de las JInternalFrame en las que se se almacena la cuenta de cada cliente.
+ * 
  * @author Francisco Morero Peyrona
  */
 final class BillInternalFrame extends JInternalFrame

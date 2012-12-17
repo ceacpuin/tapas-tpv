@@ -18,31 +18,21 @@
 
 package com.peyrona.tapas.persistence;
 
-import java.awt.Image;
+import com.peyrona.tapas.Utils;
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.sql.Blob;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import javax.swing.ImageIcon;
 
 /**
- * Esta clase proporciona almacenamiento de datos utilizando Derby DB embebido
- * como repositorio.
+ * Esta clase proporciona almacenamiento de datos utilizando Derby DB embebido.
  * <p>
  * Al ser "package" el alcance (scope) de esta clase, sólo DataProvider puede
  * instanciarla.
- * 
+ *
  * @author Francisco Morero Peyrona
  */
 
@@ -56,7 +46,7 @@ import javax.swing.ImageIcon;
 
 // Nota2: Sobre el manejo de excepciones en Java se ha discutido hasta la saciedad,
 //        y no hay manera de poner de acuerdo a todo el mundo.
-//        En esta ocasión yo he optado por no propagar las excepciones que 
+//        En esta ocasión yo he optado por no propagar las excepciones que
 //        normalmente denotan un problema grave y sobre las que el usuario no
 //        puede hacer nada. En lugar de marear al usuario con información que no
 //        entiende, prefiero guardar la exception en un log y abortar la aplicación.
@@ -134,13 +124,13 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
             }
         }
     }
-
+// FIXME: la configuración no funciona --> no guarda y/o lee los datos
     @Override
     public Configuration getConfiguration() throws SQLException, IOException
     {
         Configuration conf = new Configuration();
         Statement     stmt = null;
-        ResultSet     rs   = null;
+        ResultSet     rs;
 
         try
         {
@@ -148,15 +138,14 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
             rs   = stmt.executeQuery( "SELECT * FROM APP.configuracion WHERE id_configuracion = 1" );
 
             if( rs.next() )
-            {                
+            {
                 conf.setPassword( rs.getString( "contrasena" ) );
                 conf.setEmail( rs.getString( "email" ) );
-                conf.setMusicFolder( rs.getString( "carpeta_musica" ) );
                 conf.setFullScreenMode( rs.getInt( "full_screen" ) != 0 );
                 conf.setAutoAlignMode( rs.getInt( "auto_alinear" ) != 0 );
                 conf.setTicketFooter( rs.getString( "ticket_pie" ) );
                 conf.setTicketHeader( rs.getString( "ticket_cabecera" ) );
-                conf.setTicketHeaderImage( imageFromBlob( rs.getBlob( "ticket_imagen" ) ) );
+                conf.setTicketHeaderImage( Utils.readImageFromBlob( rs, "ticket_imagen" ) );
             }
         }
         catch( SQLException exc )
@@ -173,41 +162,49 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
     }
 
     @Override
-    public void setConfiguration( Configuration config ) throws SQLException
+    public void setConfiguration( Configuration config ) throws SQLException, IOException
     {
         PreparedStatement psUpdate = dbConn.prepareStatement(
             "UPDATE APP.configuracion "+
-            " SET contrasena = ?, email = ?, carpeta_musica = ?, full_screen = ?, auto_alinear = ?,"+
+            " SET contrasena = ?, email = ?, full_screen = ?, auto_alinear = ?,"+
             "     ticket_imagen = ?, ticket_cabecera = ?, ticket_pie = ?"+
             " WHERE id_configuracion = 1");
 
-        Blob blobImage = imageToBlob( config.getTicketHeaderImage() );
-
-        psUpdate.setString( 1, config.getPassword() );
-        psUpdate.setString( 2, config.getEmail() );
-        psUpdate.setString( 3, config.getMusicFolder() );
-        psUpdate.setInt(    4, (config.isFullScreenSelected() ? 1 : 0) );
-        psUpdate.setInt(    5, (config.isAutoAlignSelected()  ? 1 : 0) );
-        psUpdate.setBlob(   6, blobImage );
-        psUpdate.setString( 7, config.getTicketHeader() );
-        psUpdate.setString( 8, config.getTicketFooter() );
+        psUpdate.setString(     1, config.getPassword() );
+        psUpdate.setString(     2, config.getEmail() );
+        psUpdate.setInt(        3, (config.isFullScreenSelected() ? 1 : 0) );
+        psUpdate.setInt(        4, (config.isAutoAlignSelected()  ? 1 : 0) );
+        Utils.writeImageToBlob( 5, psUpdate, config.getTicketHeaderImage() );
+        psUpdate.setString(     6, config.getTicketHeader() );
+        psUpdate.setString(     7, config.getTicketFooter() );
         psUpdate.executeUpdate();
         psUpdate.close();
+    }
 
-        if( blobImage != null )
-            blobImage.free();
+    @Override
+    public HashMap<String,String> getConfiguration4Plugin( String sPluginName ) throws Exception
+    { // TODO: implementarlo cuando sea necesario
+        return null;
+    }
+
+    @Override
+    public void setConfiguration4Plugin( String sPluginName, HashMap<String,String> conf ) throws Exception
+    {
+        // TODO: implementarlo cuando sea necesario
     }
 
     @Override
     public List<Article> getCategoriesAndProducts() throws ClassNotFoundException, IOException, SQLException
     {
         List<Article> lstArticles = new ArrayList<Article>();
+
         String sQuery = "SELECT APP.categorias.nombre AS CatNombre, APP.categorias.icono AS CatIcono, APP.productos.*"+
                         "   FROM APP.categorias, APP.productos"+
                         "   WHERE APP.categorias.id_categoria = APP.productos.id_categoria"+
                         "   ORDER BY APP.categorias.id_categoria, APP.productos.nombre";
+
         Statement stmt = null;
-        ResultSet rs   = null;
+        ResultSet rs;
 
         try
         {
@@ -226,16 +223,16 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
                 // De no ser así, es una categoría nueva => añadir la inf que falta (el icono)
                 if( nIndex == -1 )
                 {
-                    category.setIcon( iconFromBlob( rs.getBlob( "CatIcono" ) ) );
+                    category.setIcon( Utils.readImageFromBlob( rs, "CatIcono" ) );
                     lstArticles.add( category );
                 }
-                
+
                 // Además siempre hay un producto en la misma línea => actualizar los campos de producto
                 Article product = new Article();
                         product.setCaption( rs.getString( "nombre" ) );
                         product.setDescription( rs.getString( "descripcion" ) );
                         product.setPrice( rs.getBigDecimal( "precio" ) );
-                        product.setIcon( iconFromBlob( rs.getBlob( "icono" ) ) );
+                        product.setIcon( Utils.readImageFromBlob( rs, "icono" ) );
                 lstArticles.get( lstArticles.size() - 1 ).addToSubMenu( product );
             }
         }
@@ -246,7 +243,9 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         finally
         {
             if( stmt != null )    // stmt.close() cierra automáticamente los rs asociados
+            {
                 try{ stmt.close(); } catch( SQLException se ) { /* Nothing to do */ }
+            }
         }
 
         return lstArticles;
@@ -258,7 +257,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
     public void setCategoriesAndProducts( List<Article> articles ) throws IOException, SQLException
     {
         PreparedStatement psCategories = dbConn.prepareStatement(
-                "INSERT INTO App.categorias (nombre, icono) VALUES (?, ?)",
+                "INSERT INTO App.categorias (nombre, icono) VALUES (?,?)",
                 Statement.RETURN_GENERATED_KEYS );
 
         PreparedStatement psProducts = dbConn.prepareStatement(
@@ -271,39 +270,41 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
 
         for( Article category : articles )
         {
-            Blob blobIcon = iconToBlob( category.getIcon() );
-
             psCategories.clearParameters();
             psCategories.setString( 1, category.getCaption() );
-            psCategories.setBlob(   2, blobIcon );
+            Utils.writeImageToBlob( 2, psCategories, category.getImage() );
             psCategories.executeUpdate();
-
-            if( blobIcon != null )
-                blobIcon.free();
 
             ResultSet rs = psCategories.getGeneratedKeys();
 
-            if( rs.next() )    // Solo hay un record en este ResultSet
+            if( rs.next() )    // Sólo hay un record en este ResultSet y este contine el ID de la última categoría insertada
+            {
                 category.setId( rs.getInt( 1 ) );
+            }
 
             rs.close();
 
             for( Article product : category.getSubMenu() )
             {
-                blobIcon = iconToBlob( product.getIcon() );
-
                 psProducts.clearParameters();
                 psProducts.setInt(        1, category.getId() );
                 psProducts.setString(     2, product.getCaption() );
                 psProducts.setString(     3, product.getDescription() );
                 psProducts.setBigDecimal( 4, product.getPrice() );
-                psProducts.setBlob(       5, blobIcon );
+                Utils.writeImageToBlob(   5, psProducts, product.getImage() );
                 psProducts.executeUpdate();
-
-                if( blobIcon != null )
-                    blobIcon.free();
             }
         }
+
+////        for( Article category : articles )
+////        {
+////            InputStream is = Imge2InputStream( category.getIcon() );
+////            psCategories.clearParameters();
+////            psCategories.setString( 1, category.getCaption() );
+////            psCategories.setBinaryStream( 2, is );
+////            psCategories.executeUpdate();
+////            is.close();
+////        }
 
         psProducts.close();
         psCategories.close();
@@ -421,7 +422,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         bSuccess = bSuccess && fDbDir.canRead() && fDbDir.canWrite();
 
         if( ! bSuccess )
-            throw new IOException( "Can't create db directory in ["+ sDbDir +"]" );
+            throw new IOException( "No se puede crear el directorio ["+ sDbDir +"]" );
 
         return sDbDir;
     }
@@ -474,77 +475,6 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         }
     }
 
-    private Blob imageToBlob( Image image ) throws SQLException
-    {
-        if( image == null )
-            return iconToBlob( null );
-
-        return iconToBlob( new ImageIcon( image) );
-    }
-
-    private Blob iconToBlob( ImageIcon icon ) throws SQLException
-    {
-        Blob blob = null;
-
-        if( icon != null )
-        {
-            blob = dbConn.createBlob();
-
-            try
-            {
-                ObjectOutputStream oos;
-                                   oos = new ObjectOutputStream( blob.setBinaryStream( 1 ) );
-                                   oos.writeObject( icon );
-                                   oos.close();
-            }
-            catch( Exception exc )
-            {
-                if( exc instanceof SQLException )
-                    throw (SQLException) exc;
-                else
-                    throw new SQLException( exc.getMessage() );
-            }
-        }
-
-        return blob;
-    }
-
-    private Image imageFromBlob( Blob blob ) throws SQLException
-    {
-        ImageIcon icon = iconFromBlob( blob );
-
-        return (icon == null ? null : icon.getImage());
-    }
-
-    private ImageIcon iconFromBlob( Blob blob ) throws SQLException
-    {
-        ImageIcon icon = null;
-
-        if( blob != null )
-        {
-            if( blob.length() > 0 )
-            {
-                try
-                {
-                    ObjectInputStream ois = new ObjectInputStream( blob.getBinaryStream() );
-
-                    icon = (ImageIcon) ois.readObject();
-                    ois.close();
-                }
-                catch( Exception exc )
-                {
-                    if( exc instanceof SQLException )
-                        throw (SQLException) exc;
-                    else
-                        throw new SQLException( exc.getMessage() );
-                }
-            }
-
-            blob.free();
-        }
-
-        return icon;
-    }
 // TODO: probar este método
     private List<Bill> resultSetToBillsList( String sCondition, boolean bDelete ) throws SQLException
     {
@@ -573,7 +503,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
             }
 
             BillLine billLine = new BillLine( rs.getInt( "CANTIDAD" ),
-                                              rs.getString( "PRODUCTO" ), 
+                                              rs.getString( "PRODUCTO" ),
                                               rs.getBigDecimal( "PRECIO" ) );
             bill.addLine( billLine );
         }

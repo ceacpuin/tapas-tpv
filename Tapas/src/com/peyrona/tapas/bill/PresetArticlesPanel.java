@@ -20,27 +20,12 @@ package com.peyrona.tapas.bill;
 
 import com.peyrona.tapas.persistence.Article;
 import com.peyrona.tapas.persistence.DataProvider;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JToggleButton;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -112,7 +97,7 @@ final class PresetArticlesPanel extends JPanel
             {
                 EventQueue.invokeLater( new Runnable()
                 {
-                    public void run(){ button.getButton().doClick(); }
+                    @Override public void run() { button.getButton().doClick(); }
                 } );
             }
         }

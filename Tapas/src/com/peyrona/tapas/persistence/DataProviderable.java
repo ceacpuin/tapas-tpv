@@ -19,6 +19,7 @@
 package com.peyrona.tapas.persistence;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -43,6 +44,10 @@ public interface DataProviderable
     Configuration getConfiguration() throws Exception;
 
     void setConfiguration( Configuration config ) throws Exception;
+    
+    HashMap<String,String> getConfiguration4Plugin( String sPluginName ) throws Exception;
+
+    void setConfiguration4Plugin( String sPluginName, HashMap<String,String> config ) throws Exception;
 
     List<Article> getCategoriesAndProducts() throws Exception;
 

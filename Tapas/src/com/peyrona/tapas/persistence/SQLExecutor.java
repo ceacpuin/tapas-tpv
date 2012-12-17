@@ -18,11 +18,7 @@
 
 package com.peyrona.tapas.persistence;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -104,8 +100,6 @@ public class SQLExecutor
             if( stmt != null )
                 try{ stmt.close(); } catch( SQLException se ) { /* Nothing to do */ }
         }
-
-        añadeAlgunosArtículosParaPoderHacerPruebas(); // FIXME QUITARLO
     }
 
     boolean isSQL( String s )
@@ -114,45 +108,5 @@ public class SQLExecutor
 
         return (sLine.length() > 0) &&
                (! sLine.startsWith( sSQL_Comment ));
-    }
-
-    private static void añadeAlgunosArtículosParaPoderHacerPruebas()
-    {
-        Article proMahou = new Article();
-                proMahou.setCaption( "Mahou 1/3" );
-                proMahou.setDescription( "Mahou 1/3 - 5 estrellas" );
-                proMahou.setPrice( BigDecimal.valueOf( 1.9d ) );
-               /// proMahou.setIcon( new ImageIcon( "/home/peyrona/proyectos/Tapas/img/mahou.png" ) );
-
-        Article proCruz = new Article();
-                proCruz.setCaption( "Cruzcampo 1/5" );
-                proCruz.setDescription( "Cruzcampo 1/5" );
-                proCruz.setPrice( BigDecimal.valueOf( 1.7d ) );
-
-        Article catBirras = new Article();
-                catBirras.setCaption( "Cervezas" );
-                catBirras.addToSubMenu( proCruz );
-                catBirras.addToSubMenu( proMahou );
-
-        Article proCoca = new Article();
-                proCoca.setCaption( "CocaCola 1/2" );
-                proCoca.setDescription( "CocaCola 1/2 litro" );
-                proCoca.setPrice( BigDecimal.valueOf( 1.5d ) );
-
-        Article proFanta = new Article();
-                proFanta.setCaption( "Fanta naranja" );
-                proFanta.setDescription( "Fanta naranja" );
-                proFanta.setPrice( BigDecimal.valueOf( 1.4d ) );
-
-        Article catColas = new Article();
-                catColas.setCaption( "Refrescos" );
-                catColas.addToSubMenu( proCoca );
-                catColas.addToSubMenu( proFanta );
-
-        List<Article> list = new ArrayList<Article>();
-                      list.add( catBirras );
-                      list.add( catColas );
-
-        DataProvider.getInstance().setCategoriesAndProducts( list );
     }
 }

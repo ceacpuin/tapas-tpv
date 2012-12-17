@@ -7,6 +7,7 @@ package com.peyrona.tapas.swing;
 
 import com.peyrona.tapas.Utils;
 import com.peyrona.tapas.mainFrame.MainFrame;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -40,7 +41,7 @@ public class SwingUtils
     public static BufferedImage ImageChooser()
     {
         BufferedImage     bufImage = null;
-        PreviewImagePanel preview  = new PreviewImagePanel();
+        ImagePreviewPanel preview  = new ImagePreviewPanel();
         JFileChooser      chooser  = new JFileChooser();
                           chooser.setAccessory( preview );
                           chooser.addPropertyChangeListener( preview );
@@ -53,35 +54,54 @@ public class SwingUtils
         return bufImage;
     }
 
+    /**
+     * Hace que un icon encaje en el componente sin perder sus proporciones.
+     *
+     * @param icon
+     * @param comp
+     * @return
+     */
+    public static ImageIcon scaleIcon( ImageIcon icon, Component comp )
+    {
+        return scaleIcon( icon, comp.getWidth(), comp.getHeight() );
+    }
+
     public static ImageIcon scaleIcon( ImageIcon icon, int nCompWidth, int nCompHeight )
     {// FIXME: No va bien
         if( icon == null )
             return null;
 
-        float nImgWidth  = icon.getIconHeight();
+        float nImgWidth  = icon.getIconWidth();
         float nImgHeight = icon.getIconHeight();
-        float nScale     = nImgHeight / nImgWidth;
+        float nRatio     = nImgWidth / nImgHeight;
 
-        if( nImgWidth > nCompWidth )
+        if( nImgWidth > nCompWidth || nImgHeight > nCompHeight )    // Uno de los lados de la imagen es mayor que el destino
         {
-            nImgWidth   = nCompWidth;
-            nImgHeight *= nScale;
+            if( nImgWidth > nCompWidth )
+            {
+                nImgWidth   = nCompWidth;
+                nImgHeight *= nRatio;
+            }
+
+            if( nImgHeight > nCompHeight )
+            {
+                nImgHeight = nCompHeight;
+                nImgWidth *= nRatio;
+            }
         }
-
-        if( nImgHeight > nCompHeight )
+        else                                                       // Uno de los lados de la imagen es menor que el destino
         {
-            nImgHeight = nCompHeight;
-            nImgWidth *= nScale;
+            
         }
 
         Image image = icon.getImage();
-              image.getScaledInstance( Math.max( 16, (int)nImgWidth ),
-                                       Math.max( 16, (int)nImgHeight ),
+              image.getScaledInstance( Math.max( 16, (int) nImgWidth ),
+                                       Math.max( 16, (int) nImgHeight ),
                                        Image.SCALE_SMOOTH );
 
         return (new ImageIcon( image ));
     }
-
+    
     public static void showError( final Throwable th, final Level level, final String sMessage, final int nExitCode )
     {
         Utils.printError( th, level, sMessage, nExitCode );

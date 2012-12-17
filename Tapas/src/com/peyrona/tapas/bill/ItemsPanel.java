@@ -21,16 +21,11 @@ package com.peyrona.tapas.bill;
 import com.peyrona.tapas.Utils;
 import com.peyrona.tapas.persistence.Article;
 import com.peyrona.tapas.persistence.BillLine;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JLabel;
-
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -213,6 +208,7 @@ final class ItemsPanel extends JScrollPane
     //------------------------------------------------------------------------//
     private final class CellRendererToEditPrice implements TableCellRenderer
     {
+        @Override
         public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected,
                                                         boolean hasFocus, int row, int column )
         {
@@ -239,16 +235,19 @@ final class ItemsPanel extends JScrollPane
     {
         private List<BillLine> vLines = new ArrayList<BillLine>();
 
+        @Override
         public int getColumnCount()
         {
             return nCOL_COUNT;
         }
 
+        @Override
         public int getRowCount()
         {
             return vLines.size();
         }
 
+        @Override
         public Object getValueAt( int nRow, int nCol )
         {
             Object ret = null;
@@ -266,6 +265,7 @@ final class ItemsPanel extends JScrollPane
             return ret;
         }
 
+        @Override
         public boolean isCellEditable( int nRow, int nCol )
         {
             return false;

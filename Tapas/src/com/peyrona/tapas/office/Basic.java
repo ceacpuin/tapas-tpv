@@ -20,10 +20,8 @@ package com.peyrona.tapas.office;
 
 import com.peyrona.tapas.persistence.Configuration;
 import com.peyrona.tapas.persistence.DataProvider;
-import com.peyrona.tapas.swing.SwingUtils;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
 /**
  *
@@ -42,7 +40,6 @@ class Basic extends javax.swing.JPanel implements ActionListener
 
         txtEmail.setText( config.getEmail() );
         txtPassword.setText( config.getPassword() );
-        txtMusicFolder.setText( config.getMusicFolder() );
         chkFullScreen.setSelected( config.isFullScreenSelected() );
         chkAutoAlign.setSelected( config.isAutoAlignSelected() );
     }
@@ -55,20 +52,16 @@ class Basic extends javax.swing.JPanel implements ActionListener
     {
         boolean bFullScr   = chkFullScreen.isSelected();
         boolean bAutoAlign = chkAutoAlign.isSelected();
-        String  sPassword  = txtPassword.getText();
-        char[]  acPassword = null;
+        char[]  acPassword = txtPassword.getText().trim().toCharArray();
         String  sEmail     = txtEmail.getText();
-        String  sMusicDir  = txtMusicFolder.getText();
-
-        if( sPassword != null  )
-            acPassword = sPassword.trim().toCharArray();
 
         config.setEmail( sEmail );
         config.setPassword( acPassword );
-        config.setMusicFolder( sMusicDir );
         config.setFullScreenMode( bFullScr );
         config.setAutoAlignMode( bAutoAlign );
 
+        // Config se guarda dos veces: unan vez lo hace Basic y la otra lo hace Ticket, pero
+        // prefiero esta duplicidad a la otra opción (que la guarde OfficeDialog).
         DataProvider.getInstance().setConfiguration( config );
     }
 
@@ -87,9 +80,6 @@ class Basic extends javax.swing.JPanel implements ActionListener
         lblEmail = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
         chkAutoAlign = new javax.swing.JCheckBox();
-        lblMusicFolder = new javax.swing.JLabel();
-        txtMusicFolder = new javax.swing.JTextField();
-        btnSelectFolder = new javax.swing.JButton();
 
         lblPassword.setText("Contraseña administrativa");
 
@@ -98,15 +88,6 @@ class Basic extends javax.swing.JPanel implements ActionListener
         lblEmail.setText("email (enviar diario de caja)");
 
         chkAutoAlign.setText("Alinear automáticamente las cuentas");
-
-        lblMusicFolder.setText("Carpeta base de música");
-
-        btnSelectFolder.setText("...");
-        btnSelectFolder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                onSelectFolder(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -120,22 +101,17 @@ class Basic extends javax.swing.JPanel implements ActionListener
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblEmail)
-                            .addComponent(lblPassword)
-                            .addComponent(lblMusicFolder))
+                            .addComponent(lblPassword))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(txtMusicFolder, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSelectFolder)))))
+                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPassword)
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -144,35 +120,19 @@ class Basic extends javax.swing.JPanel implements ActionListener
                     .addComponent(lblEmail)
                     .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblMusicFolder)
-                    .addComponent(txtMusicFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSelectFolder))
-                .addGap(18, 18, 18)
                 .addComponent(chkFullScreen)
                 .addGap(18, 18, 18)
                 .addComponent(chkAutoAlign)
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void onSelectFolder(java.awt.event.ActionEvent evt)//GEN-FIRST:event_onSelectFolder
-    {//GEN-HEADEREND:event_onSelectFolder
-        File folder = SwingUtils.folderChooser();
-
-        if( folder != null )
-            txtMusicFolder.setText( folder.getAbsolutePath() );
-    }//GEN-LAST:event_onSelectFolder
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnSelectFolder;
     private javax.swing.JCheckBox chkAutoAlign;
     private javax.swing.JCheckBox chkFullScreen;
     private javax.swing.JLabel lblEmail;
-    private javax.swing.JLabel lblMusicFolder;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtMusicFolder;
     private javax.swing.JTextField txtPassword;
     // End of variables declaration//GEN-END:variables
 }

@@ -51,6 +51,7 @@ public class ImageHighlightFilter extends RGBImageFilter
         canFilterIndexColorModel = true;
     }
 
+    @Override
     public int filterRGB( int x, int y, int rgb )
     {
         int r = (rgb >> 16) & 0xff;
