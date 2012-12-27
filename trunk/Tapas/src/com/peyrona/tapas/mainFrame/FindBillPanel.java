@@ -19,7 +19,7 @@
 package com.peyrona.tapas.mainFrame;
 
 import com.peyrona.tapas.persistence.Bill;
-import com.peyrona.tapas.swing.KeyboardVirtual;
+import com.peyrona.tapas.swing.TecladoVirtual;
 import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 
@@ -190,7 +190,7 @@ final class FindBillPanel extends javax.swing.JPanel
 
     private void onKeyboard(java.awt.event.ActionEvent evt)//GEN-FIRST:event_onKeyboard
     {//GEN-HEADEREND:event_onKeyboard
-         (new KeyboardVirtual( txtAccName )).setVisible( true );
+         (new TecladoVirtual( txtAccName )).showInDialog();
     }//GEN-LAST:event_onKeyboard
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
