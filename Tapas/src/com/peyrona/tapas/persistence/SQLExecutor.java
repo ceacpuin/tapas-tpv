@@ -19,12 +19,9 @@
 package com.peyrona.tapas.persistence;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Procesa los comandos SQL almacenados en un fichero.
@@ -62,8 +59,8 @@ public class SQLExecutor
             throw new FileNotFoundException();
 
         Statement      stmt  = null;
-        String         sLine = null;
         StringBuilder  sb    = new StringBuilder( 1024 );
+        String         sLine;
 
         try
         {

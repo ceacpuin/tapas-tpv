@@ -18,7 +18,7 @@
 
 package com.peyrona.tapas.bill;
 
-import com.peyrona.tapas.swing.KeyboardVirtual;
+import com.peyrona.tapas.swing.TecladoVirtual;
 import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -57,6 +57,6 @@ final class BillOwnerPanel extends JPanel implements ActionListener
     @Override
     public void actionPerformed( ActionEvent e )
     {
-        (new KeyboardVirtual( txtName )).setVisible( true );
+        (new TecladoVirtual( txtName )).showInDialog();
     }
 }

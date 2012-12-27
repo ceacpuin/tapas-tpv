@@ -22,42 +22,54 @@ import com.peyrona.tapas.mainFrame.MainFrame;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
 
 /**
  * Muestra un teclado en pantalla y le envía las pulsaciones de tecla al Text
  * Component asociado.
+ * <p>
+ * Se podría pensar que sería más elegante hacer que el JPanel admitiese
+ * listeners y que informase a estos cuando se pulsa una tecla, pero no es así,
+ * de hecho es menos elegante y el código resultante para utilizar esta clase
+ * es mucho más engorroso.
  *
  * @author Francisco Morero Peyrona
  */
-public final class KeyboardVirtual extends JDialog
+public final class TecladoVirtual extends JPanel
 {
-    private JTextComponent text;   // A quién se le van a enviar las letras
+    private static final String BTN_CLEAR = "CLEAR";
+    private static final String BTN_CLOSE = "CLOSE";
+
+    private JTextComponent text   = null;   // A quién se le van a enviar las letras
+    private JDialog        dialog = null;   // Para facilitar el mostrar el panel
 
     //------------------------------------------------------------------------//
 
-    public KeyboardVirtual( JTextComponent text )
+    public TecladoVirtual( JTextComponent text )
     {
-        super( MainFrame.getInstance() );
-
         this.text = text;
-
-        setModal( true );
-        setTitle( "Teclado virtual" );
-        getContentPane().setLayout( new GridLayout( 4,10 ) );
-        setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
         initComponents();
-        pack();
+    }
 
-        Point position = text.getLocationOnScreen();
+    //------------------------------------------------------------------------//
 
-        setLocation( position.x - (getWidth() - text.getWidth()) / 2,
-                     position.y + text.getHeight() + 5 );
+    public void showInDialog()
+    {
+        Point position = text.getLocationOnScreen(); // Si está a null, es un error del programador: que casque
+
+        dialog = new JDialog( MainFrame.getInstance() );
+        dialog.setModal( true );
+        dialog.setTitle( "Teclado virtual" );
+        dialog.setContentPane( this );
+        dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
+        dialog.pack();
+        dialog.setLocation( position.x - (getWidth() - text.getWidth()) / 2,
+                            position.y + text.getHeight() + 5 );
+        dialog.setVisible( true );
     }
 
     //------------------------------------------------------------------------//
@@ -69,11 +81,15 @@ public final class KeyboardVirtual extends JDialog
                            "ASDFGHJKLÑ"+
                            "ZXCVBNM ";
 
-        for( int n = 0; n < sKeyboard.length(); n++ )
-            add( new Button( sKeyboard.charAt( n ) ) );
+        setLayout( new GridLayout( 4,10 ) );
 
-        add( new Button( "CLEAR", new ImageIcon( getClass().getResource( "images/clear.png" ) ) ) );
-        add( new Button( "CLOSE", new ImageIcon( getClass().getResource( "images/close.png" ) ) ) );
+        for( int n = 0; n < sKeyboard.length(); n++ )
+        {
+            add( new Button( sKeyboard.charAt( n ) ) );
+        }
+
+        add( new Button( BTN_CLEAR, new ImageIcon( getClass().getResource( "images/clear.png" ) ) ) );
+        add( new Button( BTN_CLOSE, new ImageIcon( getClass().getResource( "images/close.png" ) ) ) );
     }
 
     //------------------------------------------------------------------------//
@@ -95,7 +111,7 @@ public final class KeyboardVirtual extends JDialog
                 public void actionPerformed( ActionEvent ae )
                 {
                     // Lamentablemente, JTextComponent no tiene un método append
-                    KeyboardVirtual.this.text.setText( KeyboardVirtual.this.text.getText() +
+                    TecladoVirtual.this.text.setText( TecladoVirtual.this.text.getText() +
                                                 ((Button) ae.getSource()).getText() );
                 }
             } );
@@ -113,10 +129,15 @@ public final class KeyboardVirtual extends JDialog
                 @Override
                 public void actionPerformed( ActionEvent ae )
                 {
-                    if( "CLEAR".equals( getName() ) )
-                        KeyboardVirtual.this.text.setText( null );
-                    else
-                        KeyboardVirtual.this.dispose();
+                    if( BTN_CLEAR.equals( getName() ) )
+                    {
+                        TecladoVirtual.this.text.setText( null );
+                    }
+                    else if( BTN_CLOSE.equals( getName() ) && dialog != null )
+                    {
+                        dialog.dispose();
+                        dialog = null;
+                    }
                 }
             } );
         }
