@@ -43,13 +43,13 @@ import javax.swing.ImageIcon;
  *
  * @author Francisco Morero Peyrona
  */
-public class Utils
+public final class Utils
 {
-    private static NumberFormat nfCurrency  = NumberFormat.getCurrencyInstance();
+    private static NumberFormat nfCurrency = NumberFormat.getCurrencyInstance();
     private static NumberFormat nfNoSymbol = NumberFormat.getInstance();
 
     public static final int nEXIT_NO_EXIT   = -1;
-    public static final int nEXIT_NO_ERROR =  0;
+    public static final int nEXIT_NO_ERROR  =  0;
     public static final int nEXIT_LAF_ERROR =  1;
     public static final int nEXIT_DB_ERROR  =  2;
 
@@ -95,6 +95,11 @@ public class Utils
     public static boolean isEmpty( String s )
     {
         return (s == null || s.trim().length() == 0);
+    }
+
+    public static boolean isNotEmpty( String s )
+    {
+        return (s != null && s.trim().length() > 0);
     }
 
     public static String setMaxLength( String s, int len )
@@ -204,7 +209,14 @@ public class Utils
             return null;
         }
 
-        BufferedImage         image = getBufferedImageFromImage( icon.getImage() );
+        Image img = icon.getImage();
+
+        if( img.getWidth( null ) < 1 && img.getHeight( null ) < 1 )
+        {
+            return null;
+        }
+
+        BufferedImage         image = getBufferedImageFromImage( img );
         ByteArrayOutputStream baos  = new ByteArrayOutputStream();
 
         ImageIO.write( image, "png", baos );

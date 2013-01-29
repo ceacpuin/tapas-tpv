@@ -31,7 +31,7 @@ public interface DataProviderable
     /**
      * Performs the connection to data sopurce and creates (if needed) the
      * Relational Data Model (tables, foreign keys and indexes).
-     * 
+     *
      * @throws Exception
      */
     void connect() throws Exception;
@@ -44,14 +44,14 @@ public interface DataProviderable
     Configuration getConfiguration() throws Exception;
 
     void setConfiguration( Configuration config ) throws Exception;
-    
+
     HashMap<String,String> getConfiguration4Plugin( String sPluginName ) throws Exception;
 
     void setConfiguration4Plugin( String sPluginName, HashMap<String,String> config ) throws Exception;
 
-    List<Article> getCategoriesAndProducts() throws Exception;
+    List<Product> getCategoriesAndProducts() throws Exception;
 
-    void setCategoriesAndProducts( List<Article> articles ) throws Exception;
+    void setCategoriesAndProducts( List<Product> products ) throws Exception;
 
     Bill insertBill( Bill bill ) throws Exception;
 

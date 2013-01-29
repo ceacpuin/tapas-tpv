@@ -19,7 +19,7 @@
 package com.peyrona.tapas.mainFrame;
 
 import com.peyrona.tapas.Utils;
-import com.peyrona.tapas.bill.BillPanel;
+import com.peyrona.tapas.account.BillAndProductsPanel;
 import com.peyrona.tapas.persistence.Bill;
 import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.BorderLayout;
@@ -37,7 +37,7 @@ import javax.swing.border.EmptyBorder;
 
 /**
  * Cada una de las JInternalFrame en las que se se almacena la cuenta de cada cliente.
- * 
+ *
  * @author Francisco Morero Peyrona
  */
 final class BillInternalFrame extends JInternalFrame
@@ -48,7 +48,7 @@ final class BillInternalFrame extends JInternalFrame
     private Bill        bill;
 
     //------------------------------------------------------------------------//
-    
+
     BillInternalFrame()
     {
         this( null );
@@ -56,21 +56,21 @@ final class BillInternalFrame extends JInternalFrame
 
     BillInternalFrame( Bill bill )
     {
-        bill      = (bill == null ? new Bill() : bill);
+        this.bill = (bill == null ? new Bill() : bill);
         lblAmount = new LabelAmount();
-        lblAmount.setAmount( bill.getTotal() );
+        lblAmount.setAmount( this.bill.getTotal() );
 
         setResizable( false );
         setIconifiable( false );
         setMaximizable( false );
         setClosable( false );
         setFrameIcon( null );
-        setCustomer( bill.getCustomer() );
-        setLocation( nCount*12+4, nCount*12+4 );
-        
+        setCustomer( this.bill.getCustomer() );
+        setLocation( (nCount*12)+4, (nCount*12)+4 );
+
         nCount = nCount > 30 ? 0 : nCount+1;
 
-        JPanel panel = new JPanel( new BorderLayout( 0, 7 ) );
+        JPanel panel = new JPanel( new BorderLayout( 0,7 ) );
                panel.setBorder( new EmptyBorder( 9,9,9,9 ) );
                panel.add( new ButtonUpdate(), BorderLayout.CENTER );
                panel.add( lblAmount         , BorderLayout.SOUTH );
@@ -78,6 +78,8 @@ final class BillInternalFrame extends JInternalFrame
         getContentPane().add( panel );
         pack();
     }
+
+    //----------------------------------------------------------------------------//
 
     @Override
     public void setSelected( boolean bSelected )
@@ -96,7 +98,23 @@ final class BillInternalFrame extends JInternalFrame
 
     private void setCustomer( String sCustomer )
     {
-        sCustomer = (sCustomer.length() > 3 ? sCustomer : "Cuenta - "+ sCustomer );
+        // Cada vez que se abre una cuenta nueva, el sistema le da un número nuevo
+        // (ordinal consecutivo), esto es un Nombre Automático, pero el usuario
+        // puede darle a la cuenta un nombre más descriptivo: el del cliente p.ej.
+        boolean isAutomaticName = true;
+
+        // Comprueba si es el automático o no
+        for( char c : sCustomer.toCharArray() )
+        {
+            if( ! Character.isDigit( c ) )
+            {
+                isAutomaticName = false;
+                break;
+            }
+        }
+
+        // Actrúa en consecuencia
+        sCustomer = (isAutomaticName ? "Cuenta - "+ sCustomer : sCustomer);
 
         setTitle( sCustomer );
     }
@@ -133,10 +151,10 @@ final class BillInternalFrame extends JInternalFrame
         @Override
         public void actionPerformed( ActionEvent ae )
         {
-            BillPanel dialog = new BillPanel( BillInternalFrame.this.bill );
-                          dialog.showDialog();
+            BillAndProductsPanel panel = new BillAndProductsPanel( BillInternalFrame.this.bill );
+                                 panel.showInDialog();
 
-            bill = dialog.getBill();
+            bill = panel.getBill();
             setCustomer( bill.getCustomer() ); // Por si ha cambiado (es más simple que comprobar si ha cambiado)
             lblAmount.setAmount( bill.getTotal() );
 

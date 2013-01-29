@@ -18,6 +18,7 @@
 
 package com.peyrona.tapas.persistence;
 
+import com.peyrona.tapas.account.products.MasterDetailPanel;
 import java.awt.Image;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,33 +26,33 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 /**
- * Clase Entidad (Entity Class) que representa elementos "Articles" de la
+ * Clase Entidad (Entity Class) que representa elementos "Products" de la
  * fuente de datos.
  * <p>
  * En la implementación por defecto del repositorio de datos se utiliza una
  * base de datos Derby y en este caso, esta entidad se corresponde con las tablas
- * "Catgorias" y "Productos".
+ * "Categorías" y "Productos".
  * <p>
  * Nota: Esta clase se utiliza tanto para las entidades "Categorías" como
  * "Productos", que son (en el caso de Derby) dos tablas separadas, pero por
  * simplicidad se utiliza una sola Clase Entidad (total, por desperdiciar un par
  * de nulls no se va a morir ninguna JVM).
- * 
+ *
  * @author Francisco Morero Peyrona
  */
-public final class Article
+public final class Product
 {
     private int           nId;
     private String        sCaption;
     private String        sDescription;
     private BigDecimal    nPrice;
     private ImageIcon     icon;
-    private List<Article> lstSubMenu;
+    private List<Product> lstSubMenu;
 
     //------------------------------------------------------------------------//
     // PUBLIC INTERFACE
 
-    public Article()
+    public Product()
     {
         setId( -1 );
         setCaption( "Sin nombre" );
@@ -98,33 +99,43 @@ public final class Article
     public ImageIcon getIcon()
     {
         if( this.icon == null )
+        {
             return null;
+        }
         else
+        {
             return new ImageIcon( icon.getImage() );    // Casi "copia defensiva"
-    }
-
-    public void setIcon( ImageIcon icon )
-    {
-        if( icon == null )
-            setIcon( (Image) null );
-        else
-            setIcon( icon.getImage() );
+        }
     }
 
     public Image getImage()
     {
         if( this.icon == null )
+        {
             return null;
+        }
         else
+        {
             return icon.getImage();
+        }
     }
+
+    public void setIcon( ImageIcon icon )
+    {
+        if( icon == null )
+        {
+            setIcon( (Image) null );
+        }
+        else
+        {
+            setIcon( icon.getImage() );
+        }
+    }
+
 
     public void setIcon( Image image )
     {
-        if( image == null )
-            this.icon = null;
-        else
-            this.icon = new ImageIcon( image );
+        this.icon = ((image == null) ? null : new ImageIcon( image ));
     }
 
     /**
@@ -143,7 +154,7 @@ public final class Article
     /**
      * @return the lstSubMenu
      */
-    public List<Article> getSubMenu()
+    public List<Product> getSubMenu()
     {
         return lstSubMenu;
     }
@@ -151,22 +162,24 @@ public final class Article
     /**
      * @param lstSubMenu the lstSubMenu to set
      */
-    public void setSubMenu( List<Article> lstSubMenu )
+    public void setSubMenu( List<Product> lstSubMenu )
     {
         if( lstSubMenu == null )
-            lstSubMenu = new ArrayList<Article>();
+        {
+            lstSubMenu = new ArrayList<Product>();
+        }
 
         this.lstSubMenu = lstSubMenu;
     }
 
     /**
      * Añade un artículo nuevo al subemnú.
-     * 
-     * @param article
+     *
+     * @param product
      */
-    public void addToSubMenu( Article article )
+    public void addToSubMenu( Product product )
     {
-        lstSubMenu.add( article );
+        lstSubMenu.add( product );
     }
 
     @Override
@@ -180,7 +193,7 @@ public final class Article
         {
             return false;
         }
-        final Article other = (Article) obj;
+        final Product other = (Product) obj;
         if( this.nId != other.nId )
         {
             return false;

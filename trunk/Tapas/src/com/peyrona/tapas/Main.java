@@ -19,7 +19,7 @@
 package com.peyrona.tapas;
 
 import com.peyrona.tapas.mainFrame.MainFrame;
-import com.peyrona.tapas.persistence.Article;
+import com.peyrona.tapas.persistence.Product;
 import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.*;
 import java.math.BigDecimal;
@@ -35,7 +35,7 @@ import javax.swing.border.LineBorder;
  *
  * @author peyrona
  */
-public class Main
+public final class Main
 {
     /**
      * La aplicación no contempla el paso de parámetros en línea de comandos.
@@ -55,7 +55,9 @@ public class Main
             public void run()
             {
                 if( ! Utils.DEBUGGING )
+                {
                     splash.setVisible( true );
+                }
             }
         } );
 
@@ -198,44 +200,46 @@ public class Main
 
     private static void DbTest()
     {
-        Article birraCruz = new Article();
+        String  sImgDir = System.getProperty( "user.dir", "." ) + "/img_tmp/";
+
+        Product birraCruz = new Product();
                 birraCruz.setCaption( "Cruz Campo" );
                 birraCruz.setDescription( "Cruz Campo 1/3" );
-                birraCruz.setIcon( new ImageIcon( "/home/peyrona/proyectos/Tapas/img_tmp/cruzcampo.jpg" ) );
+                birraCruz.setIcon( new ImageIcon( sImgDir +"cruzcampo.jpg" ) );
                 birraCruz.setPrice( new BigDecimal( "2.3" ) );
 
-        Article birraMahou = new Article();
+        Product birraMahou = new Product();
                 birraMahou.setCaption( "Mahou" );
                 birraMahou.setDescription( "Mahou 1/3" );
-                birraMahou.setIcon( new ImageIcon( "/home/peyrona/proyectos/Tapas/img_tmp/mahou.jpg" ) );
+                birraMahou.setIcon( new ImageIcon( sImgDir +"mahou.jpg" ) );
                 birraMahou.setPrice( new BigDecimal( "2.5" ) );
 
-        Article catBirra = new Article();
+        Product catBirra = new Product();
                 catBirra.setCaption( "Cervezas" );
-                catBirra.setIcon( new ImageIcon( "/home/peyrona/proyectos/Tapas/img_tmp/cervezas.jpg" ) );
+                catBirra.setIcon( new ImageIcon( sImgDir +"cervezas.jpg" ) );
                 catBirra.addToSubMenu( birraCruz );
                 catBirra.addToSubMenu( birraMahou );
 
 
-        Article sodaCoca = new Article();
+        Product sodaCoca = new Product();
                 sodaCoca.setCaption( "Coca-Cola" );
                 sodaCoca.setDescription( "Coca-Cola normal" );
-                sodaCoca.setIcon( new ImageIcon( "/home/peyrona/proyectos/Tapas/img_tmp/cocacola.jpg" ) );
+                sodaCoca.setIcon( new ImageIcon( sImgDir +"cocacola.jpg" ) );
                 sodaCoca.setPrice( new BigDecimal( "1.9" ) );
 
-        Article sodaFanta = new Article();
+        Product sodaFanta = new Product();
                 sodaCoca.setCaption( "Fanta" );
                 sodaCoca.setDescription( "Fanta naranja" );
-                sodaCoca.setIcon( new ImageIcon( "/home/peyrona/proyectos/Tapas/img_tmp/fanta.jpg" ) );
+                sodaCoca.setIcon( new ImageIcon( sImgDir +"fanta.jpg" ) );
                 sodaCoca.setPrice( new BigDecimal( "1.8" ) );
 
-        Article catSodas = new Article();
+        Product catSodas = new Product();
                 catSodas.setCaption( "Refrescos" );
-                catSodas.setIcon( new ImageIcon( "/home/peyrona/proyectos/Tapas/img_tmp/refrescos.jpg" ) );
+                catSodas.setIcon( new ImageIcon( sImgDir +"refrescos.jpg" ) );
                 catSodas.addToSubMenu( sodaCoca );
                 catSodas.addToSubMenu( sodaFanta );
 
-        List<Article> categorias = new ArrayList<Article>();
+        List<Product> categorias = new ArrayList<Product>();
                       categorias.add( catBirra );
                       categorias.add( catSodas );
 

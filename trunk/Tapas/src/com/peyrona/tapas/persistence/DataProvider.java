@@ -167,35 +167,35 @@ public final class DataProvider implements DataProviderable
     }
 
     @Override
-    public List<Article> getCategoriesAndProducts()
+    public List<Product> getCategoriesAndProducts()
     {
-        List<Article> articles = null;
+        List<Product> products = null;
 
         try
         {
-            articles = provider.getCategoriesAndProducts();
+            products = provider.getCategoriesAndProducts();
         }
         catch( Exception ex )
         {
             onFatalError( ex );
         }
 
-        return articles;
+        return products;
     }
 
     @Override
-    public void setCategoriesAndProducts( List<Article> articles )
+    public void setCategoriesAndProducts( List<Product> products )
     {
         try
         {
             // Estos son los tamaños max de las cadenas para estos los artículos
-            for( Article article : articles )
+            for( Product product : products )
             {
-                article.setCaption( Utils.setMaxLength( article.getCaption(), 16 ) );
-                article.setDescription( Utils.setMaxLength( article.getDescription(), 32 ) );
+                product.setCaption( Utils.setMaxLength( product.getCaption(), 16 ) );
+                product.setDescription( Utils.setMaxLength( product.getDescription(), 32 ) );
             }
 
-            provider.setCategoriesAndProducts( articles );
+            provider.setCategoriesAndProducts( products );
         }
         catch( Exception ex )
         {

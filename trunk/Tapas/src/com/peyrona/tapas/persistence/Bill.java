@@ -18,6 +18,7 @@
 
 package com.peyrona.tapas.persistence;
 
+import com.peyrona.tapas.Utils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +37,11 @@ public final class Bill
 {
     public enum Payment { Undefined, Paid, Deferred, Invitation, NotPaid }
 
-    public final static int NOW = -1;    // Para ser usado con setWhen(...)
-
     private static int nCount = 1;
 
     private int            nId;
     private String         sCustomer;
-    private long           nWhen;
+    private long           nWhenWasOpen;
     private Payment        payment;
     private List<BillLine> lstLines;
 
@@ -53,7 +52,7 @@ public final class Bill
     {
         setId( -1 );
         setCustomer( String.valueOf( nCount++ ) );
-        setWhen( 0l );
+        setWhenWasOpen( System.currentTimeMillis() );
         setPayment( Payment.Undefined );
         setLines( null );
     }
@@ -65,24 +64,23 @@ public final class Bill
 
     public void setCustomer( String sName )
     {
-        if( sName != null )
+        if( Utils.isNotEmpty( sName ) )
+        {
             this.sCustomer = sName;
+        }
     }
 
-    /**
-     * @return the nWhen
-     */
-    public long getWhen()
+    public long getWhenWasOpen()
     {
-        return nWhen;
+        return nWhenWasOpen;
     }
 
     /**
      * @param nWhen the nWhen to set
      */
-    public void setWhen( long nWhen )
+    public void setWhenWasOpen( long nWhen )
     {
-        this.nWhen = (nWhen < 0  ? System.currentTimeMillis() : nWhen);
+        this.nWhenWasOpen = (nWhen < 1  ? System.currentTimeMillis() : nWhen);
     }
 
     /**
@@ -115,7 +113,9 @@ public final class Bill
     public void setLines( List<BillLine> lstLines )
     {
         if( lstLines == null )
+        {
             lstLines = new ArrayList<BillLine>();
+        }
 
         this.lstLines = lstLines;
     }
@@ -123,7 +123,9 @@ public final class Bill
     public void addLine( BillLine line )
     {
         if( this.lstLines == null )
+        {
             this.lstLines = new ArrayList<BillLine>();
+        }
 
         this.lstLines.add( line );
     }
@@ -175,7 +177,7 @@ public final class Bill
         int hash = 3;
         hash = 61 * hash + this.nId;
         hash = 61 * hash + (this.sCustomer != null ? this.sCustomer.hashCode() : 0);
-        hash = 61 * hash + (int) (this.nWhen ^ (this.nWhen >>> 32));
+        hash = 61 * hash + (int) (this.nWhenWasOpen ^ (this.nWhenWasOpen >>> 32));
         hash = 61 * hash + (this.payment != null ? this.payment.hashCode() : 0);
         return hash;
     }

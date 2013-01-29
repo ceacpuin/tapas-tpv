@@ -29,6 +29,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
@@ -37,7 +38,7 @@ import javax.swing.SwingUtilities;
  *
  * @author Francisco Morero Peyrona
  */
-public class OfficePanel extends JTabbedPane
+public final class OfficePanel extends JTabbedPane
 {
     public OfficePanel()
     {
@@ -97,7 +98,7 @@ public class OfficePanel extends JTabbedPane
         }).run();
 
         JOptionPane.showMessageDialog( MainFrame.getInstance(),
-                                       "Los cambios realizados no surtirán efecto\nhasta que se reinicie la aplicación",
+                                       "Los cambios realizados surtirán efecto\ncuando se reinicie la aplicación.",
                                        "Atención",
                                        JOptionPane.INFORMATION_MESSAGE );
     }
@@ -106,7 +107,11 @@ public class OfficePanel extends JTabbedPane
     {
         Configuration config = DataProvider.getInstance().getConfiguration();
 
-        add( "Básico", new Basic( config ) );    // Estos dos componentes comparten la misma instancia de config
+        // No sé por qué, pero si no hago esto, el panel Básico, aparece en la parte inferiror del tab.
+        JPanel pnl = new JPanel( new BorderLayout() );
+               pnl.add( new Basic( config ), BorderLayout.NORTH );
+
+        add( "Básico", pnl );                    // Estos dos componentes comparten la misma instancia de config
         add( "Caja"  , new DailyReport() );
         add( "Carta" , new Menu() );
         add( "Ticket", new Ticket( config ) );   // Estos dos componentes comparten la misma instancia de config

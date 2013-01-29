@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
  *
  * @author Francisco Morero Peyrona
  */
-public class SwingUtils
+public final class SwingUtils
 {
     public static File folderChooser()
     {
@@ -91,7 +91,7 @@ public class SwingUtils
         }
         else                                                       // Uno de los lados de la imagen es menor que el destino
         {
-            
+
         }
 
         Image image = icon.getImage();
@@ -101,7 +101,7 @@ public class SwingUtils
 
         return (new ImageIcon( image ));
     }
-    
+
     public static void showError( final Throwable th, final Level level, final String sMessage, final int nExitCode )
     {
         Utils.printError( th, level, sMessage, nExitCode );

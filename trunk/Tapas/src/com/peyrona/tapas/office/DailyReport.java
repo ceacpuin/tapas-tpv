@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
  *
  * @author peyrona
  */
-class DailyReport extends javax.swing.JPanel
+final class DailyReport extends javax.swing.JPanel
 {
     /** Creates new form DailyReport */
     DailyReport()

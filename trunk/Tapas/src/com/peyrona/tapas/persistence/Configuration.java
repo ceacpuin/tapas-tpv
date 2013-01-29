@@ -35,7 +35,7 @@ import java.util.Arrays;
  *
  * @author Francisco Morero Peyrona
  */
-public class Configuration
+public final class Configuration
 {
     private char[]  acPass      = new char[0];
     private String  sEmail      = null;
