@@ -18,7 +18,7 @@
 
 package com.peyrona.tapas.office;
 
-import com.peyrona.tapas.persistence.Article;
+import com.peyrona.tapas.persistence.Product;
 import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -47,7 +47,7 @@ final class Menu extends JPanel implements ActionListener
 
     private Tables4Menu.TableCategories tblCategories;
     private Tables4Menu.TableProducts   tblProducts;
-    
+
     //------------------------------------------------------------------------//
 
     Menu()
@@ -85,14 +85,14 @@ final class Menu extends JPanel implements ActionListener
 
         if( owner == Owner.Categories )
         {
-                 if( sACT_ADD_LINE.equals(  sAction ) )  tblCategories.addRow( new Article() );
+                 if( sACT_ADD_LINE.equals(  sAction ) )  tblCategories.addRow( new Product() );
             else if( sACT_DEL_LINE.equals(  sAction ) )  tblCategories.deleteHighlightedRow();
             else if( sACT_UP_LINE.equals(   sAction ) )  tblCategories.shiftUpHighlightedRow();
             else if( sACT_DOWN_LINE.equals( sAction ) )  tblCategories.shiftDownHighlightedRow();
         }
         else
         {
-                 if( sACT_ADD_LINE.equals(  sAction ) )  tblProducts.addRow( new Article() );
+                 if( sACT_ADD_LINE.equals(  sAction ) )  tblProducts.addRow( new Product() );
             else if( sACT_DEL_LINE.equals(  sAction ) )  tblProducts.deleteHighlightedRow();
             else if( sACT_UP_LINE.equals(   sAction ) )  tblProducts.shiftUpHighlightedRow();
             else if( sACT_DOWN_LINE.equals( sAction ) )  tblProducts.shiftDownHighlightedRow();
@@ -120,12 +120,12 @@ final class Menu extends JPanel implements ActionListener
                                                 Owner.Products, sACT_UP_LINE ) );
                pnlActions4Prod.add( new Button( new ImageIcon( getClass().getResource( "images/down.png" ) ),
                                                 Owner.Products, sACT_DOWN_LINE ) );
-               
+
         JPanel pnlCategories = new JPanel( new BorderLayout() );
                pnlCategories.add( new JLabel( "Categorías" )      , BorderLayout.NORTH  );
                pnlCategories.add( new JScrollPane( tblCategories ), BorderLayout.CENTER );
                pnlCategories.add( pnlActions4Cate                 , BorderLayout.SOUTH  );
-               
+
         JPanel pnlProducts = new JPanel( new BorderLayout() );
                pnlProducts.add( new JLabel( "Productos" )     , BorderLayout.NORTH  );
                pnlProducts.add( new JScrollPane( tblProducts ), BorderLayout.CENTER );
@@ -134,17 +134,17 @@ final class Menu extends JPanel implements ActionListener
         add( pnlCategories );
         add( pnlProducts   );
 
-        // Añade todas las categorías existentes (los productos se refrescan 
+        // Añade todas las categorías existentes (los productos se refrescan
         // automáticamente mediante un selection listener)
-        List<Article> all = DataProvider.getInstance().getCategoriesAndProducts();
+        List<Product> all = DataProvider.getInstance().getCategoriesAndProducts();
 
         if( all.isEmpty() )
-            all.add( new Article() );
+            all.add( new Product() );
 
         // Al utilizar all directamente, los cambios se realizan tanto en vLines como en all
         tblCategories.setData( all );
         tblProducts.setData( all.get( 0 ).getSubMenu() );
-        
+
         // Lo elegante sería crear un nuevo tipo de evento y poner a Products como escuchante
         // de Categories, pasando los datos, pero eso es mucho trabajo para tan poca cosa.
         tblCategories.getSelectionModel().addListSelectionListener( new ListSelectionListener()
@@ -155,10 +155,10 @@ final class Menu extends JPanel implements ActionListener
                 if( ! lse.getValueIsAdjusting() )
                 {
                     int nSelectedRowInCategories = Menu.this.tblCategories.getSelectedRow();
-                    
+
                     if( nSelectedRowInCategories > -1 )
                     {
-                        Article category = Menu.this.tblCategories.getData().get( nSelectedRowInCategories );
+                        Product category = Menu.this.tblCategories.getData().get( nSelectedRowInCategories );
                         Menu.this.tblProducts.setData( category.getSubMenu() );
                     }
                 }

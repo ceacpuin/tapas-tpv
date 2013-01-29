@@ -19,7 +19,7 @@
 package com.peyrona.tapas.office;
 
 import com.peyrona.tapas.Utils;
-import com.peyrona.tapas.persistence.Article;
+import com.peyrona.tapas.persistence.Product;
 import com.peyrona.tapas.swing.SwingUtils;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -76,9 +76,9 @@ final class Tables4Menu
             setIntercellSpacing( new Dimension( 2, 2 ) );
         }
 
-        void addRow( Article article )
+        void addRow( Product product )
         {
-            ((DataModel) getModel()).addRow( article );
+            ((DataModel) getModel()).addRow( product );
             getSelectionModel().setSelectionInterval( getRowCount() - 1, getRowCount() - 1 );
             makeHighlightedRowVisible();
         }
@@ -110,15 +110,15 @@ final class Tables4Menu
             shiftHighlightedRow( 1 );
         }
 
-        List<Article> getData()
+        List<Product> getData()
         {
             return ((DataModel) getModel()).getData();
         }
 
-        void setData( List<Article> data )
+        void setData( List<Product> data )
         {
             ((DataModel) getModel()).setData( data );
-            
+
             if( data.size() > 0 )
                 getSelectionModel().setSelectionInterval( 0, 0 );
         }
@@ -195,7 +195,7 @@ final class Tables4Menu
     //------------------------------------------------------------------------//
     private static final class DataModel extends AbstractTableModel
     {
-        private List<Article> vLines     = new ArrayList<Article>();
+        private List<Product> vLines     = new ArrayList<Product>();
         private String[]      asColNames = null;
 
         private DataModel( String[] asColNames )
@@ -224,25 +224,25 @@ final class Tables4Menu
         @Override
         public Object getValueAt( int nRow, int nCol )
         {
-            Article article = vLines.get( nRow );
+            Product product = vLines.get( nRow );
             Object  ret     = null;
 
             if( asColNames.length == 2 )  // Categories
             {
                 switch( nCol )
                 {
-                    case TableCategories.nCOL_CAPTION: ret = article.getCaption(); break;
-                    case TableCategories.nCOL_ICON   : ret = article.getIcon();    break;
+                    case TableCategories.nCOL_CAPTION: ret = product.getCaption(); break;
+                    case TableCategories.nCOL_ICON   : ret = product.getIcon();    break;
                 }
             }
             else                         // Products
             {
                 switch( nCol )
                 {
-                    case TableProducts.nCOL_CAPTION    : ret = article.getCaption();                        break;
-                    case TableProducts.nCOL_DESCRIPTION: ret = article.getDescription();                     break;
-                    case TableProducts.nCOL_PRICE      : ret = Utils.formatLikeCurrency( article.getPrice() );  break;
-                    case TableProducts.nCOL_ICON       : ret = article.getIcon();                            break;
+                    case TableProducts.nCOL_CAPTION    : ret = product.getCaption();                        break;
+                    case TableProducts.nCOL_DESCRIPTION: ret = product.getDescription();                     break;
+                    case TableProducts.nCOL_PRICE      : ret = Utils.formatLikeCurrency( product.getPrice() );  break;
+                    case TableProducts.nCOL_ICON       : ret = product.getIcon();                            break;
                 }
             }
 
@@ -252,24 +252,24 @@ final class Tables4Menu
         @Override
         public void setValueAt( Object value, int nRow, int nCol )
         {
-            Article article = vLines.get( nRow );
+            Product product = vLines.get( nRow );
 
             if( asColNames.length == 2 )  // Categories
             {
                 switch( nCol )
                 {
-                    case TableCategories.nCOL_CAPTION: article.setCaption( (String)    value); break;
-                    case TableCategories.nCOL_ICON   : article.setIcon(    (ImageIcon) value); break;
+                    case TableCategories.nCOL_CAPTION: product.setCaption( (String)    value); break;
+                    case TableCategories.nCOL_ICON   : product.setIcon(    (ImageIcon) value); break;
                 }
             }
             else                         // Products
             {
                 switch( nCol )
                 {
-                    case TableProducts.nCOL_CAPTION    : article.setCaption(     (String)    value); break;
-                    case TableProducts.nCOL_DESCRIPTION: article.setDescription( (String)    value); break;
-                    case TableProducts.nCOL_PRICE      : article.setPrice(       Str2Price(value) ); break;
-                    case TableProducts.nCOL_ICON       : article.setIcon(        (ImageIcon) value); break;
+                    case TableProducts.nCOL_CAPTION    : product.setCaption(     (String)    value); break;
+                    case TableProducts.nCOL_DESCRIPTION: product.setDescription( (String)    value); break;
+                    case TableProducts.nCOL_PRICE      : product.setPrice(       Str2Price(value) ); break;
+                    case TableProducts.nCOL_ICON       : product.setIcon(        (ImageIcon) value); break;
                 }
             }
         }
@@ -280,20 +280,20 @@ final class Tables4Menu
             return true;
         }
 
-        private List<Article> getData()
+        private List<Product> getData()
         {
             return vLines;
         }
 
-        private void setData( List<Article> data )
+        private void setData( List<Product> data )
         {
             vLines = data;
             fireTableDataChanged();
         }
 
-        private void addRow( Article article )
+        private void addRow( Product product )
         {
-            vLines.add( article );
+            vLines.add( product );
             fireTableRowsInserted( vLines.size() - 1, vLines.size() - 1 );
         }
 

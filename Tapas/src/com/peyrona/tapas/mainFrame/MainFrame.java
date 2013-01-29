@@ -113,9 +113,13 @@ public final class MainFrame extends JFrame implements ActionListener
         }
 
         if( bRun )
+        {
            (new OfficePanel()).showDialog();
+        }
         else
+        {
             JOptionPane.showMessageDialog( getInstance(), "Contraseña errónea.\nInténtelo de nuevo." );
+        }
     }
 
     private void onExit()
@@ -148,13 +152,13 @@ public final class MainFrame extends JFrame implements ActionListener
     private void initComponents()
     {
         desktop = new BillsDesktop();
-        toolbar  = new ToolBar();
+        toolbar = new ToolBar();
         toolbar.addActionListener( this );
 
         JPanel pnlAll = new JPanel();
                pnlAll.setBorder( new EmptyBorder( 5, 8, 5, 8 ) );
                pnlAll.setLayout( new BorderLayout( 0, 9 ) );
-               pnlAll.add( toolbar , BorderLayout.NORTH );
+               pnlAll.add( toolbar, BorderLayout.NORTH  );
                pnlAll.add( desktop, BorderLayout.CENTER );
 
        setLayout( new BorderLayout() );
@@ -163,7 +167,7 @@ public final class MainFrame extends JFrame implements ActionListener
 
     private MainFrame()
     {
-        setTitle( "Tapas: TPV para bares y tascas - Ver. 1.0 (Licencia GPL)" );
+        setTitle( "Tapas: TPV para bares - Ver. 1.0 (Licencia GPL)" );
         setIconImage( new ImageIcon( getClass().getResource( "images/logo_small.png" ) ).getImage() );
         setDefaultCloseOperation( WindowConstants.DO_NOTHING_ON_CLOSE );
         setPreferredSize( new Dimension( 1024, 768 ) );

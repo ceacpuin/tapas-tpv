@@ -38,13 +38,13 @@ import javax.swing.JPanel;
  *
  * @author Francisco Morero Peyrona
  */
-class ImagePreviewPanel extends JPanel implements PropertyChangeListener
+final class ImagePreviewPanel extends JPanel implements PropertyChangeListener
 {
     private JLabel        lblImage;
     private BufferedImage buffImage;
 
     //------------------------------------------------------------------------//
-    
+
     ImagePreviewPanel()
     {
         lblImage = new JLabel();

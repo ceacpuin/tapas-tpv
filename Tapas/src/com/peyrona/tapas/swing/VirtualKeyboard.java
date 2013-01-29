@@ -39,7 +39,7 @@ import javax.swing.text.JTextComponent;
  *
  * @author Francisco Morero Peyrona
  */
-public final class TecladoVirtual extends JPanel
+public final class VirtualKeyboard extends JPanel
 {
     private static final String BTN_CLEAR = "CLEAR";
     private static final String BTN_CLOSE = "CLOSE";
@@ -49,7 +49,7 @@ public final class TecladoVirtual extends JPanel
 
     //------------------------------------------------------------------------//
 
-    public TecladoVirtual( JTextComponent text )
+    public VirtualKeyboard( JTextComponent text )
     {
         this.text = text;
         initComponents();
@@ -67,6 +67,7 @@ public final class TecladoVirtual extends JPanel
         dialog.setContentPane( this );
         dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
         dialog.pack();
+        dialog.setResizable( false );
         dialog.setLocation( position.x - (getWidth() - text.getWidth()) / 2,
                             position.y + text.getHeight() + 5 );
         dialog.setVisible( true );
@@ -111,7 +112,7 @@ public final class TecladoVirtual extends JPanel
                 public void actionPerformed( ActionEvent ae )
                 {
                     // Lamentablemente, JTextComponent no tiene un método append
-                    TecladoVirtual.this.text.setText( TecladoVirtual.this.text.getText() +
+                    VirtualKeyboard.this.text.setText( VirtualKeyboard.this.text.getText() +
                                                 ((Button) ae.getSource()).getText() );
                 }
             } );
@@ -131,7 +132,7 @@ public final class TecladoVirtual extends JPanel
                 {
                     if( BTN_CLEAR.equals( getName() ) )
                     {
-                        TecladoVirtual.this.text.setText( null );
+                        VirtualKeyboard.this.text.setText( null );
                     }
                     else if( BTN_CLOSE.equals( getName() ) && dialog != null )
                     {

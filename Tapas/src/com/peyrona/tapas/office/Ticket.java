@@ -32,7 +32,7 @@ import javax.swing.ImageIcon;
  *
  * @author Francisco Morero Peyrona (www.peyrona.com)
  */
-class Ticket extends javax.swing.JPanel implements ActionListener
+final class Ticket extends javax.swing.JPanel implements ActionListener
 {
     private Configuration config;
 

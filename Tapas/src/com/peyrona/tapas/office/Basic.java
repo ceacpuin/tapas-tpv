@@ -27,7 +27,7 @@ import java.awt.event.ActionListener;
  *
  * @author peyrona
  */
-class Basic extends javax.swing.JPanel implements ActionListener
+final class Basic extends javax.swing.JPanel implements ActionListener
 {
     private Configuration config;
 

@@ -31,7 +31,7 @@ import java.sql.Statement;
  *
  * @author Francisco Morero Peyrona
  */
-public class SQLExecutor
+public final class SQLExecutor
 {
     private final static String sSQL_Comment     = "--";
     private final static String sSQL_Termination =  ";";

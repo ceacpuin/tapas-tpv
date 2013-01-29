@@ -25,7 +25,7 @@ import javax.swing.filechooser.FileFilter;
  *
  * @author Francisco Morero Peyrona
  */
-class ImageFilter extends FileFilter
+final class ImageFilter extends FileFilter
 {
     @Override
     public boolean accept( File f )

@@ -75,7 +75,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
 
         System.setProperty( "derby.system.home", sDbPath );
         Class.forName( "org.apache.derby.jdbc.EmbeddedDriver" );
-        dbConn = DriverManager.getConnection( "jdbc:derby:tapas;user=admin;password=admin;create=true" );
+        dbConn = DriverManager.getConnection( "jdbc:derby:tapas;user=admin;password=admin;create="+ (bCreateTables ? "true" : "false") );
 
         if( bCreateTables )
         {
@@ -155,7 +155,9 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         finally
         {
             if( stmt != null )    // stmt.close() cierra automáticamente los rs asociados
+            {
                 try{ stmt.close(); } catch( SQLException se ) { /* Nada que hacer */ }
+            }
         }
 
         return conf;
@@ -194,9 +196,9 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
     }
 
     @Override
-    public List<Article> getCategoriesAndProducts() throws ClassNotFoundException, IOException, SQLException
+    public List<Product> getCategoriesAndProducts() throws ClassNotFoundException, IOException, SQLException
     {
-        List<Article> lstArticles = new ArrayList<Article>();
+        List<Product> lstProducts = new ArrayList<Product>();
 
         String sQuery = "SELECT APP.categorias.nombre AS CatNombre, APP.categorias.icono AS CatIcono, APP.productos.*"+
                         "   FROM APP.categorias, APP.productos"+
@@ -213,27 +215,27 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
 
             while( rs.next() )
             {
-                Article category = new Article();
+                Product category = new Product();
                         category.setCaption( rs.getString( "CatNombre" ) );
 
                 // Buscamos si la categoría ya había sido añadida
-                // (El método Article::equals() NO tiene en cuenta el icono)
-                int nIndex = lstArticles.indexOf( category );
+                // (El método Product::equals() NO tiene en cuenta el icono)
+                int nIndex = lstProducts.indexOf( category );
 
                 // De no ser así, es una categoría nueva => añadir la inf que falta (el icono)
                 if( nIndex == -1 )
                 {
                     category.setIcon( Utils.readImageFromBlob( rs, "CatIcono" ) );
-                    lstArticles.add( category );
+                    lstProducts.add( category );
                 }
 
                 // Además siempre hay un producto en la misma línea => actualizar los campos de producto
-                Article product = new Article();
+                Product product = new Product();
                         product.setCaption( rs.getString( "nombre" ) );
                         product.setDescription( rs.getString( "descripcion" ) );
                         product.setPrice( rs.getBigDecimal( "precio" ) );
                         product.setIcon( Utils.readImageFromBlob( rs, "icono" ) );
-                lstArticles.get( lstArticles.size() - 1 ).addToSubMenu( product );
+                lstProducts.get( lstProducts.size() - 1 ).addToSubMenu( product );
             }
         }
         catch( SQLException exc )
@@ -248,13 +250,13 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
             }
         }
 
-        return lstArticles;
+        return lstProducts;
     }
 
     // Este método está implementado a lo bestia: borra todo y lo vuelve a grabar todo.
     // Es bestia, sí, pero es simple y efectivo, además una carta son pocos registros.
     @Override
-    public void setCategoriesAndProducts( List<Article> articles ) throws IOException, SQLException
+    public void setCategoriesAndProducts( List<Product> products ) throws IOException, SQLException
     {
         PreparedStatement psCategories = dbConn.prepareStatement(
                 "INSERT INTO App.categorias (nombre, icono) VALUES (?,?)",
@@ -268,7 +270,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         // las categorías, se borran automáticamente los productos
         executeCommand( "DELETE FROM App.categorias" );
 
-        for( Article category : articles )
+        for( Product category : products )
         {
             psCategories.clearParameters();
             psCategories.setString( 1, category.getCaption() );
@@ -284,7 +286,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
 
             rs.close();
 
-            for( Article product : category.getSubMenu() )
+            for( Product product : category.getSubMenu() )
             {
                 psProducts.clearParameters();
                 psProducts.setInt(        1, category.getId() );
@@ -295,16 +297,6 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
                 psProducts.executeUpdate();
             }
         }
-
-////        for( Article category : articles )
-////        {
-////            InputStream is = Imge2InputStream( category.getIcon() );
-////            psCategories.clearParameters();
-////            psCategories.setString( 1, category.getCaption() );
-////            psCategories.setBinaryStream( 2, is );
-////            psCategories.executeUpdate();
-////            is.close();
-////        }
 
         psProducts.close();
         psCategories.close();
@@ -498,7 +490,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
                 bill.setId( nBillId );
                 bill.setCustomer( rs.getString( "CLIENTE" ) );
                 bill.setPayModeAsInt( rs.getInt( "MODO_PAGO" ) );
-                bill.setWhen( rs.getLong( "CUANDO" ) );
+                bill.setWhenWasOpen( rs.getLong( "CUANDO" ) );
                 bills.add( bill );
             }
 

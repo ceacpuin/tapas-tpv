@@ -30,7 +30,7 @@ import java.math.BigDecimal;
 
  * @author Francisco Morero Peyrona
  */
-public class BillLine
+public final class BillLine
 {
     private int        nId;
     private int        nQuantity;
@@ -137,7 +137,7 @@ public class BillLine
         hash = 97 * hash + (this.nPrice != null ? this.nPrice.hashCode() : 0);
         return hash;
     }
-    
+
     //------------------------------------------------------------------------//
     // PACKAGE INTERFACE
 
