@@ -45,15 +45,15 @@ final class Menu extends JPanel implements ActionListener
 
     private enum Owner { Categories, Products };
 
-    private Tables4Menu.TableCategories tblCategories;
-    private Tables4Menu.TableProducts   tblProducts;
+    private JTables4Menu.TableCategories tblCategories;
+    private JTables4Menu.TableProducts   tblProducts;
 
     //------------------------------------------------------------------------//
 
     Menu()
     {
-        tblCategories = new Tables4Menu.TableCategories();
-        tblProducts   = new Tables4Menu.TableProducts();
+        tblCategories = new JTables4Menu.TableCategories();
+        tblProducts   = new JTables4Menu.TableProducts();
 
         setLayout( new FlowLayout() );
         initComponents();
@@ -103,23 +103,23 @@ final class Menu extends JPanel implements ActionListener
     {
         JPanel pnlActions4Cate = new JPanel( new FlowLayout( FlowLayout.LEADING ) );
                pnlActions4Cate.add( new Button( new ImageIcon( getClass().getResource( "images/add.png" ) ),
-                                                Owner.Categories, sACT_ADD_LINE ) );
+                                                "Añade una nueva categoría", Owner.Categories, sACT_ADD_LINE ) );
                pnlActions4Cate.add( new Button( new ImageIcon( getClass().getResource( "images/del.png" ) ),
-                                                Owner.Categories, sACT_DEL_LINE ) );
+                                                "Elimina la categoría resaltada", Owner.Categories, sACT_DEL_LINE ) );
                pnlActions4Cate.add( new Button( new ImageIcon( getClass().getResource( "images/up.png" ) ),
-                                                Owner.Categories, sACT_UP_LINE ) );
+                                                "Desplaza la categoría resaltada hacia arriba", Owner.Categories, sACT_UP_LINE ) );
                pnlActions4Cate.add( new Button( new ImageIcon( getClass().getResource( "images/down.png" ) ),
-                                                Owner.Categories, sACT_DOWN_LINE ) );
+                                                "Desplaza la categoría resaltada hacia abajo", Owner.Categories, sACT_DOWN_LINE ) );
 
         JPanel pnlActions4Prod = new JPanel( new FlowLayout( FlowLayout.TRAILING ) );
                pnlActions4Prod.add( new Button( new ImageIcon( getClass().getResource( "images/add.png" ) ),
-                                                Owner.Products, sACT_ADD_LINE ) );
+                                                "Añade un nuevo producto", Owner.Products, sACT_ADD_LINE ) );
                pnlActions4Prod.add( new Button( new ImageIcon( getClass().getResource( "images/del.png" ) ),
-                                                Owner.Products, sACT_DEL_LINE ) );
+                                                "Elimina el producto resaltado",Owner.Products, sACT_DEL_LINE ) );
                pnlActions4Prod.add( new Button( new ImageIcon( getClass().getResource( "images/up.png" ) ),
-                                                Owner.Products, sACT_UP_LINE ) );
+                                                "Desplaza el producto resaltado hacia arriba", Owner.Products, sACT_UP_LINE ) );
                pnlActions4Prod.add( new Button( new ImageIcon( getClass().getResource( "images/down.png" ) ),
-                                                Owner.Products, sACT_DOWN_LINE ) );
+                                                "Desplaza el producto resaltado hacia abajo", Owner.Products, sACT_DOWN_LINE ) );
 
         JPanel pnlCategories = new JPanel( new BorderLayout() );
                pnlCategories.add( new JLabel( "Categorías" )      , BorderLayout.NORTH  );
@@ -173,11 +173,12 @@ final class Menu extends JPanel implements ActionListener
     {
         private Owner owner;
 
-        private Button( ImageIcon icon, Owner owner, String sAction )
+        private Button( ImageIcon icon, String sToolTip, Owner owner, String sAction )
         {
             this.owner = owner;
 
             setIcon( icon );
+            setToolTipText( sToolTip );
             setActionCommand( sAction );
             setFocusPainted( false );
             setMargin( new Insets( 4,4,4,4 ) );

@@ -48,12 +48,12 @@ import javax.swing.table.TableCellRenderer;
  * aunque fuesen private, lo que no ocurre al estar en otro fichero.
  * <p>
  * Son static porque de este modo funcionan casi como si cada una estuviera en un
- * fichero diferente (ya que no hay que instanciar Tables4Menu para poder crear
+ * fichero diferente (ya que no hay que instanciar JTables4Menu para poder crear
  * instancias de estas clases).
  *
  * @author Francisco Morero Peyrona
  */
-final class Tables4Menu
+final class JTables4Menu
 {
     //------------------------------------------------------------------------//
     // Inner Class
@@ -239,10 +239,10 @@ final class Tables4Menu
             {
                 switch( nCol )
                 {
-                    case TableProducts.nCOL_CAPTION    : ret = product.getCaption();                        break;
-                    case TableProducts.nCOL_DESCRIPTION: ret = product.getDescription();                     break;
-                    case TableProducts.nCOL_PRICE      : ret = Utils.formatLikeCurrency( product.getPrice() );  break;
-                    case TableProducts.nCOL_ICON       : ret = product.getIcon();                            break;
+                    case TableProducts.nCOL_CAPTION    : ret = product.getCaption();                           break;
+                    case TableProducts.nCOL_DESCRIPTION: ret = product.getDescription();                       break;
+                    case TableProducts.nCOL_PRICE      : ret = Utils.formatLikeCurrency( product.getPrice() ); break;
+                    case TableProducts.nCOL_ICON       : ret = product.getIcon();                              break;
                 }
             }
 
@@ -326,7 +326,7 @@ final class Tables4Menu
         // Esto no es alta tecnología, pero si el usuario es sensato funciona
         private BigDecimal Str2Price( Object value )
         {
-            String sPrice = (String) value;
+            String sPrice = value.toString();
                    sPrice = sPrice.replace( Utils.cDecimalSep, '.' );
 
             return new BigDecimal( sPrice );

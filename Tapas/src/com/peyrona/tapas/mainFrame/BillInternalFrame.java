@@ -19,7 +19,7 @@
 package com.peyrona.tapas.mainFrame;
 
 import com.peyrona.tapas.Utils;
-import com.peyrona.tapas.account.BillAndProductsPanel;
+import com.peyrona.tapas.account.BillAndMenuPanel;
 import com.peyrona.tapas.persistence.Bill;
 import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.BorderLayout;
@@ -151,7 +151,7 @@ final class BillInternalFrame extends JInternalFrame
         @Override
         public void actionPerformed( ActionEvent ae )
         {
-            BillAndProductsPanel panel = new BillAndProductsPanel( BillInternalFrame.this.bill );
+            BillAndMenuPanel panel = new BillAndMenuPanel( BillInternalFrame.this.bill );
                                  panel.showInDialog();
 
             bill = panel.getBill();
