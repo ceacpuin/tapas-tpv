@@ -18,7 +18,6 @@
 
 package com.peyrona.tapas.persistence;
 
-import com.peyrona.tapas.account.products.MasterDetailPanel;
 import java.awt.Image;
 import java.math.BigDecimal;
 import java.util.ArrayList;

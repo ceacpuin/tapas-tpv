@@ -290,8 +290,10 @@ public final class DataProvider implements DataProviderable
     private DataProvider()
     {
         if( type == null )
+        {
             type = DataSources.DerbyEmbedded;
-
+        }
+        
         // Por ahora sólo hay un tipo de fuente de datos, pero de este modo se
         // pueden implementar otras fácilmente.
         switch( type )
