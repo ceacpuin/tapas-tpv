@@ -34,10 +34,11 @@ final class Basic extends javax.swing.JPanel implements ActionListener
     /** Creates new form Basic */
     Basic( Configuration config )
     {
-        this.config = config;
+        this.config = config;    // Guardo la referencia
 
         initComponents();
 
+        // Inicializo los componentes Swing
         txtEmail.setText( config.getEmail() );
         txtPassword.setText( config.getPassword() );
         chkFullScreen.setSelected( config.isFullScreenSelected() );
@@ -55,6 +56,7 @@ final class Basic extends javax.swing.JPanel implements ActionListener
         char[]  acPassword = txtPassword.getText().trim().toCharArray();
         String  sEmail     = txtEmail.getText();
 
+        // Actualizamos la configuración con los valores de los componentes Swing
         config.setEmail( sEmail );
         config.setPassword( acPassword );
         config.setFullScreenMode( bFullScr );
