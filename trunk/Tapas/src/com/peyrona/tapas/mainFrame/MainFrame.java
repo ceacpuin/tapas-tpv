@@ -105,7 +105,7 @@ public final class MainFrame extends JFrame implements ActionListener
         boolean       bRun   = true;
         Configuration config = DataProvider.getInstance().getConfiguration();
 
-        if( config.getPassword() != null )
+        if( Utils.isNotEmpty( config.getPassword() ) )
         {
             String sPassword = JOptionPane.showInputDialog( getInstance(), "Contraseña", "" );
 
@@ -143,7 +143,13 @@ public final class MainFrame extends JFrame implements ActionListener
 
     private void sendMailWithTodaySales()
     {
-        // TODO: Implementarlo
+        Configuration config = DataProvider.getInstance().getConfiguration();
+        String        email  = config.getEmail();
+
+        if( Utils.isNotEmpty( email ) )
+        {
+            // TODO: Implementarlo
+        }
     }
 
     private void initComponents()

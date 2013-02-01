@@ -30,7 +30,7 @@ import javax.swing.border.LineBorder;
 
 /**
  * El JDesktopPane donde aparecen todas las JInternalFrame.
- * 
+ *
  * @author Francisco Morero Peyrona
  */
 final class BillsDesktop extends JDesktopPane
@@ -49,13 +49,15 @@ final class BillsDesktop extends JDesktopPane
     void openAccount( Bill bill )
     {
         final BillInternalFrame iframe = new BillInternalFrame( bill );
-                             iframe.setVisible( true );
+                                iframe.setVisible( true );
 
         add( iframe, JLayeredPane.DEFAULT_LAYER );
         iframe.setSelected( true );
 
        if( DataProvider.getInstance().getConfiguration().isAutoAlignSelected() )
+       {
            mosaic();
+       }
     }
 
     boolean isEmpty()
@@ -66,15 +68,15 @@ final class BillsDesktop extends JDesktopPane
     void mosaic()
     {
         DesktopManager   manager = getDesktopManager();
-        JInternalFrame[] aFrame  = getAllFramesInLayer( JLayeredPane.DEFAULT_LAYER );
+        JInternalFrame[] aFrame  = getAllFrames();
 
         if( manager != null && aFrame.length > 0 )  // Tiene que haber desktop manager y ventanas
         {
             int nDeskCols  = getSize().width / aFrame[0].getWidth();  // Nº de iFrames que caben a lo ancho
-            int nFrmWidth  = aFrame[0].getWidth();     // Anchura de la iFrame
-            int nFrmHeight = aFrame[0].getHeight();    // Altura de la iFrame
-            int nColIndex  = -1;                       // Columna en la que se situa la iFrame
-            int nRowIndex  = 0;                        // Fila en la que se situa la iFrame
+            int nFrmWidth  = aFrame[0].getWidth();                    // Anchura de la iFrame
+            int nFrmHeight = aFrame[0].getHeight();                   // Altura de la iFrame
+            int nColIndex  = -1;                                      // Columna en la que se situa la iFrame
+            int nRowIndex  = 0;                                       // Fila en la que se situa la iFrame
 
             for( int n = aFrame.length - 1; n >= 0 ; n-- )
             {
