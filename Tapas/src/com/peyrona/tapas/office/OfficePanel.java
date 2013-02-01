@@ -22,13 +22,10 @@ import com.peyrona.tapas.mainFrame.MainFrame;
 import com.peyrona.tapas.persistence.Configuration;
 import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -101,13 +98,13 @@ public final class OfficePanel extends JTabbedPane
 
                 // No se puden destruir los componentes hasta no haber cerrado todos los tabs
                 SwingUtilities.getWindowAncestor( OfficePanel.this ).dispose();
+
+                if( config.isFullScreenSelected() )
+                {
+                    // TODO: hacerlo -> poner la ventana en modo full-screen
+                }
             }
         }).run();
-
-        JOptionPane.showMessageDialog( MainFrame.getInstance(),
-                                       "Los cambios realizados surtirán efecto\ncuando se reinicie la aplicación.",
-                                       "Atención",
-                                       JOptionPane.INFORMATION_MESSAGE );
     }
 
     private void initComponents()

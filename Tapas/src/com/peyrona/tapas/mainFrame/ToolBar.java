@@ -62,13 +62,17 @@ final class ToolBar extends JPanel
     public void addActionListener( ActionListener al )
     {
         if( al != null )
+        {
             lstListeners.add( al );
+        }
     }
 
     public void removeActionListener( ActionListener al )
     {
         if( al != null && lstListeners.contains( al ) )
+        {
             lstListeners.remove( al );
+        }
     }
 
     //------------------------------------------------------------------------//
@@ -76,7 +80,9 @@ final class ToolBar extends JPanel
     private void fireActionEvent( ActionEvent ae )
     {
         for( ActionListener al : lstListeners )
+        {
             al.actionPerformed( ae );
+        }
     }
 
     //------------------------------------------------------------------------//
@@ -91,7 +97,7 @@ final class ToolBar extends JPanel
             setIcon( new ImageIcon( getClass().getResource( "images/"+ sIcon +".png" ) ) );
             setFont( getFont().deriveFont( Font.BOLD, 14f ) );
             setMaximumSize( new Dimension( 220, 60 ) );
-            
+
             // Si la resolución horizontal es baja, hacemos los iconos más pequeños
             // poniendo las etiquetas (text) bajo el icono en lugar de a su derecha.
             // Asumimos que sólo hay una pantalla asociada (es lo normal en un TPV).
