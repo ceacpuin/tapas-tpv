@@ -19,7 +19,6 @@
 package com.peyrona.tapas.office;
 
 import com.peyrona.tapas.persistence.Configuration;
-import com.peyrona.tapas.persistence.DataProvider;
 import com.peyrona.tapas.swing.SwingUtils;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -41,14 +40,17 @@ final class Ticket extends javax.swing.JPanel implements ActionListener
      */
     Ticket( Configuration config )
     {
-        this.config = config;
+        this.config = config;   // Guardo la referencia
 
         initComponents();
 
         Image image  = config.getTicketHeaderImage();
 
+        // Inicializo los componentes Swing
         if( image != null )
-            setLabelHeaderIcon( new ImageIcon( image ) );
+        {
+            lblImageHeaderIcon.setIcon( new ImageIcon( image ) );
+        }
 
         txtHeaderText.setText( config.getTicketHeader() );
         txtFooterText.setText( config.getTicketFooter() );
@@ -60,25 +62,15 @@ final class Ticket extends javax.swing.JPanel implements ActionListener
     @Override
     public void actionPerformed( ActionEvent e )
     {
-        ImageIcon icon      = getLabelHeaderIcon();
+        ImageIcon icon      = (ImageIcon) lblImageHeaderIcon.getIcon();
         Image     imgHeader = (icon == null ? null : icon.getImage());
         String    sHeader   = txtHeaderText.getText();
         String    sFooter   = txtFooterText.getText();
 
+        // Actualizamos la configuración con los valores de los componentes Swing
         config.setTicketHeaderImage( imgHeader );
         config.setTicketHeader( sHeader );
         config.setTicketFooter( sFooter );
-    }
-
-    private ImageIcon getLabelHeaderIcon()
-    {
-        // Recojo el original (sin escalar) desde donde lo guardé
-        return (ImageIcon) lblImageHeaderIcon.getDisabledIcon();
-    }
-
-    private void setLabelHeaderIcon( ImageIcon icon )
-    {
-        lblImageHeaderIcon.setDisabledIcon( icon );
     }
 
     //------------------------------------------------------------------------//
@@ -188,7 +180,9 @@ final class Ticket extends javax.swing.JPanel implements ActionListener
         BufferedImage bimg = SwingUtils.ImageChooser();
 
         if( bimg != null )
-            setLabelHeaderIcon( new ImageIcon( bimg ) );
+        {
+            lblImageHeaderIcon.setIcon( new ImageIcon( bimg ) );
+        }
     }//GEN-LAST:event_onSelectHeaderImage
 
     private void onDiscardImage(java.awt.event.ActionEvent evt)//GEN-FIRST:event_onDiscardImage
