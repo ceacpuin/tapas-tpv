@@ -26,6 +26,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -82,7 +83,8 @@ public final class VirtualKeyboard extends JPanel
                            "ASDFGHJKLÑ"+
                            "ZXCVBNM ";
 
-        setLayout( new GridLayout( 4,10 ) );
+        setBorder( new EmptyBorder( 5,6,5,6 ) );
+        setLayout( new GridLayout( 4,10, 6,5 ) );
 
         for( int n = 0; n < sKeyboard.length(); n++ )
         {
@@ -113,7 +115,7 @@ public final class VirtualKeyboard extends JPanel
                 {
                     // Lamentablemente, JTextComponent no tiene un método append
                     VirtualKeyboard.this.text.setText( VirtualKeyboard.this.text.getText() +
-                                                ((Button) ae.getSource()).getText() );
+                                                       ((Button) ae.getSource()).getText() );
                 }
             } );
         }
@@ -145,12 +147,11 @@ public final class VirtualKeyboard extends JPanel
 
         private void init()
         {
-            setMaximumSize( new Dimension( 55, 55 ) );
+            setMaximumSize( new Dimension( 65, 65 ) );
             setMinimumSize( getMaximumSize() );
             setPreferredSize( getMaximumSize() );
             setFocusPainted( false );
-            setMargin( new Insets( 4, 4, 4, 4 ) );
-            setFont( getFont().deriveFont( Font.BOLD, 16f ) );
+            setFont( getFont().deriveFont( Font.BOLD, 18f ) );
         }
     }
 }
