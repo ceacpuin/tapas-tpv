@@ -127,7 +127,6 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         }
     }
 
-    // FIXME: la configuración no funciona --> no guarda y/o lee los datos
     @Override
     public Configuration getConfiguration() throws SQLException, IOException
     {
