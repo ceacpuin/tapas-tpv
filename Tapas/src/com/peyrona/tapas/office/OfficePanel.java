@@ -40,6 +40,14 @@ import javax.swing.SwingUtilities;
  */
 public final class OfficePanel extends JTabbedPane
 {
+    private Configuration config      = DataProvider.getInstance().getConfiguration();
+    private Basic         basic       = new Basic( config );
+    private DailyReport   dailyReport = new DailyReport();
+    private Menu          menu        = new Menu();
+    private Ticket        ticket      = new Ticket( config );
+
+    //----------------------------------------------------------------------------//
+
     public OfficePanel()
     {
         initComponents();
@@ -84,13 +92,12 @@ public final class OfficePanel extends JTabbedPane
             {
                 ActionEvent ae = new ActionEvent( this, ActionEvent.ACTION_PERFORMED, null );
 
-                for( Component comp : OfficePanel.this.getComponents() )
-                {
-                    if( comp instanceof ActionListener )
-                    {
-                        ((ActionListener) comp).actionPerformed( ae );
-                    }
-                }
+                basic.actionPerformed( ae );
+                menu.actionPerformed( ae );
+                ticket.actionPerformed( ae );
+
+                // Puesto que config está en esta clase es más claro que sea esta quien la guarde en la DB
+                DataProvider.getInstance().setConfiguration( config );
 
                 // No se puden destruir los componentes hasta no haber cerrado todos los tabs
                 SwingUtilities.getWindowAncestor( OfficePanel.this ).dispose();
@@ -105,16 +112,16 @@ public final class OfficePanel extends JTabbedPane
 
     private void initComponents()
     {
-        Configuration config = DataProvider.getInstance().getConfiguration();
-
         // No sé por qué, pero si no hago esto, el panel Básico, aparece en la parte inferiror del tab.
         JPanel pnl = new JPanel( new BorderLayout() );
-               pnl.add( new Basic( config ), BorderLayout.NORTH );
+               pnl.add( basic, BorderLayout.NORTH );
+        //---------------------------------------------------------------------------------------------
 
-        add( "Básico", pnl );                    // Estos dos componentes comparten la misma instancia de config
-        add( "Caja"  , new DailyReport() );
-        add( "Carta" , new Menu() );
-        add( "Ticket", new Ticket( config ) );   // Estos dos componentes comparten la misma instancia de config
-        setSelectedIndex( 1 );  // Tab Caja
+        add( "Básico", pnl         );    // Estos dos componentes comparten la misma instancia de config
+        add( "Caja"  , dailyReport );
+        add( "Carta" , menu        );
+        add( "Ticket", ticket      );    // Estos dos componentes comparten la misma instancia de config
+
+        setSelectedIndex( 1 );           // Tab Caja
     }
 }

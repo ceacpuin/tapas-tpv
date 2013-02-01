@@ -19,12 +19,8 @@
 package com.peyrona.tapas;
 
 import com.peyrona.tapas.mainFrame.MainFrame;
-import com.peyrona.tapas.persistence.Product;
 import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.*;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -54,10 +50,7 @@ public final class Main
             @Override
             public void run()
             {
-                if( ! Utils.DEBUGGING )
-                {
-                    splash.setVisible( true );
-                }
+                splash.setVisible( true );
             }
         } );
 
@@ -115,8 +108,6 @@ public final class Main
 
                 splash.dispose();
                 frame.requestFocus();
-
-                DbTest();// FIXME: quitarlo
             }
         } );
     }
@@ -196,53 +187,5 @@ public final class Main
                 Utils.printError( e, Level.SEVERE, "Error iniciando L&F", Utils.nEXIT_LAF_ERROR );
             }
         }
-    }
-
-    private static void DbTest()
-    {
-        String  sImgDir = System.getProperty( "user.dir", "." ) + "/img_tmp/";
-
-        Product birraCruz = new Product();
-                birraCruz.setCaption( "Cruz Campo" );
-                birraCruz.setDescription( "Cruz Campo 1/3" );
-                birraCruz.setIcon( new ImageIcon( sImgDir +"cruzcampo.jpg" ) );
-                birraCruz.setPrice( new BigDecimal( "2.3" ) );
-
-        Product birraMahou = new Product();
-                birraMahou.setCaption( "Mahou" );
-                birraMahou.setDescription( "Mahou 1/3" );
-                birraMahou.setIcon( new ImageIcon( sImgDir +"mahou.jpg" ) );
-                birraMahou.setPrice( new BigDecimal( "2.5" ) );
-
-        Product catBirra = new Product();
-                catBirra.setCaption( "Cervezas" );
-                catBirra.setIcon( new ImageIcon( sImgDir +"cervezas.jpg" ) );
-                catBirra.addToSubMenu( birraCruz );
-                catBirra.addToSubMenu( birraMahou );
-
-
-        Product sodaCoca = new Product();
-                sodaCoca.setCaption( "Coca-Cola" );
-                sodaCoca.setDescription( "Coca-Cola normal" );
-                sodaCoca.setIcon( new ImageIcon( sImgDir +"cocacola.jpg" ) );
-                sodaCoca.setPrice( new BigDecimal( "1.9" ) );
-
-        Product sodaFanta = new Product();
-                sodaCoca.setCaption( "Fanta" );
-                sodaCoca.setDescription( "Fanta naranja" );
-                sodaCoca.setIcon( new ImageIcon( sImgDir +"fanta.jpg" ) );
-                sodaCoca.setPrice( new BigDecimal( "1.8" ) );
-
-        Product catSodas = new Product();
-                catSodas.setCaption( "Refrescos" );
-                catSodas.setIcon( new ImageIcon( sImgDir +"refrescos.jpg" ) );
-                catSodas.addToSubMenu( sodaCoca );
-                catSodas.addToSubMenu( sodaFanta );
-
-        List<Product> categorias = new ArrayList<Product>();
-                      categorias.add( catBirra );
-                      categorias.add( catSodas );
-
-        DataProvider.getInstance().setCategoriesAndProducts( categorias );
     }
 }

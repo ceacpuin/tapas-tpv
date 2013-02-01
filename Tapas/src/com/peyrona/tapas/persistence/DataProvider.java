@@ -122,8 +122,8 @@ public final class DataProvider implements DataProviderable
     {
         try
         {   // Estos son los tamaños max de las cadenas para estos datos
-            config.setEmail( Utils.setMaxLength( config.getEmail(), 48 ) );
-            config.setPassword( Utils.setMaxLength( config.getPassword(), 32 ) );
+            config.setEmail(        Utils.setMaxLength( config.getEmail()       ,  48 ) );
+            config.setPassword(     Utils.setMaxLength( config.getPassword()    ,  32 ) );
             config.setTicketHeader( Utils.setMaxLength( config.getTicketHeader(), 999 ) );
             config.setTicketFooter( Utils.setMaxLength( config.getTicketFooter(), 999 ) );
 
@@ -186,15 +186,10 @@ public final class DataProvider implements DataProviderable
     @Override
     public void setCategoriesAndProducts( List<Product> products )
     {
+        setMaxLenForStrings( products );
+
         try
         {
-            // Estos son los tamaños max de las cadenas para estos los artículos
-            for( Product product : products )
-            {
-                product.setCaption( Utils.setMaxLength( product.getCaption(), 16 ) );
-                product.setDescription( Utils.setMaxLength( product.getDescription(), 32 ) );
-            }
-
             provider.setCategoriesAndProducts( products );
         }
         catch( Exception ex )
@@ -293,7 +288,7 @@ public final class DataProvider implements DataProviderable
         {
             type = DataSources.DerbyEmbedded;
         }
-        
+
         // Por ahora sólo hay un tipo de fuente de datos, pero de este modo se
         // pueden implementar otras fácilmente.
         switch( type )
@@ -309,5 +304,23 @@ public final class DataProvider implements DataProviderable
                               "No se ha podido acceder a la base de datos.\n"+
                               "El programa no puede continuar.",
                               Utils.nEXIT_DB_ERROR );
+    }
+
+
+    /**
+     * Ajustamos los tamaños max de las cadenas de Caption y Description para que
+     * no desborden los campos de la DB.
+     *
+     * @param products
+     */
+    private void setMaxLenForStrings( List<Product> products )
+    {
+        for( Product product : products )
+        {
+            product.setCaption( Utils.setMaxLength( product.getCaption(), 16 ) );
+            product.setDescription( Utils.setMaxLength( product.getDescription(), 32 ) );
+
+            setMaxLenForStrings( product.getSubMenu() );
+        }
     }
 }

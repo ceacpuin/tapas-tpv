@@ -65,14 +65,9 @@ final class Ticket extends javax.swing.JPanel implements ActionListener
         String    sHeader   = txtHeaderText.getText();
         String    sFooter   = txtFooterText.getText();
 
-        config = new Configuration();
         config.setTicketHeaderImage( imgHeader );
         config.setTicketHeader( sHeader );
         config.setTicketFooter( sFooter );
-
-        // Config se guarda dos veces: unan vez lo hace Basic y la otra lo hace Ticket, pero
-        // prefiero esta duplicidad a la otra opción (que la guarde OfficeDialog).
-        DataProvider.getInstance().setConfiguration( config );
     }
 
     private ImageIcon getLabelHeaderIcon()
@@ -83,9 +78,7 @@ final class Ticket extends javax.swing.JPanel implements ActionListener
 
     private void setLabelHeaderIcon( ImageIcon icon )
     {
-        ImageIcon iconScaled = SwingUtils.scaleIcon( icon, lblImageHeaderIcon );
-        lblImageHeaderIcon.setIcon( iconScaled );
-        lblImageHeaderIcon.setDisabledIcon( icon );  // Guardo aquí el original, sin escalar (es tan buen sitio como otro)
+        lblImageHeaderIcon.setDisabledIcon( icon );
     }
 
     //------------------------------------------------------------------------//

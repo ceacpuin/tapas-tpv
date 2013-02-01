@@ -59,10 +59,6 @@ final class Basic extends javax.swing.JPanel implements ActionListener
         config.setPassword( acPassword );
         config.setFullScreenMode( bFullScr );
         config.setAutoAlignMode( bAutoAlign );
-
-        // Config se guarda dos veces: unan vez lo hace Basic y la otra lo hace Ticket, pero
-        // prefiero esta duplicidad a la otra opción (que la guarde OfficeDialog).
-        DataProvider.getInstance().setConfiguration( config );
     }
 
     /** This method is called from within the constructor to

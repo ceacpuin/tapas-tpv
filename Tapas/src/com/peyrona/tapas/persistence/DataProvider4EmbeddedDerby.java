@@ -39,12 +39,14 @@ import java.util.List;
 // Sobre "embedded Derby":
 // http://java.sun.com/developer/technicalArticles/J2SE/Desktop/javadb/
 
-// Nota1: Las buenas prácticas dicen que se usen siempre PreparedStatements, pero
+// Nota1: Las buenas prácticas dicen que se usen siempre StringBuilder, pero
 //        en una app como esta no hay merma apreciable de rendimiento por usar
 //        concatenación de cadenas y en algunos casos se lee más claro. Así que
 //        he decidido utilizar unas u otras según comodidad y legibilidad.
 
-// Nota2: Sobre el manejo de excepciones en Java se ha discutido hasta la saciedad,
+// Nota2: Lo mismo que en la Nota1 pero ahora con los PreparedStatements.
+
+// Nota3: Sobre el manejo de excepciones en Java se ha discutido hasta la saciedad,
 //        y no hay manera de poner de acuerdo a todo el mundo.
 //        En esta ocasión yo he optado por no propagar las excepciones que
 //        normalmente denotan un problema grave y sobre las que el usuario no
@@ -124,7 +126,8 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
             }
         }
     }
-// FIXME: la configuración no funciona --> no guarda y/o lee los datos
+
+    // FIXME: la configuración no funciona --> no guarda y/o lee los datos
     @Override
     public Configuration getConfiguration() throws SQLException, IOException
     {
@@ -254,7 +257,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
     }
 
     // Este método está implementado a lo bestia: borra todo y lo vuelve a grabar todo.
-    // Es bestia, sí, pero es simple y efectivo, además una carta son pocos registros.
+    // Es bestia, sí, pero es simple y efectivo, además una menú de bar son pocos registros.
     @Override
     public void setCategoriesAndProducts( List<Product> products ) throws IOException, SQLException
     {
@@ -266,7 +269,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
                 "INSERT INTO App.productos (id_categoria, nombre, descripcion, precio, icono) VALUES (?,?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS );
 
-        // Al ser la relación con la tabla Productos ON DELETE CASCADE, al borrar
+        // Puesto que la relación con la tabla Productos es ON DELETE CASCADE, al borrar
         // las categorías, se borran automáticamente los productos
         executeCommand( "DELETE FROM App.categorias" );
 
@@ -279,7 +282,7 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
 
             ResultSet rs = psCategories.getGeneratedKeys();
 
-            if( rs.next() )    // Sólo hay un record en este ResultSet y este contine el ID de la última categoría insertada
+            if( rs.next() )    // Sólo hay un record en el ResultSet y éste contiene el ID de la última categoría insertada
             {
                 category.setId( rs.getInt( 1 ) );
             }
@@ -380,7 +383,9 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
             sbCondition.append( "APP.ventas.modo_pago IN (" );
 
             for( Bill.Payment p : payments )
+            {
                 sbCondition.append( p ).append( ',' );
+            }
 
             sbCondition.deleteCharAt( sbCondition.length() - 1 );   // Quitamos el último ','
             sbCondition.append( ")" );
@@ -463,11 +468,13 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         finally
         {
             if( stmt != null )
+            {
                 try{ stmt.close(); } catch( SQLException se ) { /* Nothing to do */ }
+            }
         }
     }
 
-// TODO: probar este método
+    // TODO: probar este método
     private List<Bill> resultSetToBillsList( String sCondition, boolean bDelete ) throws SQLException
     {
         ArrayList<Bill> bills = new ArrayList<Bill>();

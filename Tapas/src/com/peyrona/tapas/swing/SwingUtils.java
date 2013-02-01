@@ -7,13 +7,10 @@ package com.peyrona.tapas.swing;
 
 import com.peyrona.tapas.Utils;
 import com.peyrona.tapas.mainFrame.MainFrame;
-import java.awt.Component;
 import java.awt.EventQueue;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.logging.Level;
-import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -52,54 +49,6 @@ public final class SwingUtils
             bufImage = preview.getImage();
 
         return bufImage;
-    }
-
-    /**
-     * Hace que un icon encaje en el componente sin perder sus proporciones.
-     *
-     * @param icon
-     * @param comp
-     * @return
-     */
-    public static ImageIcon scaleIcon( ImageIcon icon, Component comp )
-    {
-        return scaleIcon( icon, comp.getWidth(), comp.getHeight() );
-    }
-
-    public static ImageIcon scaleIcon( ImageIcon icon, int nCompWidth, int nCompHeight )
-    {// FIXME: No va bien
-        if( icon == null )
-            return null;
-
-        float nImgWidth  = icon.getIconWidth();
-        float nImgHeight = icon.getIconHeight();
-        float nRatio     = nImgWidth / nImgHeight;
-
-        if( nImgWidth > nCompWidth || nImgHeight > nCompHeight )    // Uno de los lados de la imagen es mayor que el destino
-        {
-            if( nImgWidth > nCompWidth )
-            {
-                nImgWidth   = nCompWidth;
-                nImgHeight *= nRatio;
-            }
-
-            if( nImgHeight > nCompHeight )
-            {
-                nImgHeight = nCompHeight;
-                nImgWidth *= nRatio;
-            }
-        }
-        else                                                       // Uno de los lados de la imagen es menor que el destino
-        {
-
-        }
-
-        Image image = icon.getImage();
-              image.getScaledInstance( Math.max( 16, (int) nImgWidth ),
-                                       Math.max( 16, (int) nImgHeight ),
-                                       Image.SCALE_SMOOTH );
-
-        return (new ImageIcon( image ));
     }
 
     public static void showError( final Throwable th, final Level level, final String sMessage, final int nExitCode )

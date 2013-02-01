@@ -123,6 +123,11 @@ final class JTables4Menu
                 getSelectionModel().setSelectionInterval( 0, 0 );
         }
 
+        boolean isDataChanged()
+        {
+            return ((DataModel) getModel()).isDataChanged();
+        }
+
         private void shiftHighlightedRow( int nDirection )
         {
             int nSelect = getSelectedRow();
@@ -195,8 +200,9 @@ final class JTables4Menu
     //------------------------------------------------------------------------//
     private static final class DataModel extends AbstractTableModel
     {
-        private List<Product> vLines     = new ArrayList<Product>();
-        private String[]      asColNames = null;
+        private boolean       bDataChanged = false;    // ¿Han cambiado los datos? (¿Es necesario guardarlos?)
+        private List<Product> vLines       = new ArrayList<Product>();
+        private String[]      asColNames   = null;
 
         private DataModel( String[] asColNames )
         {
@@ -272,6 +278,8 @@ final class JTables4Menu
                     case TableProducts.nCOL_ICON       : product.setIcon(        (ImageIcon) value); break;
                 }
             }
+
+            bDataChanged = true;
         }
 
         @Override
@@ -295,6 +303,7 @@ final class JTables4Menu
         {
             vLines.add( product );
             fireTableRowsInserted( vLines.size() - 1, vLines.size() - 1 );
+            bDataChanged = true;
         }
 
         private void deleteRow( int nRow )
@@ -303,24 +312,32 @@ final class JTables4Menu
             {
                 vLines.remove( nRow );
                 fireTableRowsDeleted( nRow, nRow );
+                bDataChanged = true;
             }
+        }
+
+        private boolean isDataChanged()
+        {
+            return bDataChanged;
         }
 
         private int shiftRow( int nRow, int nDirection )
         {
-            int NewRow = -1;
+            int nNewRow = -1;
 
-            if( (nRow > -1 && nRow < getRowCount()) &&           // nRow es un valor válido
+            if( (nRow > -1 && nRow < getRowCount())              // nRow es un valor válido
+                &&
                 ((nDirection == 1 && nRow < getRowCount() - 1)   // Quiere bajar y no es ya el último
                 ||
-                 (nDirection == -1 && nRow > 0)) )               // Quiere subir y no es ya el primero
+                (nDirection == -1 && nRow > 0)) )                // Quiere subir y no es ya el primero
             {
-                NewRow = (nDirection == 1 ? nRow+1: nRow-1 );
-                vLines.add( NewRow, vLines.remove( nRow ) );
+                nNewRow = nRow + nDirection;
+                vLines.add( nNewRow, vLines.remove( nRow ) );
                 fireTableDataChanged();
+                bDataChanged = true;
             }
 
-            return NewRow;
+            return nNewRow;
         }
 
         // Esto no es alta tecnología, pero si el usuario es sensato funciona

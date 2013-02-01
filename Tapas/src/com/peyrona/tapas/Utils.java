@@ -45,23 +45,35 @@ import javax.swing.ImageIcon;
  */
 public final class Utils
 {
-    private static NumberFormat nfCurrency = NumberFormat.getCurrencyInstance();
-    private static NumberFormat nfNoSymbol = NumberFormat.getInstance();
-
     public static final int nEXIT_NO_EXIT   = -1;
     public static final int nEXIT_NO_ERROR  =  0;
     public static final int nEXIT_LAF_ERROR =  1;
     public static final int nEXIT_DB_ERROR  =  2;
 
-    public static final char   cDecimalSep     = (new DecimalFormatSymbols()).getMonetaryDecimalSeparator();
-    public static final String sCurrencySymbol = (new DecimalFormatSymbols()).getCurrencySymbol();
+    private static final Logger       logger          = Logger.getLogger( "Tapas.Logger" );
 
-    public static final boolean DEBUGGING = true;   // ¿Estamos en modo develop o debug?    // FIXME: Apagar el flag de debug
+    private static final NumberFormat nfCurrency      = NumberFormat.getCurrencyInstance();
+    private static final NumberFormat nfNoSymbol      = NumberFormat.getInstance();
+
+    public  static final char         cDecimalSep     = (new DecimalFormatSymbols()).getMonetaryDecimalSeparator();
+    public  static final String       sCurrencySymbol = (new DecimalFormatSymbols()).getCurrencySymbol();
 
     //------------------------------------------------------------------------//
 
     static
     {
+        // Inicializamos el Log para que vierta su información a fichero
+        try
+        {
+            FileHandler handler = new FileHandler( "Tapas.log", true );   // true == append en el fichero
+            logger.addHandler( handler );
+        }
+        catch( IOException ioe )
+        {
+            // Nada que hacer
+        }
+
+        // Inicializamos apropiadamente la moneda
         int nDigits = Currency.getInstance( Locale.getDefault() ).getDefaultFractionDigits();
 
         Utils.nfNoSymbol.setMinimumFractionDigits( nDigits );
@@ -121,28 +133,25 @@ public final class Utils
     public static void printError( Throwable th, Level level, String sMessage, int nExitCode )
     {
         if( sMessage != null )
+        {
             System.out.println( sMessage );
+        }
 
         if( th != null )
         {
-            Logger logger = Logger.getLogger( "Tapas.Logger" );
-
-            try
-            {
-                FileHandler handler = new FileHandler( "Tapas.log", true );   // true == append en el fichero
-                logger.addHandler( handler );// FIXME: esto añadiría un handler cada vez que se llama a printError: corregirlo
-            }
-            catch( IOException ioe )
-            {
-                // Nada que hacer
-            }
-
             logger.log( Level.SEVERE, sMessage, th );
             th.printStackTrace( System.err );
         }
 
         if( nExitCode != nEXIT_NO_EXIT )
+        {
             System.exit( nExitCode );
+        }
+    }
+
+    public static int getCores()
+    {   // Este valor puede camiar de una invocación a otra
+        return Runtime.getRuntime().availableProcessors();
     }
 
     //------------------------------------------------------------------------//

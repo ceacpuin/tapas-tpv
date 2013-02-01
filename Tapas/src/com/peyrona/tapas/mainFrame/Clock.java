@@ -5,6 +5,7 @@
 
 package com.peyrona.tapas.mainFrame;
 
+import com.peyrona.tapas.Utils;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,9 +55,8 @@ final class Clock extends JPanel
         lblClock.setForeground( COLOR_TINTA );
         lblClock.setFont( new Font( "Courier New", Font.BOLD, 34 ) );
 
-        // Si el micro tiene más de un core nos podemos permitir un reloj más complejo
-        // (no compruebo el nº de microprocesadores porque los TPVs no suelen tener más de uno)
-        bShowSecs = (Runtime.getRuntime().availableProcessors() > 1);
+        // Si el micro tiene más de un core nos podemos permitir un reloj más complejo.
+        bShowSecs = (Utils.getCores() > 1);
 
         Timer timer = new Timer( (bShowSecs ? 1 : 60) * 1000, new UpdateTask() );
               timer.start();
