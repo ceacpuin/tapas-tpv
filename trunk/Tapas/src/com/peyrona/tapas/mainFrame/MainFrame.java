@@ -128,12 +128,9 @@ public final class MainFrame extends JFrame implements ActionListener
 
         if( ! desktop.isEmpty() )
         {
-            if( ! Utils. DEBUGGING )
-            {
-                nOption = JOptionPane.showConfirmDialog( this,
-                          "Aún quedan cuentas abiertas.\n¿Seguro que desea salir?",
-                          "Cerrando la aplicación", JOptionPane.OK_CANCEL_OPTION );
-            }
+            nOption = JOptionPane.showConfirmDialog( this,
+                      "Aún quedan cuentas abiertas.\n¿Seguro que desea salir?",
+                      "Cerrando la aplicación", JOptionPane.OK_CANCEL_OPTION );
         }
 
         if( nOption == JOptionPane.OK_OPTION )

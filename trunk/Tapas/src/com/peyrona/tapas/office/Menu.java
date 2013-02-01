@@ -18,9 +18,11 @@
 
 package com.peyrona.tapas.office;
 
+import com.peyrona.tapas.Utils;
 import com.peyrona.tapas.persistence.Product;
 import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -55,7 +57,7 @@ final class Menu extends JPanel implements ActionListener
         tblCategories = new JTables4Menu.TableCategories();
         tblProducts   = new JTables4Menu.TableProducts();
 
-        setLayout( new FlowLayout() );
+        setLayout( new BorderLayout() );
         initComponents();
     }
 
@@ -67,7 +69,10 @@ final class Menu extends JPanel implements ActionListener
     @Override
     public void actionPerformed( ActionEvent ae )
     {
-        DataProvider.getInstance().setCategoriesAndProducts( tblCategories.getData() );
+        if( tblCategories.isDataChanged() || tblProducts.isDataChanged() )
+        {
+            DataProvider.getInstance().setCategoriesAndProducts( tblCategories.getData() );
+        }
     }
 
     //------------------------------------------------------------------------//
@@ -101,47 +106,62 @@ final class Menu extends JPanel implements ActionListener
 
     private void initComponents()
     {
-        JPanel pnlActions4Cate = new JPanel( new FlowLayout( FlowLayout.LEADING ) );
-               pnlActions4Cate.add( new Button( new ImageIcon( getClass().getResource( "images/add.png" ) ),
+        JPanel pnlToolBar4Cate = new JPanel( new FlowLayout( FlowLayout.LEADING ) );
+               pnlToolBar4Cate.add( new Button( new ImageIcon( getClass().getResource( "images/add.png" ) ),
                                                 "Añade una nueva categoría", Owner.Categories, sACT_ADD_LINE ) );
-               pnlActions4Cate.add( new Button( new ImageIcon( getClass().getResource( "images/del.png" ) ),
+               pnlToolBar4Cate.add( new Button( new ImageIcon( getClass().getResource( "images/del.png" ) ),
                                                 "Elimina la categoría resaltada", Owner.Categories, sACT_DEL_LINE ) );
-               pnlActions4Cate.add( new Button( new ImageIcon( getClass().getResource( "images/up.png" ) ),
+               pnlToolBar4Cate.add( new Button( new ImageIcon( getClass().getResource( "images/up.png" ) ),
                                                 "Desplaza la categoría resaltada hacia arriba", Owner.Categories, sACT_UP_LINE ) );
-               pnlActions4Cate.add( new Button( new ImageIcon( getClass().getResource( "images/down.png" ) ),
+               pnlToolBar4Cate.add( new Button( new ImageIcon( getClass().getResource( "images/down.png" ) ),
                                                 "Desplaza la categoría resaltada hacia abajo", Owner.Categories, sACT_DOWN_LINE ) );
 
-        JPanel pnlActions4Prod = new JPanel( new FlowLayout( FlowLayout.TRAILING ) );
-               pnlActions4Prod.add( new Button( new ImageIcon( getClass().getResource( "images/add.png" ) ),
+        JPanel pnlToolBar4Prod = new JPanel( new FlowLayout( FlowLayout.TRAILING ) );
+               pnlToolBar4Prod.add( new Button( new ImageIcon( getClass().getResource( "images/add.png" ) ),
                                                 "Añade un nuevo producto", Owner.Products, sACT_ADD_LINE ) );
-               pnlActions4Prod.add( new Button( new ImageIcon( getClass().getResource( "images/del.png" ) ),
+               pnlToolBar4Prod.add( new Button( new ImageIcon( getClass().getResource( "images/del.png" ) ),
                                                 "Elimina el producto resaltado",Owner.Products, sACT_DEL_LINE ) );
-               pnlActions4Prod.add( new Button( new ImageIcon( getClass().getResource( "images/up.png" ) ),
+               pnlToolBar4Prod.add( new Button( new ImageIcon( getClass().getResource( "images/up.png" ) ),
                                                 "Desplaza el producto resaltado hacia arriba", Owner.Products, sACT_UP_LINE ) );
-               pnlActions4Prod.add( new Button( new ImageIcon( getClass().getResource( "images/down.png" ) ),
+               pnlToolBar4Prod.add( new Button( new ImageIcon( getClass().getResource( "images/down.png" ) ),
                                                 "Desplaza el producto resaltado hacia abajo", Owner.Products, sACT_DOWN_LINE ) );
 
         JPanel pnlCategories = new JPanel( new BorderLayout() );
                pnlCategories.add( new JLabel( "Categorías" )      , BorderLayout.NORTH  );
                pnlCategories.add( new JScrollPane( tblCategories ), BorderLayout.CENTER );
-               pnlCategories.add( pnlActions4Cate                 , BorderLayout.SOUTH  );
+               pnlCategories.add( pnlToolBar4Cate                 , BorderLayout.SOUTH  );
 
         JPanel pnlProducts = new JPanel( new BorderLayout() );
                pnlProducts.add( new JLabel( "Productos" )     , BorderLayout.NORTH  );
                pnlProducts.add( new JScrollPane( tblProducts ), BorderLayout.CENTER );
-               pnlProducts.add( pnlActions4Prod               , BorderLayout.SOUTH  );
+               pnlProducts.add( pnlToolBar4Prod               , BorderLayout.SOUTH  );
 
-        add( pnlCategories );
-        add( pnlProducts   );
+        final JSplitPane spBoth = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT,
+                                                  (Utils.getCores() > 1),
+                                                  pnlCategories, pnlProducts );
+                         spBoth.setOneTouchExpandable( true );
+
+        EventQueue.invokeLater( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                spBoth.setDividerLocation( .40d );
+            }
+        } );
+
+        add( spBoth, BorderLayout.CENTER );
 
         // Añade todas las categorías existentes (los productos se refrescan
         // automáticamente mediante un selection listener)
         List<Product> all = DataProvider.getInstance().getCategoriesAndProducts();
 
         if( all.isEmpty() )
+        {
             all.add( new Product() );
+        }
 
-        // Al utilizar all directamente, los cambios se realizan tanto en vLines como en all
+        // Al utilizar "all" directamente, los cambios se realizan tanto en "vLines" como en "all"
         tblCategories.setData( all );
         tblProducts.setData( all.get( 0 ).getSubMenu() );
 
