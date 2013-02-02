@@ -23,6 +23,7 @@ import com.peyrona.tapas.account.BillAndMenuPanel;
 import com.peyrona.tapas.persistence.Bill;
 import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -34,6 +35,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
  * Cada una de las JInternalFrame en las que se se almacena la cuenta de cada cliente.
@@ -60,6 +62,7 @@ final class BillInternalFrame extends JInternalFrame
         lblAmount = new LabelAmount();
         lblAmount.setAmount( this.bill.getTotal() );
 
+        removeWindowMenu();
         setResizable( false );
         setIconifiable( false );
         setMaximizable( false );
@@ -135,8 +138,17 @@ final class BillInternalFrame extends JInternalFrame
         // TODO: implementarlo
     }
 
+    private void removeWindowMenu()
+    {
+        BasicInternalFrameUI bifui = (BasicInternalFrameUI) getUI();
+        Container north = (Container) bifui.getNorthPane();
+                  north.remove(0);
+                  north.validate();
+                  north.repaint();
+    }
+
     //------------------------------------------------------------------------//
-    // INNER CLASS
+    // INNER CLASS: El botón de la InternalFrame
     //------------------------------------------------------------------------//
     private final class ButtonUpdate extends JButton implements ActionListener
     {
@@ -159,12 +171,14 @@ final class BillInternalFrame extends JInternalFrame
             lblAmount.setAmount( bill.getTotal() );
 
             if( bill.isClosed() )
+            {
                 onCloseBill();
+            }
         }
     }
 
     //------------------------------------------------------------------------//
-    // INNER CLASS
+    // INNER CLASS: La etiquetac on la cantidad en la InternalFrame
     //------------------------------------------------------------------------//
     private final class LabelAmount extends JLabel
     {

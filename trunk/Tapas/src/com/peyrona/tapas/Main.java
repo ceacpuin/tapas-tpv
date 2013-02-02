@@ -21,6 +21,8 @@ package com.peyrona.tapas;
 import com.peyrona.tapas.mainFrame.MainFrame;
 import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -84,6 +86,14 @@ public final class Main
         final MainFrame frame = MainFrame.getInstance();
                         frame.pack();
                         frame.setExtendedState( JFrame.MAXIMIZED_BOTH );
+                        frame.addWindowListener( new WindowAdapter()
+                        {
+                            @Override
+                            public void windowOpened( WindowEvent we )
+                            {
+                                splash.dispose();
+                            }
+                        } );
 
         // Arrancamos el GUI dentro del Event Dispath Thread
         EventQueue.invokeLater( new Runnable()
@@ -93,7 +103,7 @@ public final class Main
             {
                 frame.setVisible( true );
 
-                // Esperamos a que termine la Thread de inicializaicón de DataProvider
+                // Esperamos a que termine la Thread de inicialización de DataProvider
                 try{ tDB.join(); } catch( InterruptedException ex ) { Utils.printError( ex ); }
 
                 // NEXT: Sistema de plugins ----------------------------
@@ -106,7 +116,6 @@ public final class Main
                     setFullScreenMode( frame );
                 }
 
-                splash.dispose();
                 frame.requestFocus();
             }
         } );
@@ -124,10 +133,11 @@ public final class Main
                      panel.add( image   , BorderLayout.CENTER );
                      panel.add( progress, BorderLayout.SOUTH  );
         JWindow      window = new JWindow();
+                     window.setAlwaysOnTop( true );
                      window.setLayout( new BorderLayout() );
                      window.add( panel, BorderLayout.CENTER );
                      window.pack();
-                     window.setLocationRelativeTo( null );
+                     window.setLocationRelativeTo( null );   // Centra la window en la pantalla
 
         return window;
     }
