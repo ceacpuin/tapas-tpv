@@ -142,10 +142,10 @@ public final class BillPanel extends JPanel
         {
             super( new GridLayout( 1, 4, 4, 0 ) );
 
-            add( new Button4Item( Button4Item.CMD_DEL   ) );
-            add( new Button4Item( Button4Item.CMD_EDIT  ) );
-            add( new Button4Item( Button4Item.CMD_MINUS ) );
-            add( new Button4Item( Button4Item.CMD_PLUS  ) );
+            add( new Button4Item( Button4Item.CMD_DEL  , "Elimina la línea resaltada" ) );
+            add( new Button4Item( Button4Item.CMD_EDIT , "Edita el precio de la línea resaltada" ) );
+            add( new Button4Item( Button4Item.CMD_MINUS, "Decrementa las unidades de la línea resaltada" ) );
+            add( new Button4Item( Button4Item.CMD_PLUS , "Incrementa las unidades de la línea resaltada" ) );
         }
 
         @Override
@@ -226,7 +226,7 @@ public final class BillPanel extends JPanel
         final static String CMD_EDIT  = "item_edit";
         final static String CMD_DEL   = "item_del";
 
-        Button4Item( String sActionCommand )
+        Button4Item( String sActionCommand, String sToolTip )
         {
             // Con este filtro fabrico el icono de disabled y me ahorro la mitad de los iconos
             ImageHighlightFilter ihf = new ImageHighlightFilter( true, 64 );
@@ -236,6 +236,7 @@ public final class BillPanel extends JPanel
             ImageIcon dicon = new ImageIcon( image );
 
             setActionCommand( sActionCommand );
+            setToolTipText( sToolTip );
             setIcon( icon );
             setDisabledIcon( dicon );
             setMargin( new Insets( 4, 0, 0, 4 ) );
