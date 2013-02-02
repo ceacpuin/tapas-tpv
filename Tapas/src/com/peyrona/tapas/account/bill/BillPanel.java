@@ -134,7 +134,7 @@ public final class BillPanel extends JPanel
     }
 
     //------------------------------------------------------------------------//
-    // Inner Class
+    // Inner Class: Panel con los botones de edición de la línea resaltada del ticket.
     //------------------------------------------------------------------------//
     private final class ItemEditorPanel extends JPanel
     {
@@ -161,7 +161,7 @@ public final class BillPanel extends JPanel
     }
 
     //------------------------------------------------------------------------//
-    // Inner Class
+    // Inner Class: Editor para cambiar el precio de la línea resaltada del ticket.
     //------------------------------------------------------------------------//
     private final class ItemPriceEditor implements ActionListener
     {
@@ -211,12 +211,13 @@ public final class BillPanel extends JPanel
 
         private boolean notExist()     // Comprueba que no existe el DecimalSeparator en sb
         {
-            return (sb.toString().indexOf( Utils.cDecimalSep ) == -1);
+            return (sb.indexOf( String.valueOf( Utils.cDecimalSep ) ) == -1);
         }
     }
 
     //------------------------------------------------------------------------//
-    // Inner Class
+    // Inner Class: Los botones para editar las líneas del ticket: incrementar y
+    //              decrementar las unidades, cambiar el precio o borrarla.
     //------------------------------------------------------------------------//
     private final class Button4Item extends JButton implements ActionListener
     {

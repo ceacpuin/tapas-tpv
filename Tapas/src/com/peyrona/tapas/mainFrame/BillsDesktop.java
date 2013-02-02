@@ -18,6 +18,7 @@
 
 package com.peyrona.tapas.mainFrame;
 
+import com.peyrona.tapas.Utils;
 import com.peyrona.tapas.persistence.Bill;
 import com.peyrona.tapas.persistence.DataProvider;
 import java.awt.Color;
@@ -25,7 +26,6 @@ import java.awt.Dimension;
 import javax.swing.DesktopManager;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
-import javax.swing.JLayeredPane;
 import javax.swing.border.LineBorder;
 
 /**
@@ -37,6 +37,7 @@ final class BillsDesktop extends JDesktopPane
 {
     BillsDesktop()
     {
+        setDragMode( Utils.getCores() > 1 ? JDesktopPane.LIVE_DRAG_MODE : JDesktopPane.OUTLINE_DRAG_MODE );
         setMinimumSize( new Dimension( 580, 380 ) );
         setBorder( new LineBorder( Color.black, 2, true ));
     }
@@ -49,9 +50,8 @@ final class BillsDesktop extends JDesktopPane
     void openAccount( Bill bill )
     {
         final BillInternalFrame iframe = new BillInternalFrame( bill );
-                                iframe.setVisible( true );
-
-        add( iframe, JLayeredPane.DEFAULT_LAYER );
+                                iframe.setVisible( true );    // Hay que hacerla visible antes de añadirla al desktop
+        add( iframe, JDesktopPane.DEFAULT_LAYER );
         iframe.setSelected( true );
 
        if( DataProvider.getInstance().getConfiguration().isAutoAlignSelected() )
@@ -68,17 +68,17 @@ final class BillsDesktop extends JDesktopPane
     void mosaic()
     {
         DesktopManager   manager = getDesktopManager();
-        JInternalFrame[] aFrame  = getAllFrames();
+        JInternalFrame[] aFrame  = getAllFramesInLayer( JDesktopPane.DEFAULT_LAYER );
 
-        if( manager != null && aFrame.length > 0 )  // Tiene que haber desktop manager y ventanas
+        if( (manager != null) && (aFrame.length > 0) )  // Tiene que haber desktop manager y ventanas
         {
-            int nDeskCols  = getSize().width / aFrame[0].getWidth();  // Nº de iFrames que caben a lo ancho
-            int nFrmWidth  = aFrame[0].getWidth();                    // Anchura de la iFrame
-            int nFrmHeight = aFrame[0].getHeight();                   // Altura de la iFrame
-            int nColIndex  = -1;                                      // Columna en la que se situa la iFrame
-            int nRowIndex  = 0;                                       // Fila en la que se situa la iFrame
+            int nFrmWidth  = aFrame[0].getWidth();          // Anchura de la iFrame
+            int nFrmHeight = aFrame[0].getHeight();         // Altura de la iFrame
+            int nDeskCols  = getSize().width / nFrmHeight;  // Nº de iFrames que caben a lo ancho
+            int nColIndex  = -1;                            // Columna en la que se situa la iFrame
+            int nRowIndex  = 0;                             // Fila en la que se situa la iFrame
 
-            for( int n = aFrame.length - 1; n >= 0 ; n-- )
+            for( int n = aFrame.length - 1; n >= 0; n-- )
             {
                 if( aFrame[n].isVisible() )
                 {
@@ -90,6 +90,10 @@ final class BillsDesktop extends JDesktopPane
                         nRowIndex++;
                     }
 
+                    // NOTA: Con algunos L&F, este método da un NullPointerException, con otros no.
+                    //       Por lo que debo asumir que es un bug de Swing, pero no tengo ganas de
+                    //       ponerme a buscar la causa.
+                    //       Si alguien lo averigua, por favor que me lo diga: peyrona@gmail.com
                     manager.dragFrame( aFrame[n], nColIndex * nFrmWidth + nColIndex,
                                                   nRowIndex * nFrmHeight + nRowIndex );
                 }

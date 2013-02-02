@@ -39,9 +39,10 @@ final class DailyReport extends javax.swing.JPanel
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
+        radioGroupTipo = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         btnExecute = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -70,8 +71,10 @@ final class DailyReport extends javax.swing.JPanel
         jLabel1.setText("jLabel1");
 
         btnExecute.setText("Ejecutar el listado");
-        btnExecute.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnExecute.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 onExecuteReport(evt);
             }
         });
@@ -97,7 +100,7 @@ final class DailyReport extends javax.swing.JPanel
                     .addComponent(jLabel3))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                    .addComponent(jSpinner1)
                     .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,7 +148,7 @@ final class DailyReport extends javax.swing.JPanel
                     .addComponent(chkNotPaid)
                     .addComponent(chkInvitation)
                     .addComponent(chkDeferred))
-                .addContainerGap(107, Short.MAX_VALUE))
+                .addContainerGap(120, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,7 +185,7 @@ final class DailyReport extends javax.swing.JPanel
                     .addComponent(chkExportToXLS)
                     .addComponent(chkExportToPlainText)
                     .addComponent(chkExportToHTML))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -199,9 +202,11 @@ final class DailyReport extends javax.swing.JPanel
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(" Tipo "));
 
+        radioGroupTipo.add(jRadioButton1);
         jRadioButton1.setSelected(true);
         jRadioButton1.setText("Listado simplificado");
 
+        radioGroupTipo.add(jRadioButton2);
         jRadioButton2.setText("Listado detallado");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -224,7 +229,7 @@ final class DailyReport extends javax.swing.JPanel
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        chkDeleteFromDB.setText("Borrar los datos exportados de la base de datos");
+        chkDeleteFromDB.setText("Borrar de la base de datos los datos que se van a listar");
 
         lblTitle.setFont(lblTitle.getFont().deriveFont((float)16));
         lblTitle.setText("Listados del Diario de Caja");
@@ -237,19 +242,17 @@ final class DailyReport extends javax.swing.JPanel
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblTitle)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(chkDeleteFromDB)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(btnExecute)
                         .addGroup(layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGap(18, 18, 18)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(chkDeleteFromDB)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnExecute))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -266,10 +269,10 @@ final class DailyReport extends javax.swing.JPanel
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnExecute)
-                    .addComponent(chkDeleteFromDB))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addComponent(chkDeleteFromDB)
+                .addGap(18, 18, 18)
+                .addComponent(btnExecute)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -283,7 +286,6 @@ final class DailyReport extends javax.swing.JPanel
     private javax.swing.JButton btnDatePicker;
     private javax.swing.JButton btnDatePicker1;
     private javax.swing.JButton btnExecute;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox chkDeferred;
     private javax.swing.JCheckBox chkDeleteFromDB;
     private javax.swing.JCheckBox chkExportToHTML;
@@ -305,5 +307,6 @@ final class DailyReport extends javax.swing.JPanel
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinner2;
     private javax.swing.JLabel lblTitle;
+    private javax.swing.ButtonGroup radioGroupTipo;
     // End of variables declaration//GEN-END:variables
 }

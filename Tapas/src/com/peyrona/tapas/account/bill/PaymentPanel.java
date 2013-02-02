@@ -100,7 +100,7 @@ final class PaymentPanel extends JPanel
     private void closeDialog( Bill.Payment payment )
     {
         payMode =  payment;
-        SwingUtilities.getWindowAncestor( this ).dispose();
+        SwingUtilities.getWindowAncestor( this ).dispose();  // Cierra la JDialog (el parent de este JPanel)
     }
 
     //------------------------------------------------------------------------//

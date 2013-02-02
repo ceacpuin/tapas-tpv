@@ -39,25 +39,14 @@ public final class SQLExecutor
     private Connection     dbConn;
     private BufferedReader reader;
 
-    SQLExecutor( Connection conn, File file )
+    SQLExecutor( Connection conn, InputStream is )
     {
         dbConn = conn;
-
-        try
-        {
-            reader = new BufferedReader( new FileReader( file ) );
-        }
-        catch( FileNotFoundException ex )
-        {
-            reader = null;
-        }
+        reader = new BufferedReader( new InputStreamReader( is ) );
     }
 
-    void extecute()  throws FileNotFoundException, SQLException, IOException
+    void extecute() throws SQLException, IOException
     {
-        if( reader == null )
-            throw new FileNotFoundException();
-
         Statement      stmt  = null;
         StringBuilder  sb    = new StringBuilder( 1024 );
         String         sLine;

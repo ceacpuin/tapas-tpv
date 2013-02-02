@@ -21,6 +21,7 @@ package com.peyrona.tapas.persistence;
 import com.peyrona.tapas.Utils;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,14 +84,15 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         {
             try
             {
-                File file = new File( getClass().getResource( "derby_RDM.sql" ).toURI() );
-                SQLExecutor sqlexc = new SQLExecutor( dbConn, file );
+                InputStream is     = getClass().getResourceAsStream("derby_RDM.sql" );
+                SQLExecutor sqlexc = new SQLExecutor( dbConn, is );
                             sqlexc.extecute();
             }
             catch( Exception ex )
             {
                 deleteDirectory( new File( sDbPath ) );
-                throw new SQLException( "Error procesing SQL file to create RDM." );
+                System.err.println( "Error procesando el fichero SQL para crear el RDM." );
+                throw new SQLException( ex );
             }
         }
 
