@@ -28,11 +28,11 @@ import java.util.List;
 import java.util.logging.Level;
 
 /**
- * Este es un tipo un poco raro de Factory, de hecho y para exáctos no es un
+ * Este es un tipo un poco raro de Factory, de hecho y para ser exáctos no es un
  * factory propiamente dicho, pero se le parece bastante.
  *
- * Esta clase internamente instancia unnnn DataProviderable y hace de
- * facade contra ella, por lo que sería un híbrido entre los patrones de diseño
+ * Esta clase internamente instancia un DataProviderable y hace de facade
+ * contra ella, por lo que sería un híbrido entre los patrones de diseño
  * facade y factory. También implementa Sigleton (una vez puestos...)
  *
  * @author Francisco Morero Peyrona
