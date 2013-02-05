@@ -24,7 +24,9 @@ import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 
 /**
- *
+ * Esta panel/dialog permite buscar cuentas en la DB utilizando distintos
+ * criterios de búsqueda.
+ * 
  * @author peyrona
  */
 final class FindBillPanel extends javax.swing.JPanel

@@ -24,6 +24,7 @@ package com.peyrona.tapas.swing;
 import java.awt.image.RGBImageFilter;
 
 /**
+ * Permite aclarar u oscurecer la imagen que se pasa como parámetro.
  *
  * @author Francisco Morero Peyrona
  */

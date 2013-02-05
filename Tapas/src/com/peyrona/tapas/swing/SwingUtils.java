@@ -28,7 +28,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * Algunos métodos estáticos para operar con Swing.
+ * 
  * @author Francisco Morero Peyrona
  */
 public final class SwingUtils

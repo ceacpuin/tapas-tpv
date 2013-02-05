@@ -22,6 +22,8 @@ import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
 /**
+ * Qué formato de archivos de imagen se aceptan en la aplicación (utilizado por
+ * JFileChooser).
  *
  * @author Francisco Morero Peyrona
  */

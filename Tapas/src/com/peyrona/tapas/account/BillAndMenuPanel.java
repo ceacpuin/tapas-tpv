@@ -30,10 +30,11 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 /**
- * Cuando se abre el detalle de una cuenta, aparecen dos paneles: este es el de
- * la izquierda, que contiene el nombre del cliente, lo que ha consumido y los
- * botones para operar con ello y el de la derecha donde aparecen todos los
- * artículos (bebidas y comidas) pre-establecidas.
+ * Cuando se abre el detalle de una cuenta, aparecen dos paneles: el
+ * de la izquierda contiene la cuenta del cliente y el de la derecha
+ * contiene todos los productos que se pueden ir añadiendo.
+ * 
+ * Esta calse (un panel) contiene a ambos.
  *
  * @author Francisco Morero Peyrona
  */

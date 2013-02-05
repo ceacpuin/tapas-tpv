@@ -32,7 +32,8 @@ import javax.swing.JScrollBar;
 import javax.swing.JToggleButton;
 
 /**
- *
+ * Panel que contiene una barra de botones con las categroías (de prouctos).
+ * 
  * @author peyrona
  */
 final class CategoriesPanel extends JPanel

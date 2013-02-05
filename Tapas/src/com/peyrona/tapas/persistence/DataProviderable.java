@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Interfaz con las operaciones de persistencia que la aplicación necesita.
  *
  * @author Francisco Morero Peyrona
  */

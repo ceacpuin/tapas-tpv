@@ -21,7 +21,7 @@ package com.peyrona.tapas.office;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * Panel del tab "Caja" de la dialog de Configuración de la aplicación.
  * @author peyrona
  */
 final class DailyReport extends javax.swing.JPanel

@@ -27,7 +27,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
- *
+ * Panel que contiene los productos de la categoría selecionada.
+ * 
  * @author peyrona
  */
 final class ProductsPanel extends JPanel

@@ -31,7 +31,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 /**
- *
+ * Panel que contiene las categorías y los productos.
+ * 
  * @author Francisco Morero Peyrona
  */
 public final class MenuPanel extends JPanel

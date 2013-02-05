@@ -35,6 +35,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
+ * El preview que se utiliza con JFileChooser para previsualizar imágenes.
  *
  * @author Francisco Morero Peyrona
  */
