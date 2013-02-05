@@ -30,6 +30,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 /**
+ * Panel de estilo toolbar que contiene los distinstos modos de pago.
  *
  * @author Francisco Morero Peyrona
  */

@@ -27,7 +27,8 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
 /**
- * Configuración del ticket que se imprime.
+ * Panel del tab "Ticket" de la dialog de Configuración de la aplicación.
+ * Permite la configuración del ticket de caja que se imprime.
  *
  * @author Francisco Morero Peyrona (www.peyrona.com)
  */

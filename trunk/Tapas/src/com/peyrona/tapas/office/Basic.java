@@ -24,7 +24,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- *
+ * Panel del tab "Básico" de la dialog de Configuración de la aplicación.
+ * 
  * @author peyrona
  */
 final class Basic extends javax.swing.JPanel implements ActionListener

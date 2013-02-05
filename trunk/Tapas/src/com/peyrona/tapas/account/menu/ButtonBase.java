@@ -32,7 +32,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 /**
- *
+ * Botón base para las categorías y los productos.
+ * 
  * @author peyrona
  */
 abstract class ButtonBase extends JPanel implements ActionListener

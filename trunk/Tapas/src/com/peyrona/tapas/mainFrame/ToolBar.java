@@ -28,7 +28,8 @@ import java.util.List;
 import javax.swing.*;
 
 /**
- *
+ * ToolBar de la ventana principal.
+ * 
  * @author Francisco Morero Peyrona
  */
 final class ToolBar extends JPanel

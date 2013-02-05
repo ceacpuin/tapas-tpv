@@ -33,7 +33,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 /**
- *
+ * La ventana principal de la aplicación.
+ * 
  * @author Francisco Morero Peyrona
  */
 public final class MainFrame extends JFrame implements ActionListener

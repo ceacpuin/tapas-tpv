@@ -40,6 +40,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 /**
+ * Constantes y algunos métodos estáticos para realizar operaciones frecuentes.
  *
  * @author Francisco Morero Peyrona
  */
