@@ -60,9 +60,9 @@ public final class DataProvider implements DataProviderable
 
     public static DataProvider getInstance()
     {
-        synchronized( DataProvider.class )
+        if( instance == null )
         {
-            if( instance == null )
+            synchronized( DataProvider.class )
             {
                 instance = new DataProvider();
             }
