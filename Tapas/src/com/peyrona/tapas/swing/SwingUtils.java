@@ -22,33 +22,17 @@ import com.peyrona.tapas.Utils;
 import com.peyrona.tapas.mainFrame.MainFrame;
 import java.awt.EventQueue;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.logging.Level;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
  * Algunos métodos estáticos para operar con Swing.
- * 
+ *
  * @author Francisco Morero Peyrona
  */
 public final class SwingUtils
 {
-    public static File folderChooser()
-    {
-        File folder = null;
-
-        JFileChooser fc = new JFileChooser();
-                     fc.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
-                     fc.setAcceptAllFileFilterUsed( false );   // Desactiva la opción "All files"
-                     fc.setMultiSelectionEnabled( false );     // Sólo se admite un dir
-
-        if( fc.showOpenDialog( MainFrame.getInstance() ) == JFileChooser.APPROVE_OPTION )
-            folder = fc.getSelectedFile();
-
-        return folder;
-    }
-
     public static BufferedImage ImageChooser()
     {
         BufferedImage     bufImage = null;

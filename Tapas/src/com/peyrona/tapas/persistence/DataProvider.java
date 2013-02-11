@@ -137,36 +137,6 @@ public final class DataProvider implements DataProviderable
     }
 
     @Override
-    public HashMap<String,String> getConfiguration4Plugin( String sPluginName ) throws Exception
-    {
-        HashMap<String,String> ret = null;
-
-        try
-        {
-            ret = provider.getConfiguration4Plugin( sPluginName );
-        }
-        catch( Exception ex )
-        {
-            onFatalError( ex );
-        }
-
-        return ret;
-    }
-
-    @Override
-    public void setConfiguration4Plugin( String sPluginName, HashMap<String,String> conf ) throws Exception
-    {
-        try
-        {
-            provider.setConfiguration4Plugin( sPluginName, conf );
-        }
-        catch( Exception ex )
-        {
-            onFatalError( ex );
-        }
-    }
-
-    @Override
     public List<Product> getCategoriesAndProducts()
     {
         List<Product> products = null;

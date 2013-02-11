@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -185,18 +184,6 @@ final class DataProvider4EmbeddedDerby implements DataProviderable
         psUpdate.setString(     7, config.getTicketFooter() );
         psUpdate.executeUpdate();
         psUpdate.close();
-    }
-
-    @Override
-    public HashMap<String,String> getConfiguration4Plugin( String sPluginName ) throws Exception
-    { // TODO: implementarlo cuando sea necesario
-        return null;
-    }
-
-    @Override
-    public void setConfiguration4Plugin( String sPluginName, HashMap<String,String> conf ) throws Exception
-    {
-        // TODO: implementarlo cuando sea necesario
     }
 
     @Override
