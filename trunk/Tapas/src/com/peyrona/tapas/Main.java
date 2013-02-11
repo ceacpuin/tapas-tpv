@@ -147,7 +147,7 @@ public final class Main
     {
         // NEXT: Sistema de plugins ----------------------------
         // Informamos a los plugins que se va a cerrar
-        // PluginManager.getInstance().destroy();
+        // PluginManager.getInstance().destroy( this );
         //------------------------------------------------------
 
         // Nos aseguramos de que al cerrar la app, la DB se cierra apropiadamente

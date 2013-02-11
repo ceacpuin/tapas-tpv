@@ -46,10 +46,6 @@ public interface DataProviderable
 
     void setConfiguration( Configuration config ) throws Exception;
 
-    HashMap<String,String> getConfiguration4Plugin( String sPluginName ) throws Exception;
-
-    void setConfiguration4Plugin( String sPluginName, HashMap<String,String> config ) throws Exception;
-
     List<Product> getCategoriesAndProducts() throws Exception;
 
     void setCategoriesAndProducts( List<Product> products ) throws Exception;
