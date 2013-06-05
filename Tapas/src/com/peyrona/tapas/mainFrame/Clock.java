@@ -1,19 +1,6 @@
 /*
  * Copyright (C) 2010 Francisco José Morero Peyrona. All Rights Reserved.
  *
- * This file is part of Tapas project: http://code.google.com/p/tapas-tpv/
- *
- * GNU Classpath is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the free
- * Software Foundation; either version 3, or (at your option) any later version.
- *
- * Tapas is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * Tapas; see the file COPYING.  If not, write to the Free Software Foundation,
- * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 package com.peyrona.tapas.mainFrame;
@@ -25,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
@@ -37,13 +23,14 @@ import javax.swing.border.EmptyBorder;
  *
  * @author Francisco Morero Peyrona
  */
-final class Clock extends JPanel
+final class Clock extends JLabel
 {
     private static final Color COLOR_TINTA = Color.cyan.darker();
 
-    private JLabel  lblClock;
-    private boolean bShowSecs;       // Mostrar los segundos?
-    private int     nSecs;
+    // Si el micro tiene más de un core nos podemos permitir un reloj más complejo.
+    private static boolean bShowSecs = (Utils.getCores() > 1);
+
+    private int nSecs = 0;
 
     //------------------------------------------------------------------------//
 
@@ -53,23 +40,18 @@ final class Clock extends JPanel
 
         setMaximumSize( new Dimension( 120, 48 ) );
         setPreferredSize( getMaximumSize() );
+        setOpaque( true );
         setBackground( Color.black );
         setBorder( new EmptyBorder( 4,4,4,4 ) );
-        setLayout( new GridLayout( 1, 1 ) );
-        add( lblClock );
     }
+
+    //----------------------------------------------------------------------------//
 
     private void initComponents()
     {
-        nSecs = 0;
-
-        lblClock = new JLabel();
-        lblClock.setHorizontalAlignment( JLabel.CENTER );
-        lblClock.setForeground( COLOR_TINTA );
-        lblClock.setFont( new Font( "Courier New", Font.BOLD, 34 ) );
-
-        // Si el micro tiene más de un core nos podemos permitir un reloj más complejo.
-        bShowSecs = (Utils.getCores() > 1);
+        setHorizontalAlignment( JLabel.CENTER );
+        setForeground( COLOR_TINTA );
+        setFont( new Font( "Courier New", Font.BOLD, 34 ) );
 
         Timer timer = new Timer( (bShowSecs ? 1 : 60) * 1000, new UpdateTask() );
               timer.start();
@@ -82,10 +64,11 @@ final class Clock extends JPanel
 
         if( bShowSecs )
         {
-            Graphics2D g2d = (Graphics2D) g;
+            double nUnit = getWidth() / (double) 60;   // double para evitar el redondeo de las divisiones a enteros (por defecto)
 
-            g2d.setColor( COLOR_TINTA );
-            g2d.fillRect( 0, getHeight()-4, nSecs*2+2, 4 );
+            Graphics2D g2d = (Graphics2D) g;
+                       g2d.setColor( getForeground() );
+                       g2d.fillRect( 0, getHeight()-4, (int) (nSecs*nUnit), 4 );
         }
     }
 
@@ -111,25 +94,29 @@ final class Clock extends JPanel
         @Override
         public void actionPerformed( ActionEvent ae )
         {
-            if( nSecs == 0 )
+            if( Clock.this.nSecs == 0 )
             {
                 updateHour();
             }
 
-            // Lo apropiado sería pasar de System.currentTimeMillis() a secs transcurridos
-            // desde medianoche, pero esto es más simple y también vale.
-            nSecs = (nSecs == 58 ? 0 : nSecs+1);
+            // Pasamos de System.currentTimeMillis() a secs transcurridos en el minuto actual
+            Clock.this.nSecs = ((int) (System.currentTimeMillis() / 1000)) % 60;
 
-            if( Clock.this.bShowSecs )
+            if( Clock.this.nSecs == 0 )
             {
-                // Mejora mucho el rendimiento porque sólo pinta el área especificada
-                Clock.this.repaint( 0, Clock.this.getHeight()-4, Clock.this.getWidth(), 4 );
+                updateHour();
+            }
+
+            if( Clock.bShowSecs )
+            {
+                // Repinta sólo el área de la barra de los segundos y no la hora (mejora el rendimiento)
+                Clock.this.repaint( 0, getHeight()-4, getWidth(), 4 );
             }
         }
 
         private void updateHour()
         {
-            Clock.this.lblClock.setText( dateFormat.format( new Date() ) );
+            Clock.this.setText( dateFormat.format( new Date() ) );
         }
     }
 }
