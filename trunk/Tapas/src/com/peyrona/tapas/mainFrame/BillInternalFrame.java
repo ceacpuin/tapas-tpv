@@ -178,7 +178,7 @@ final class BillInternalFrame extends JInternalFrame
     }
 
     //------------------------------------------------------------------------//
-    // INNER CLASS: La etiquetac on la cantidad en la InternalFrame
+    // INNER CLASS: La etiqueta con la cantidad en la InternalFrame
     //------------------------------------------------------------------------//
     private final class LabelAmount extends JLabel
     {
